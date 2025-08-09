@@ -3,2019 +3,2117 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LegalClauseChecker.com - Free Legal Clause Checker</title>
-    <meta name="description" content="Analyze contracts instantly with our free tool. Detect risky clauses, get plain-English explanations, and understand contract terms in seconds.">
-    <script src="https://cdn.tailwindcss.com" integrity="sha384-..." crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.2.67/pdf.min.js" integrity="sha512-7Xw6Qw7hXwQvKkQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQw==" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.7.0/mammoth.browser.min.js" integrity="sha512-+kQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQw==" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/dompurify@3.0.9/dist/purify.min.js" integrity="sha384-..." crossorigin="anonymous"></script>
+    <title>LegalClauseChecker Pro - Advanced Contract Analysis</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.4.2/mammoth.browser.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js"></script>
     <style>
-        /* Dark mode variables */
-        :root {
-            --bg-primary: #ffffff;
-            --bg-secondary: #f9fafb;
-            --text-primary: #111827;
-            --text-secondary: #6b7280;
-            --border-color: #d1d5db;
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
-        
-        [data-theme="dark"] {
-            --bg-primary: #1f2937;
-            --bg-secondary: #111827;
-            --text-primary: #f9fafb;
-            --text-secondary: #9ca3af;
-            --border-color: #374151;
-        }
-        
+
         body {
-            background-color: var(--bg-secondary);
-            color: var(--text-primary);
-            transition: background-color 0.3s ease, color 0.3s ease;
-        }
-        
-        .bg-card {
-            background-color: var(--bg-primary);
-            border-color: var(--border-color);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            min-height: 100vh;
+            color: #333;
+            line-height: 1.6;
         }
 
-        /* Animated highlights */
-        .highlight-low { 
-            background: linear-gradient(90deg, transparent 0%, #fef3c7 50%, transparent 100%);
-            background-size: 200% 100%;
-            border-bottom: 2px solid #f59e0b;
-            animation: highlightSweep 1.5s ease-out forwards;
-            position: relative;
-        }
-        .highlight-medium { 
-            background: linear-gradient(90deg, transparent 0%, #fed7aa 50%, transparent 100%);
-            background-size: 200% 100%;
-            border-bottom: 2px solid #ea580c;
-            animation: highlightSweep 1.5s ease-out forwards;
-            position: relative;
-        }
-        .highlight-high { 
-            background: linear-gradient(90deg, transparent 0%, #fecaca 50%, transparent 100%);
-            background-size: 200% 100%;
-            border-bottom: 2px solid #dc2626;
-            animation: highlightSweep 1.5s ease-out forwards;
-            position: relative;
-        }
-        
-        @keyframes highlightSweep {
-            0% { background-position: -200% 0; }
-            100% { background-position: 200% 0; }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
         }
 
-        /* Risk cards */
-        .risk-card {
-            perspective: 1000px;
-            height: 200px;
-        }
-        
-        .card-inner {
-            position: relative;
-            width: 100%;
-            height: 100%;
+        .header {
             text-align: center;
-            transition: transform 0.6s;
-            transform-style: preserve-3d;
+            color: white;
+            margin-bottom: 40px;
+        }
+
+        .header h1 {
+            font-size: 3rem;
+            margin-bottom: 10px;
+            font-weight: 700;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            margin-bottom: 20px;
+        }
+
+        .progress-steps {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 30px;
+            gap: 20px;
+        }
+
+        .step {
+            display: flex;
+            align-items: center;
+            color: rgba(255,255,255,0.6);
+            font-weight: 500;
+        }
+
+        .step.active {
+            color: white;
+        }
+
+        .step.completed {
+            color: #4ade80;
+        }
+
+        .step-number {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 10px;
+            font-weight: bold;
+        }
+
+        .step.active .step-number {
+            background: white;
+            color: #1e3c72;
+        }
+
+        .step.completed .step-number {
+            background: #4ade80;
+            color: white;
+        }
+
+        .disclaimer {
+            background: linear-gradient(135deg, #fef3c7, #fde68a);
+            border: 1px solid #f59e0b;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 30px;
+            color: #92400e;
+            font-size: 0.95rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .main-content {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .input-section {
+            padding: 40px;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .input-tabs {
+            display: flex;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #f3f4f6;
+            gap: 10px;
+        }
+
+        .tab-button {
+            padding: 15px 25px;
+            background: none;
+            border: none;
             cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            color: #6b7280;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s ease;
+            border-radius: 8px 8px 0 0;
         }
-        
-        .risk-card:hover .card-inner,
-        .risk-card.flipped .card-inner {
-            transform: rotateY(180deg);
+
+        .tab-button.active {
+            color: #1e3c72;
+            border-bottom-color: #1e3c72;
+            background: #f8fafc;
         }
-        
-        .card-front, .card-back {
-            position: absolute;
+
+        .tab-content {
+            display: none;
+            margin-top: 30px;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .file-upload {
+            border: 3px dashed #d1d5db;
+            border-radius: 12px;
+            padding: 60px 40px;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            background: #fafafa;
+        }
+
+        .file-upload:hover {
+            border-color: #1e3c72;
+            background: #f0f4ff;
+            transform: translateY(-2px);
+        }
+
+        .file-upload.dragover {
+            border-color: #4ade80;
+            background: #f0fdf4;
+        }
+
+        .file-upload input {
+            display: none;
+        }
+
+        .upload-icon {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            color: #6b7280;
+        }
+
+        .upload-text h3 {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+            color: #374151;
+        }
+
+        .upload-text p {
+            color: #6b7280;
+            margin-bottom: 5px;
+        }
+
+        .file-constraints {
+            font-size: 0.85rem;
+            color: #9ca3af;
+            margin-top: 15px;
+        }
+
+        .text-input {
             width: 100%;
+            min-height: 300px;
+            padding: 20px;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+            font-size: 0.9rem;
+            resize: vertical;
+            transition: border-color 0.3s ease;
+        }
+
+        .text-input:focus {
+            outline: none;
+            border-color: #1e3c72;
+            box-shadow: 0 0 0 3px rgba(30, 60, 114, 0.1);
+        }
+
+        .char-counter {
+            text-align: right;
+            margin-top: 10px;
+            font-size: 0.85rem;
+            color: #6b7280;
+        }
+
+        .char-counter.warning {
+            color: #f59e0b;
+        }
+
+        .char-counter.error {
+            color: #ef4444;
+        }
+
+        .sample-contracts {
+            margin-top: 30px;
+            padding: 20px;
+            background: #f8fafc;
+            border-radius: 12px;
+        }
+
+        .sample-contracts h4 {
+            margin-bottom: 15px;
+            color: #374151;
+        }
+
+        .sample-buttons {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .sample-btn {
+            padding: 8px 16px;
+            background: #e5e7eb;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: all 0.2s ease;
+        }
+
+        .sample-btn:hover {
+            background: #1e3c72;
+            color: white;
+        }
+
+        .analyze-button {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            border: none;
+            padding: 18px 40px;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 30px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(30, 60, 114, 0.3);
+        }
+
+        .analyze-button:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(30, 60, 114, 0.4);
+        }
+
+        .analyze-button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 6px;
+            background: #e5e7eb;
+            border-radius: 3px;
+            overflow: hidden;
+            margin-top: 20px;
+            display: none;
+        }
+
+        .progress-fill {
             height: 100%;
-            backface-visibility: hidden;
-            border-radius: 0.5rem;
-            padding: 1.5rem;
+            background: linear-gradient(90deg, #1e3c72, #4ade80);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .results-section {
+            padding: 40px;
+            display: none;
+        }
+
+        .results-section.active {
+            display: block;
+        }
+
+        .analysis-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .results-summary {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 16px;
+            margin-bottom: 30px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 30px;
+            text-align: center;
+        }
+
+        .summary-item h3 {
+            font-size: 2rem;
+            margin-bottom: 5px;
+        }
+
+        .summary-item p {
+            opacity: 0.9;
+        }
+
+        .filters-controls {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .filter-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .filter-select {
+            padding: 8px 12px;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            font-size: 0.9rem;
+        }
+
+        .search-input {
+            padding: 8px 12px;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            min-width: 200px;
+        }
+
+        .clause-grid {
+            display: grid;
+            gap: 20px;
+        }
+
+        .clause-card {
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        .clause-card:hover {
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            transform: translateY(-2px);
+        }
+
+        .clause-header {
+            padding: 25px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 20px;
+        }
+
+        .clause-title-section {
+            flex: 1;
+        }
+
+        .clause-title {
+            font-weight: 700;
+            font-size: 1.2rem;
+            margin-bottom: 8px;
+            color: #1f2937;
+        }
+
+        .clause-subtitle {
+            font-size: 0.9rem;
+            color: #6b7280;
+            margin-bottom: 15px;
+        }
+
+        .clause-status-section {
             display: flex;
             flex-direction: column;
-            justify-content: center;
-        }
-        
-        .card-back {
-            transform: rotateY(180deg);
-            background-color: var(--bg-primary);
+            align-items: flex-end;
+            gap: 10px;
         }
 
-        /* Confetti animation */
-        .confetti {
+        .risk-badge {
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .risk-low {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .risk-medium {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .risk-high {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .risk-missing {
+            background: #f3f4f6;
+            color: #374151;
+        }
+
+        .clause-content {
+            display: none;
+            border-top: 1px solid #f3f4f6;
+            background: #fafafa;
+        }
+
+        .clause-content.active {
+            display: block;
+        }
+
+        .content-section {
+            padding: 25px;
+        }
+
+        .content-tabs {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .content-tab {
+            padding: 10px 20px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 0.9rem;
+            color: #6b7280;
+            border-bottom: 2px solid transparent;
+            transition: all 0.2s ease;
+        }
+
+        .content-tab.active {
+            color: #1e3c72;
+            border-bottom-color: #1e3c72;
+        }
+
+        .tab-panel {
+            display: none;
+            padding: 20px 0;
+        }
+
+        .tab-panel.active {
+            display: block;
+        }
+
+        .clause-text {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 4px solid #1e3c72;
+            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+            font-size: 0.85rem;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+
+        .explanation-text {
+            background: #f0f9ff;
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 4px solid #0ea5e9;
+        }
+
+        .risk-analysis {
+            background: #fef7f0;
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 4px solid #f97316;
+        }
+
+        .recommendations {
+            background: #f0fdf4;
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 4px solid #22c55e;
+        }
+
+        .highlight-risk {
+            background: #fee2e2;
+            padding: 2px 4px;
+            border-radius: 3px;
+            color: #991b1b;
+        }
+
+        .export-section {
             position: fixed;
-            width: 10px;
-            height: 10px;
-            background: #f59e0b;
-            animation: confetti-fall 3s linear forwards;
+            bottom: 30px;
+            right: 30px;
             z-index: 1000;
         }
-        
-        @keyframes confetti-fall {
-            0% {
-                transform: translateY(-100vh) rotate(0deg);
-                opacity: 1;
-            }
-            100% {
-                transform: translateY(100vh) rotate(720deg);
-                opacity: 0;
-            }
-        }
 
-        /* Progress scanning animation */
-        .scan-progress {
-            width: 100%;
-            height: 4px;
-            background: #e5e7eb;
-            border-radius: 2px;
-            overflow: hidden;
-            margin: 1rem 0;
-        }
-        
-        .scan-bar {
-            height: 100%;
-            background: linear-gradient(90deg, #3b82f6, #10b981, #3b82f6);
-            background-size: 200% 100%;
-            animation: scanning 2s ease-in-out infinite;
-            transform: translateX(-100%);
-        }
-        
-        @keyframes scanning {
-            0% { transform: translateX(-100%); }
-            50% { transform: translateX(0%); }
-            100% { transform: translateX(100%); }
-        }
-
-        /* Tooltip styles */
-        .tooltip {
-            position: absolute;
-            background: #1f2937;
+        .export-button {
+            background: #22c55e;
             color: white;
-            padding: 0.5rem 0.75rem;
-            border-radius: 0.375rem;
-            font-size: 0.875rem;
-            max-width: 250px;
-            z-index: 1000;
-            opacity: 0;
-            transform: translateY(-10px);
-            transition: opacity 0.3s, transform 0.3s;
-            pointer-events: none;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-        }
-        
-        .tooltip.show {
-            opacity: 1;
-            transform: translateY(0);
-        }
-        
-        .tooltip::after {
-            content: '';
-            position: absolute;
-            top: 100%;
-            left: 50%;
-            margin-left: -5px;
-            border-width: 5px;
-            border-style: solid;
-            border-color: #1f2937 transparent transparent transparent;
+            border: none;
+            padding: 15px 25px;
+            border-radius: 50px;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(34, 197, 94, 0.3);
+            transition: all 0.3s ease;
+            display: none;
         }
 
+        .export-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(34, 197, 94, 0.4);
+        }
 
-        
-        .loading-spinner {
-            border: 3px solid #f3f4f6;
-            border-top: 3px solid #3b82f6;
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+        }
+
+        .loading-content {
+            background: white;
+            padding: 40px;
+            border-radius: 16px;
+            text-align: center;
+            max-width: 400px;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #1e3c72;
             border-radius: 50%;
-            width: 24px;
-            height: 24px;
             animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
         }
-        
+
         @keyframes spin {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
-        
-        .fade-in {
-            animation: fadeIn 0.5s ease-in;
-        }
-        
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
+
+        .chevron {
+            transition: transform 0.3s ease;
+            font-size: 1.2rem;
+            color: #6b7280;
         }
 
-        /* Legal icons animation */
-        .legal-icon {
-            display: inline-block;
-            margin: 0 0.5rem;
-            animation: bounce 2s infinite;
-        }
-        
-        @keyframes bounce {
-            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
-            40% { transform: translateY(-10px); }
-            60% { transform: translateY(-5px); }
+        .clause-header.active .chevron {
+            transform: rotate(180deg);
         }
 
-        /* Share button styles */
-        .share-btn {
-            background: linear-gradient(45deg, #3b82f6, #10b981);
-            transition: transform 0.2s, box-shadow 0.2s;
-        }
-        
-        .share-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        .footer {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            padding: 40px 0 20px;
+            margin-top: 60px;
         }
 
-        /* Dark mode toggle */
-        .theme-toggle {
-            position: relative;
-            width: 60px;
-            height: 30px;
-            background: #374151;
-            border-radius: 15px;
+        .footer-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+            text-align: center;
+        }
+
+        .footer-nav {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .footer-link {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1rem;
             cursor: pointer;
-            transition: background 0.3s;
+            padding: 10px 15px;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+            text-decoration: none;
         }
-        
-        .theme-toggle.active {
-            background: #3b82f6;
+
+        .footer-link:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-2px);
         }
-        
-        .theme-toggle::after {
-            content: '';
-            position: absolute;
-            top: 3px;
-            left: 3px;
-            width: 24px;
-            height: 24px;
+
+        .footer-copyright {
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+            padding-top: 20px;
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        .footer-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 3000;
+            overflow-y: auto;
+        }
+
+        .footer-modal-content {
             background: white;
-            border-radius: 50%;
-            transition: transform 0.3s;
+            margin: 50px auto;
+            padding: 0;
+            border-radius: 16px;
+            max-width: 800px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
         }
-        
-        .theme-toggle.active::after {
-            transform: translateX(30px);
+
+        .footer-modal-header {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            padding: 25px 30px;
+            border-radius: 16px 16px 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .footer-modal-header h2 {
+            margin: 0;
+            font-size: 1.5rem;
+        }
+
+        .footer-modal-close {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 2rem;
+            cursor: pointer;
+            padding: 0;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.3s ease;
+        }
+
+        .footer-modal-close:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .footer-modal-body {
+            padding: 30px;
+            line-height: 1.7;
+            color: #374151;
+        }
+
+        .footer-modal-body h3 {
+            color: #1e3c72;
+            margin-top: 25px;
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+        }
+
+        .footer-modal-body h4 {
+            color: #2563eb;
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+
+        .footer-modal-body p {
+            margin-bottom: 15px;
+        }
+
+        .footer-modal-body ul {
+            margin-left: 20px;
+            margin-bottom: 15px;
+        }
+
+        .footer-modal-body li {
+            margin-bottom: 8px;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .input-section, .results-section {
+                padding: 25px;
+            }
+            
+            .progress-steps {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .analysis-header {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .filters-controls {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .export-section {
+                bottom: 20px;
+                right: 20px;
+            }
+
+            .footer-nav {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .footer-modal-content {
+                margin: 20px auto;
+                width: 95%;
+                max-height: 90vh;
+            }
+
+            .footer-modal-header {
+                padding: 20px;
+            }
+
+            .footer-modal-body {
+                padding: 20px;
+            }
         }
     </style>
 </head>
-<body class="bg-gray-50 min-h-screen">
-    <!-- Header -->
-    <header class="bg-navy-900 text-white py-12 lg:py-16" style="background-color: #1e3a8a;">
-        <div class="container mx-auto px-6 lg:px-8 max-w-7xl">
-            <!-- Theme Toggle - Top Right -->
-            <div class="flex justify-end mb-8 lg:mb-10">
-                <div class="flex items-center gap-3">
-                    <span class="text-sm">🌙</span>
-                    <div id="themeToggle" class="theme-toggle"></div>
-                    <span class="text-sm">☀️</span>
-                </div>
-            </div>
-            
-            <!-- Centered Title and Brand -->
-            <div class="text-center">
-                <h1 class="text-3xl sm:text-4xl lg:text-6xl font-black tracking-tight mb-6" style="font-family: 'Inter', 'Segoe UI', system-ui, sans-serif; letter-spacing: -0.02em;">Free Legal Clause Checker</h1>
-                <p class="text-lg lg:text-xl text-blue-100 max-w-3xl mx-auto leading-relaxed px-4">Instantly spot risky contract clauses with plain-English explanations 📝✨</p>
-            </div>
+<body>
+    <div class="loading-overlay" id="loading-overlay">
+        <div class="loading-content">
+            <div class="spinner"></div>
+            <h3>Analyzing Contract</h3>
+            <p id="loading-text">Processing document...</p>
         </div>
-    </header>
+    </div>
 
-    <!-- Main Content -->
-    <main class="container mx-auto px-6 lg:px-8 py-12 lg:py-16 max-w-7xl">
-        <!-- Input Section -->
-        <section class="bg-card rounded-xl shadow-lg p-8 lg:p-10 mb-12 border">
-            <h2 class="text-xl lg:text-2xl font-semibold mb-6 flex items-center gap-3" style="color: var(--text-primary);">
-                <span>📄</span>
-                <span>Paste Your Contract Text Below</span>
-            </h2>
+    <div class="container">
+        <div class="header">
+            <h1>LegalClauseChecker</h1>
+            <p>Advanced AI-Powered Contract Analysis & Risk Assessment - for FREE!</p>
             
-            <!-- Upload Options -->
-            <div class="mb-6">
-                <div class="flex flex-col sm:flex-row gap-4 mb-4">
-                    <button id="pasteOption" class="flex-1 p-4 border-2 border-blue-500 bg-blue-50 rounded-lg text-blue-700 font-medium transition-all">
-                        📝 Paste Text
-                    </button>
-                    <button id="uploadOption" class="flex-1 p-4 border-2 border-gray-300 bg-white rounded-lg text-gray-700 font-medium transition-all hover:border-blue-300">
-                        📄 Upload Document
-                    </button>
+            <div class="progress-steps">
+                <div class="step active" id="step-1">
+                    <div class="step-number">1</div>
+                    <span>Upload</span>
                 </div>
-            </div>
-
-            <!-- Paste Text Section -->
-            <div id="pasteSection" class="mb-4">
-                <label for="contractText" class="block text-sm font-medium mb-2" style="color: var(--text-secondary);">
-                    Contract Text (minimum 50 characters, maximum 300,000 characters)
-                </label>
-                <textarea 
-                    id="contractText" 
-                    class="w-full h-64 p-4 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-vertical bg-card border"
-                    style="border-color: var(--border-color); color: var(--text-primary);"
-                    placeholder="Paste your contract text here. The tool will analyze it for potentially risky clauses and provide plain-English explanations..."
-                    aria-describedby="char-count"
-                ></textarea>
-                <div id="char-count" class="text-sm mt-2" style="color: var(--text-secondary);">0 characters (minimum 50 required, maximum 300,000 characters)</div>
-            </div>
-
-            <!-- Upload Document Section -->
-            <div id="uploadSection" class="mb-4 hidden">
-                <label class="block text-sm font-medium mb-2" style="color: var(--text-secondary);">
-                    Upload Document (PDF or Word - maximum 300,000 characters)
-                </label>
-                <div class="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center bg-card hover:border-blue-400 transition-colors">
-                    <input type="file" id="fileInput" accept=".pdf,.doc,.docx" class="hidden">
-                    <div id="uploadArea" class="cursor-pointer">
-                        <div class="text-4xl mb-4">📁</div>
-                        <p class="text-lg font-medium mb-2" style="color: var(--text-primary);">Drop your file here or click to browse</p>
-                        <p class="text-sm" style="color: var(--text-secondary);">Supports PDF, DOC, and DOCX files up to 50MB</p>
-                    </div>
-                    <div id="fileInfo" class="hidden">
-                        <div class="text-2xl mb-2">✅</div>
-                        <p id="fileName" class="font-medium" style="color: var(--text-primary);"></p>
-                        <p id="fileSize" class="text-sm" style="color: var(--text-secondary);"></p>
-                        <button id="removeFile" class="mt-2 text-red-600 hover:text-red-800 text-sm">Remove file</button>
-                    </div>
+                <div class="step" id="step-2">
+                    <div class="step-number">2</div>
+                    <span>Analyze</span>
                 </div>
-                <div id="extractionStatus" class="mt-4 hidden">
-                    <div class="flex items-center gap-2 text-sm" style="color: var(--text-secondary);">
-                        <div class="loading-spinner"></div>
-                        <span>Extracting text from document...</span>
-                    </div>
+                <div class="step" id="step-3">
+                    <div class="step-number">3</div>
+                    <span>Results</span>
                 </div>
-            </div>
-
-            <!-- Progress scanning animation (hidden by default) -->
-            <div id="scanProgress" class="scan-progress hidden">
-                <div class="scan-bar"></div>
-            </div>
-            <div id="scanText" class="text-center text-sm hidden" style="color: var(--text-secondary);">
-                <span class="legal-icon">⚖️</span>
-                Scanning contract for risky clauses...
-                <span class="legal-icon">📋</span>
-            </div>
-
-            <div class="flex flex-col sm:flex-row gap-4 mt-8">
-                <button 
-                    id="analyzeBtn" 
-                    class="bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 rounded-xl font-semibold transition-all duration-200 disabled:bg-gray-400 disabled:cursor-not-allowed flex items-center justify-center shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
-                    disabled
-                >
-                    <span class="mr-2">🔍</span>
-                    <span id="analyzeText">Analyze Contract</span>
-                    <div id="loadingSpinner" class="loading-spinner ml-2 hidden"></div>
-                </button>
-                <button 
-                    id="clearBtn" 
-                    class="bg-gray-500 hover:bg-gray-600 text-white px-6 py-4 rounded-xl font-medium transition-all duration-200 flex items-center justify-center shadow-md hover:shadow-lg"
-                >
-                    <span class="mr-2">🗑️</span>
-                    <span>Clear</span>
-                </button>
-                <button 
-                    id="exampleBtn" 
-                    class="bg-green-600 hover:bg-green-700 text-white px-6 py-4 rounded-xl font-medium transition-all duration-200 flex items-center justify-center shadow-md hover:shadow-lg"
-                >
-                    <span class="mr-2">📋</span>
-                    <span>Load Example</span>
-                </button>
-            </div>
-        </section>
-
-        <!-- Results Section -->
-        <div id="resultsSection" class="hidden">
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                <!-- Main Results -->
-                <div class="lg:col-span-3">
-                    <!-- Highlighted Contract Text -->
-                    <section class="bg-card rounded-xl shadow-lg p-8 lg:p-10 mb-12 border">
-                        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
-                            <h3 class="text-xl lg:text-2xl font-semibold flex items-center gap-3" style="color: var(--text-primary);">
-                                <span>📊</span>
-                                <span>Contract Analysis - Highlighted Text</span>
-                            </h3>
-                            <div class="flex gap-3">
-                                <button id="downloadPdfBtn" class="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-xl font-medium text-sm hidden flex items-center gap-2 shadow-lg transition-colors">
-                                    <span>📄</span>
-                                    <span>Download PDF</span>
-                                </button>
-                                <button id="shareBtn" class="share-btn text-white px-6 py-3 rounded-xl font-medium text-sm hidden flex items-center gap-2 shadow-lg">
-                                    <span>📤</span>
-                                    <span>Share Report</span>
-                                </button>
-                            </div>
-                        </div>
-                        <div class="mb-4">
-                            <div class="flex flex-wrap gap-4 text-sm">
-                                <div class="flex items-center">
-                                    <div class="w-4 h-4 bg-red-200 border-b-2 border-red-600 mr-2"></div>
-                                    <span style="color: var(--text-secondary);">High Risk</span>
-                                </div>
-                                <div class="flex items-center">
-                                    <div class="w-4 h-4 bg-orange-200 border-b-2 border-orange-600 mr-2"></div>
-                                    <span style="color: var(--text-secondary);">Medium Risk</span>
-                                </div>
-                                <div class="flex items-center">
-                                    <div class="w-4 h-4 bg-yellow-200 border-b-2 border-yellow-600 mr-2"></div>
-                                    <span style="color: var(--text-secondary);">Low Risk</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div id="highlightedText" class="p-4 rounded-lg border text-sm leading-relaxed whitespace-pre-wrap bg-card" style="border-color: var(--border-color); color: var(--text-primary);"></div>
-                    </section>
-
-                    <!-- Risk Cards Section -->
-                    <section class="bg-card rounded-xl shadow-lg p-8 lg:p-10 border">
-                        <h3 class="text-xl lg:text-2xl font-semibold mb-8 flex items-center gap-3" style="color: var(--text-primary);">
-                            <span>⚠️</span>
-                            <span>Detected Clauses Summary</span>
-                        </h3>
-                        
-                        <!-- No Clauses Found (with confetti) -->
-                        <div id="noClausesFound" class="hidden text-center py-12">
-                            <div class="text-6xl mb-4">🎉</div>
-                            <div class="text-2xl font-bold text-green-600 mb-2">Great news!</div>
-                            <div class="text-lg mb-4" style="color: var(--text-primary);">No high-risk clauses detected</div>
-                            <div class="text-sm" style="color: var(--text-secondary);">This contract appears to have standard, low-risk language.</div>
-                        </div>
-
-                        <!-- Risk Cards Grid -->
-                        <div id="riskCardsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                            <!-- Cards will be dynamically inserted here -->
-                        </div>
-                        
-                        <div class="text-center mt-6 text-sm" style="color: var(--text-secondary);">
-                            💡 <strong>Tip:</strong> Hover over cards to see detailed explanations
-                        </div>
-                    </section>
+                <div class="step" id="step-4">
+                    <div class="step-number">4</div>
+                    <span>Export</span>
                 </div>
             </div>
         </div>
-    </main>
 
+        <div class="disclaimer">
+            <strong>⚠️ Legal Disclaimer:</strong> This tool provides automated analysis for informational purposes only and does not constitute legal advice. Results should be reviewed by qualified legal professionals. Always consult with an attorney for legal matters and contract review.
+        </div>
 
+        <div class="main-content">
+            <div class="input-section" id="input-section">
+                <div class="input-tabs">
+                    <button class="tab-button active" onclick="switchTab('upload')">📁 Upload Document</button>
+                    <button class="tab-button" onclick="switchTab('paste')">📝 Paste Text</button>
+                </div>
+
+                <div id="upload-tab" class="tab-content active">
+                    <div class="file-upload" id="file-upload-area">
+                        <input type="file" id="file-input" accept=".pdf,.doc,.docx,.txt" onchange="handleFileUpload(event)">
+                        <div class="upload-icon">📄</div>
+                        <div class="upload-text">
+                            <h3>Upload Contract Document</h3>
+                            <p>Drag and drop your file here, or click to browse</p>
+                            <p>Supports PDF, DOC, DOCX, and TXT files</p>
+                        </div>
+                        <div class="file-constraints">
+                            Maximum file size: 50MB | Maximum text length: 500,000 characters
+                        </div>
+                    </div>
+                    <div class="progress-bar" id="upload-progress">
+                        <div class="progress-fill" id="progress-fill"></div>
+                    </div>
+                </div>
+
+                <div id="paste-tab" class="tab-content">
+                    <textarea id="contract-text" class="text-input" placeholder="Paste your contract text here...
+
+Example: You can paste any legal agreement, contract, or document text for analysis. The system will automatically detect and analyze all standard legal clauses."></textarea>
+                    <div class="char-counter" id="char-counter">0 / 500,000 characters</div>
+                    
+                    <div class="sample-contracts">
+                        <h4>📋 Try Sample Contracts</h4>
+                        <div class="sample-buttons">
+                            <button class="sample-btn" onclick="loadSample('nda')">NDA Agreement</button>
+                            <button class="sample-btn" onclick="loadSample('service')">Service Agreement</button>
+                            <button class="sample-btn" onclick="loadSample('employment')">Employment Contract</button>
+                            <button class="sample-btn" onclick="loadSample('freelance')">Freelance Agreement</button>
+                        </div>
+                    </div>
+                </div>
+
+                <button class="analyze-button" onclick="analyzeContract()" id="analyze-btn" disabled>
+                    🔍 Analyze Contract
+                </button>
+            </div>
+
+            <div class="results-section" id="results-section">
+                <div class="analysis-header">
+                    <h2>📊 Contract Analysis Results</h2>
+                </div>
+
+                <div class="results-summary" id="results-summary">
+                    <div class="summary-item">
+                        <h3 id="total-clauses">0</h3>
+                        <p>Clauses Detected</p>
+                    </div>
+                    <div class="summary-item">
+                        <h3 id="missing-clauses">0</h3>
+                        <p>Missing Clauses</p>
+                    </div>
+                    <div class="summary-item">
+                        <h3 id="high-risk-count">0</h3>
+                        <p>High Risk Items</p>
+                    </div>
+                    <div class="summary-item">
+                        <h3 id="overall-score">0%</h3>
+                        <p>Overall Score</p>
+                    </div>
+                </div>
+
+                <div class="filters-controls">
+                    <div class="filter-group">
+                        <label>Filter by Risk:</label>
+                        <select class="filter-select" id="risk-filter" onchange="filterClauses()">
+                            <option value="all">All Risks</option>
+                            <option value="high">High Risk</option>
+                            <option value="medium">Medium Risk</option>
+                            <option value="low">Low Risk</option>
+                            <option value="missing">Missing</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label>Sort by:</label>
+                        <select class="filter-select" id="sort-filter" onchange="sortClauses()">
+                            <option value="risk">Risk Level</option>
+                            <option value="name">Clause Name</option>
+                            <option value="status">Status</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <input type="text" class="search-input" id="search-input" placeholder="Search clauses..." oninput="searchClauses()">
+                    </div>
+                </div>
+
+                <div class="clause-grid" id="clause-grid">
+                    <!-- Clause cards will be populated here -->
+                </div>
+            </div>
+        </div>
+
+        <div class="export-section">
+            <button class="export-button" onclick="exportToPDF()" id="export-btn">
+                📥 Export PDF Report
+            </button>
+        </div>
+    </div>
 
     <!-- Footer -->
-    <footer class="text-white py-16 lg:py-20 mt-20" style="background-color: #1e3a8a;">
-        <div class="container mx-auto px-6 lg:px-8 max-w-7xl">
-            <!-- Footer Content -->
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-10 lg:gap-12 mb-12">
-                <!-- Brand Section -->
-                <div class="md:col-span-1">
-                    <div class="mb-4">
-                        <div class="font-bold text-lg">LegalClauseChecker.com</div>
-                        <div class="text-xs text-blue-200">Powered by AI</div>
-                    </div>
-                    <p class="text-sm text-blue-100 leading-relaxed">
-                        Instantly analyze contracts and spot risky clauses with our AI-powered legal tool.
-                    </p>
-                </div>
-
-                <!-- Quick Links -->
-                <div>
-                    <h3 class="font-semibold text-lg mb-6 flex items-center gap-2">
-                        <span>🔗</span>
-                        <span>Quick Links</span>
-                    </h3>
-                    <ul class="space-y-2 text-sm">
-                        <li><a href="#" class="text-blue-100 hover:text-white transition-colors">Home</a></li>
-                        <li><a href="#" class="text-blue-100 hover:text-white transition-colors">Contract Analyzer</a></li>
-                        <li><a href="#" onclick="showPage('howItWorks')" class="text-blue-100 hover:text-white transition-colors cursor-pointer">How It Works</a></li>
-                    </ul>
-                </div>
-
-                <!-- Legal Pages -->
-                <div>
-                    <h3 class="font-semibold text-lg mb-6 flex items-center gap-2">
-                        <span>⚖️</span>
-                        <span>Legal</span>
-                    </h3>
-                    <ul class="space-y-2 text-sm">
-                        <li><a href="#" onclick="showPage('about')" class="text-blue-100 hover:text-white transition-colors cursor-pointer">About</a></li>
-                        <li><a href="#" onclick="showPage('privacy')" class="text-blue-100 hover:text-white transition-colors cursor-pointer">Privacy Policy</a></li>
-                        <li><a href="#" onclick="showPage('terms')" class="text-blue-100 hover:text-white transition-colors cursor-pointer">Terms of Service</a></li>
-                        <li><a href="#" onclick="showPage('disclaimer')" class="text-blue-100 hover:text-white transition-colors cursor-pointer">Legal Disclaimer</a></li>
-                    </ul>
-                </div>
-
-                <!-- Support -->
-                <div>
-                    <h3 class="font-semibold text-lg mb-6 flex items-center gap-2">
-                        <span>🛠️</span>
-                        <span>Support</span>
-                    </h3>
-                    <ul class="space-y-2 text-sm">
-                        <li><a href="#" onclick="showPage('faq')" class="text-blue-100 hover:text-white transition-colors cursor-pointer">FAQ</a></li>
-                        <li><a href="#" onclick="showPage('contact')" class="text-blue-100 hover:text-white transition-colors cursor-pointer">Contact Us</a></li>
-                        <li><a href="#" onclick="showPage('reportIssue')" class="text-blue-100 hover:text-white transition-colors cursor-pointer">Report Issue</a></li>
-                        <li><a href="#" onclick="showPage('featureRequest')" class="text-blue-100 hover:text-white transition-colors cursor-pointer">Feature Request</a></li>
-                    </ul>
-                </div>
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-nav">
+                <button class="footer-link" onclick="showFooterPage('about')">About Us</button>
+                <button class="footer-link" onclick="showFooterPage('privacy')">Privacy Policy</button>
+                <button class="footer-link" onclick="showFooterPage('terms')">Terms of Service</button>
+                <button class="footer-link" onclick="showFooterPage('disclaimer')">Legal Disclaimer</button>
+                <button class="footer-link" onclick="showFooterPage('contact')">Contact Us</button>
             </div>
-
-            <!-- Bottom Section -->
-            <div class="border-t border-blue-700 pt-8">
-                <div class="text-center">
-                    <p class="text-sm text-blue-100 mb-4">
-                        This tool provides general information only and is not legal advice. 
-                        Always consult with a qualified attorney for legal matters.
-                    </p>
-                    <p class="text-xs text-blue-200">© 2025 LegalClauseChecker.com. All rights reserved.</p>
-                </div>
+            <div class="footer-copyright">
+                <p>&copy; 2025 LegalClauseChecker. All rights reserved.</p>
             </div>
         </div>
     </footer>
 
-    <!-- Modal for Legal Pages -->
-    <div id="pageModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden flex items-center justify-center p-4">
-        <div class="bg-white rounded-lg max-w-4xl w-full max-h-[90vh] overflow-y-auto" style="background-color: var(--bg-primary);">
-            <div class="sticky top-0 bg-white border-b p-4 flex justify-between items-center" style="background-color: var(--bg-primary); border-color: var(--border-color);">
-                <h2 id="modalTitle" class="text-2xl font-bold" style="color: var(--text-primary);"></h2>
-                <button onclick="closeModal()" class="text-gray-500 hover:text-gray-700 text-2xl">&times;</button>
+    <!-- Footer Pages Modal -->
+    <div class="footer-modal" id="footer-modal">
+        <div class="footer-modal-content">
+            <div class="footer-modal-header">
+                <h2 id="footer-modal-title">Page Title</h2>
+                <button class="footer-modal-close" onclick="closeFooterModal()">&times;</button>
             </div>
-            <div id="modalContent" class="p-6" style="color: var(--text-primary);"></div>
+            <div class="footer-modal-body" id="footer-modal-body">
+                <!-- Content will be populated here -->
+            </div>
         </div>
     </div>
 
     <script>
-        // Clause Library - Static JSON data
-        const clauseLibrary = [
+        // Enhanced clause definitions with detailed analysis
+        const clauseDefinitions = [
             {
-                name: "Non-Compete Clause",
-                keywords: ["non-compete", "non compete", "not compete", "restraint of trade", "competitive activities"],
-                explanation: "This clause restricts your ability to work for competitors or start a competing business after leaving. It may limit your career opportunities and earning potential.",
-                riskLevel: "High"
+                id: 'confidentiality',
+                title: 'Confidentiality / NDA Clauses',
+                subtitle: 'Protection of sensitive information',
+                keywords: ['confidential', 'non-disclosure', 'proprietary', 'secret', 'information', 'disclose', 'confidentiality', 'nda'],
+                riskFactors: ['broad definition', 'unlimited duration', 'no exceptions', 'mutual obligations'],
+                explanation: 'These clauses protect sensitive business information from being shared with unauthorized parties. They define what information is considered confidential and establish obligations for handling such information.',
+                risks: 'Overly broad confidentiality clauses can restrict normal business operations. Lack of clear exceptions for publicly available information or independently developed information can create unnecessary liability.',
+                recommendations: 'Ensure confidentiality obligations are mutual, include standard exceptions (publicly available information, independently developed), and have reasonable time limitations.'
             },
             {
-                name: "Unlimited Liability",
-                keywords: ["unlimited liability", "personal liability", "jointly and severally liable", "without limitation"],
-                explanation: "You could be held responsible for damages beyond what's reasonable or expected. This puts your personal assets at risk.",
-                riskLevel: "High"
+                id: 'non_compete',
+                title: 'Non-Compete Clauses',
+                subtitle: 'Restrictions on competitive activities',
+                keywords: ['non-compete', 'non-competition', 'compete', 'competitive', 'restraint', 'restriction', 'covenant not to compete'],
+                riskFactors: ['geographic scope', 'time duration', 'industry definition', 'enforceability'],
+                explanation: 'Non-compete clauses prevent one party from engaging in competitive business activities for a specified period and within a defined geographic area.',
+                risks: 'Overly restrictive non-compete clauses may be unenforceable and can limit career opportunities. Courts often scrutinize these clauses for reasonableness.',
+                recommendations: 'Ensure restrictions are reasonable in scope, time, and geography. Consider non-solicitation clauses as less restrictive alternatives.'
             },
             {
-                name: "Automatic Renewal",
-                keywords: ["automatic renewal", "auto-renew", "automatically renew", "unless terminated"],
-                explanation: "The contract will continue indefinitely unless you actively cancel it. You might get locked into terms longer than intended.",
-                riskLevel: "Medium"
+                id: 'termination',
+                title: 'Termination Clauses',
+                subtitle: 'Conditions for ending the agreement',
+                keywords: ['terminate', 'termination', 'end', 'expire', 'breach', 'notice', 'cause', 'without cause', 'dissolution'],
+                riskFactors: ['notice period', 'termination triggers', 'post-termination obligations', 'survival clauses'],
+                explanation: 'Termination clauses specify how and when the contract can be ended, including notice requirements and consequences of termination.',
+                risks: 'Unclear termination procedures can lead to disputes. Lack of termination for convenience options can trap parties in unwanted relationships.',
+                recommendations: 'Include both for-cause and convenience termination options with clear notice periods and post-termination obligations.'
             },
             {
-                name: "Penalty Clause",
-                keywords: ["penalty", "liquidated damages", "breach penalty", "default fee"],
-                explanation: "You'll pay specific fees if you break the contract. Make sure these amounts are reasonable and not punitive.",
-                riskLevel: "Medium"
+                id: 'dispute_resolution',
+                title: 'Dispute Resolution Clauses',
+                subtitle: 'Methods for resolving conflicts',
+                keywords: ['dispute', 'arbitration', 'mediation', 'litigation', 'court', 'jurisdiction', 'resolution', 'adr'],
+                riskFactors: ['mandatory arbitration', 'jurisdiction selection', 'cost allocation', 'appeal rights'],
+                explanation: 'These clauses establish the process for resolving disputes that may arise under the contract, including mediation, arbitration, or court proceedings.',
+                risks: 'Mandatory arbitration can limit legal remedies. Unfavorable jurisdiction selection can increase costs and complexity of dispute resolution.',
+                recommendations: 'Consider tiered dispute resolution (negotiation, then mediation, then arbitration). Choose neutral jurisdiction and ensure cost-effective procedures.'
             },
             {
-                name: "Indemnification",
-                keywords: ["indemnify", "hold harmless", "defend and indemnify", "indemnification"],
-                explanation: "You agree to protect the other party from legal claims and pay their legal costs. This can be expensive if claims arise.",
-                riskLevel: "Medium"
+                id: 'intellectual_property',
+                title: 'Intellectual Property Clauses',
+                subtitle: 'Ownership and licensing of IP rights',
+                keywords: ['intellectual property', 'copyright', 'trademark', 'patent', 'ownership', 'license', 'work product', 'ip', 'proprietary rights'],
+                riskFactors: ['ownership allocation', 'work-for-hire', 'license scope', 'infringement liability'],
+                explanation: 'IP clauses define who owns intellectual property created during the contract and establish any licensing arrangements.',
+                risks: 'Unclear IP ownership can lead to costly disputes. Broad IP assignments may transfer more rights than intended.',
+                recommendations: 'Clearly define IP ownership, include work-for-hire provisions where appropriate, and specify license terms for any shared IP.'
             },
             {
-                name: "Arbitration Clause",
-                keywords: ["arbitration", "binding arbitration", "dispute resolution", "arbitrator"],
-                explanation: "Disputes must be resolved through arbitration instead of court. This may limit your legal options and rights to appeal.",
-                riskLevel: "Medium"
+                id: 'liability_limitation',
+                title: 'Liability Limitation Clauses',
+                subtitle: 'Caps on damages and liability',
+                keywords: ['liability', 'limitation', 'damages', 'cap', 'exclude', 'limit', 'consequential', 'indirect', 'maximum'],
+                riskFactors: ['damage caps', 'exclusions scope', 'enforceability', 'carve-outs'],
+                explanation: 'These clauses limit the types and amounts of damages that can be recovered in case of breach or other issues.',
+                risks: 'Overly broad liability limitations may be unenforceable. One-sided limitations can create unfair risk allocation.',
+                recommendations: 'Ensure limitations are mutual and reasonable. Include carve-outs for intentional misconduct and confidentiality breaches.'
             },
             {
-                name: "Termination for Convenience",
-                keywords: ["terminate for convenience", "terminate without cause", "at will termination"],
-                explanation: "The other party can end the contract anytime without reason. This creates uncertainty and potential income loss.",
-                riskLevel: "Medium"
+                id: 'indemnification',
+                title: 'Indemnification Clauses',
+                subtitle: 'Protection from third-party claims',
+                keywords: ['indemnify', 'indemnification', 'hold harmless', 'defend', 'third party', 'claims', 'losses'],
+                riskFactors: ['scope of indemnity', 'mutual obligations', 'defense obligations', 'notice requirements'],
+                explanation: 'Indemnification clauses require one party to protect the other from certain third-party claims and associated costs.',
+                risks: 'One-sided indemnification can create significant financial exposure. Broad indemnification scope may cover unintended risks.',
+                recommendations: 'Ensure indemnification is mutual where appropriate and limited to specific, foreseeable risks. Include proper notice and cooperation requirements.'
             },
             {
-                name: "Intellectual Property Assignment",
-                keywords: ["assign", "transfer", "intellectual property", "work for hire", "inventions"],
-                explanation: "You give up rights to ideas, inventions, or creative work. Make sure this only applies to work directly related to the contract.",
-                riskLevel: "Low"
+                id: 'payment_terms',
+                title: 'Payment Terms',
+                subtitle: 'Financial obligations and schedules',
+                keywords: ['payment', 'fee', 'compensation', 'invoice', 'due', 'payable', 'amount', 'schedule', 'interest', 'late'],
+                riskFactors: ['payment schedule', 'late fees', 'dispute procedures', 'currency'],
+                explanation: 'Payment terms specify amounts due, payment schedules, accepted payment methods, and consequences of late payment.',
+                risks: 'Unclear payment terms can cause cash flow problems. Lack of late payment penalties may encourage delayed payment.',
+                recommendations: 'Include specific payment amounts, clear due dates, late payment penalties, and dispute resolution procedures for payment issues.'
             },
             {
-                name: "Confidentiality Agreement",
-                keywords: ["confidential", "non-disclosure", "proprietary information", "trade secrets"],
-                explanation: "You must keep certain information secret. Ensure the scope is reasonable and doesn't prevent normal business activities.",
-                riskLevel: "Low"
+                id: 'governing_law',
+                title: 'Governing Law and Jurisdiction',
+                subtitle: 'Legal framework and court jurisdiction',
+                keywords: ['governing law', 'jurisdiction', 'laws of', 'governed by', 'applicable law', 'courts', 'venue'],
+                riskFactors: ['law selection', 'jurisdiction convenience', 'enforcement', 'conflict of laws'],
+                explanation: 'These clauses specify which jurisdiction\'s laws will govern the contract and where legal proceedings must be brought.',
+                risks: 'Unfavorable governing law or jurisdiction can increase legal costs and complexity. Some jurisdictions may not enforce certain contract terms.',
+                recommendations: 'Choose a jurisdiction that is convenient for both parties and has favorable contract law. Ensure the selected law will enforce key contract terms.'
             },
             {
-                name: "Force Majeure",
-                keywords: ["force majeure", "act of god", "unforeseeable circumstances", "beyond control"],
-                explanation: "Parties are excused from obligations during extraordinary events like natural disasters. This is generally protective for both sides.",
-                riskLevel: "Low"
+                id: 'force_majeure',
+                title: 'Force Majeure Clauses',
+                subtitle: 'Protection from unforeseeable events',
+                keywords: ['force majeure', 'act of god', 'unforeseeable', 'beyond control', 'natural disaster', 'pandemic', 'government action'],
+                riskFactors: ['event coverage', 'notice requirements', 'mitigation obligations', 'termination rights'],
+                explanation: 'Force majeure clauses excuse performance when extraordinary circumstances beyond the parties\' control make performance impossible or impracticable.',
+                risks: 'Narrow force majeure clauses may not cover modern risks like cyber attacks or pandemics. Lack of clear procedures can lead to disputes.',
+                recommendations: 'Include comprehensive list of force majeure events, clear notice and mitigation requirements, and termination rights for extended force majeure events.'
+            },
+            {
+                id: 'severability',
+                title: 'Severability Clauses',
+                subtitle: 'Contract validity if parts are unenforceable',
+                keywords: ['severability', 'severable', 'invalid', 'unenforceable', 'remainder', 'separate', 'divisible'],
+                riskFactors: ['enforceability preservation', 'material terms', 'reformation'],
+                explanation: 'Severability clauses ensure that if one part of the contract is found to be unenforceable, the rest of the contract remains valid.',
+                risks: 'Without severability clauses, an unenforceable provision could invalidate the entire contract.',
+                recommendations: 'Include standard severability language to protect the contract\'s overall validity and consider reformation provisions for partially invalid terms.'
+            },
+            {
+                id: 'assignment',
+                title: 'Assignment Clauses',
+                subtitle: 'Transfer of rights and obligations',
+                keywords: ['assign', 'assignment', 'transfer', 'delegate', 'successor', 'third party', 'consent'],
+                riskFactors: ['consent requirements', 'successor obligations', 'partial assignments', 'delegation'],
+                explanation: 'Assignment clauses govern whether and how parties can transfer their rights or obligations under the contract to third parties.',
+                risks: 'Unrestricted assignment can result in dealing with unknown third parties. Prohibition on assignment may limit business flexibility.',
+                recommendations: 'Balance flexibility with control by requiring consent for assignments while allowing assignments to affiliates and successors.'
+            },
+            {
+                id: 'amendment',
+                title: 'Amendment Clauses',
+                subtitle: 'Procedures for contract modifications',
+                keywords: ['amend', 'modify', 'change', 'written', 'signed', 'modification', 'supplement', 'waiver'],
+                riskFactors: ['modification procedures', 'waiver prevention', 'oral modifications', 'authority'],
+                explanation: 'Amendment clauses specify how the contract can be modified and help prevent unauthorized changes.',
+                risks: 'Unclear amendment procedures can lead to disputes over whether modifications are valid. Oral modifications can create uncertainty.',
+                recommendations: 'Require written amendments signed by authorized representatives and include anti-waiver provisions to prevent inadvertent modifications.'
+            },
+            {
+                id: 'arbitration',
+                title: 'Arbitration Clauses',
+                subtitle: 'Alternative dispute resolution requirements',
+                keywords: ['arbitration', 'arbitrator', 'binding', 'aaa', 'jams', 'arbitral', 'award', 'final'],
+                riskFactors: ['arbitrator selection', 'rules and procedures', 'cost allocation', 'appeal rights'],
+                explanation: 'Arbitration clauses require disputes to be resolved through private arbitration rather than court litigation.',
+                risks: 'Mandatory arbitration can limit legal remedies and appeal rights. Arbitration costs may be higher than expected.',
+                recommendations: 'Specify arbitration rules, arbitrator selection process, and cost allocation. Consider carve-outs for injunctive relief and small claims.'
+            },
+            {
+                id: 'warranties',
+                title: 'Warranties and Representations',
+                subtitle: 'Promises and statements of fact',
+                keywords: ['warranty', 'represent', 'guarantee', 'warrants', 'represents', 'assure', 'covenant', 'promise'],
+                riskFactors: ['warranty scope', 'disclaimer language', 'remedy limitations', 'survival periods'],
+                explanation: 'Warranties and representations are promises and statements of fact that parties make to each other as part of the contract.',
+                risks: 'Broad warranties can create unexpected liability. Inadequate warranties may leave parties without recourse for defective performance.',
+                recommendations: 'Balance necessary assurances with reasonable limitations. Include appropriate disclaimers and specify warranty periods and remedies.'
             }
         ];
 
-        // Example contract text
-        const exampleContract = `EMPLOYMENT AGREEMENT
+        // Sample contracts for testing
+        const sampleContracts = {
+            nda: `MUTUAL NON-DISCLOSURE AGREEMENT
 
-This Employment Agreement is entered into between ABC Corporation and John Smith.
+This Mutual Non-Disclosure Agreement ("Agreement") is entered into on [DATE] by and between [COMPANY A], a [STATE] corporation ("Company A"), and [COMPANY B], a [STATE] corporation ("Company B").
 
-TERMS AND CONDITIONS:
+WHEREAS, the parties wish to explore a potential business relationship and may disclose confidential information to each other;
 
-1. NON-COMPETE: Employee agrees not to compete with the Company for a period of 2 years after termination in any geographic area where the Company conducts business.
+NOW, THEREFORE, the parties agree as follows:
 
-2. COMPENSATION: Employee will receive a base salary of $75,000 annually.
+1. CONFIDENTIAL INFORMATION
+"Confidential Information" means any and all non-public, proprietary or confidential information disclosed by either party, including but not limited to technical data, trade secrets, know-how, research, product plans, products, services, customers, customer lists, markets, software, developments, inventions, processes, formulas, technology, designs, drawings, engineering, hardware configuration information, marketing, finances, or other business information.
 
-3. CONFIDENTIALITY: Employee agrees to maintain confidentiality of all proprietary information and trade secrets of the Company.
+2. NON-DISCLOSURE OBLIGATIONS
+Each party agrees to hold and maintain the other party's Confidential Information in strict confidence and not to disclose such information to any third parties without prior written consent.
 
-4. TERMINATION: This agreement may be terminated by either party for convenience with 30 days written notice.
+3. TERM
+This Agreement shall remain in effect for a period of three (3) years from the date first written above.
 
-5. INDEMNIFICATION: Employee agrees to indemnify and hold harmless the Company from any claims arising from Employee's actions.
+4. GOVERNING LAW
+This Agreement shall be governed by the laws of the State of California.
 
-6. DISPUTE RESOLUTION: Any disputes shall be resolved through binding arbitration.
+IN WITNESS WHEREOF, the parties have executed this Agreement as of the date first written above.`,
 
-7. INTELLECTUAL PROPERTY: All inventions, discoveries, and creative work produced during employment shall be assigned to the Company.
+            service: `SERVICE AGREEMENT
 
-This agreement shall automatically renew for successive one-year terms unless terminated by either party.`;
+This Service Agreement ("Agreement") is entered into on [DATE] between [CLIENT NAME] ("Client") and [SERVICE PROVIDER] ("Provider").
 
-        // DOM Elements
-        const contractTextArea = document.getElementById('contractText');
-        const analyzeBtn = document.getElementById('analyzeBtn');
-        const clearBtn = document.getElementById('clearBtn');
-        const exampleBtn = document.getElementById('exampleBtn');
-        const charCount = document.getElementById('char-count');
-        const resultsSection = document.getElementById('resultsSection');
-        const highlightedText = document.getElementById('highlightedText');
-        const riskCardsGrid = document.getElementById('riskCardsGrid');
-        const noClausesFound = document.getElementById('noClausesFound');
+1. SCOPE OF SERVICES
+Provider agrees to perform the following services: [DESCRIPTION OF SERVICES]
 
-        const analyzeText = document.getElementById('analyzeText');
-        const loadingSpinner = document.getElementById('loadingSpinner');
-        const scanProgress = document.getElementById('scanProgress');
-        const scanText = document.getElementById('scanText');
-        const shareBtn = document.getElementById('shareBtn');
-        const downloadPdfBtn = document.getElementById('downloadPdfBtn');
-        const themeToggle = document.getElementById('themeToggle');
+2. PAYMENT TERMS
+Client agrees to pay Provider the sum of $[AMOUNT] according to the following schedule: [PAYMENT SCHEDULE]. Payment is due within 30 days of invoice date.
 
-        // Upload elements
-        const pasteOption = document.getElementById('pasteOption');
-        const uploadOption = document.getElementById('uploadOption');
-        const pasteSection = document.getElementById('pasteSection');
-        const uploadSection = document.getElementById('uploadSection');
-        const fileInput = document.getElementById('fileInput');
-        const uploadArea = document.getElementById('uploadArea');
-        const fileInfo = document.getElementById('fileInfo');
-        const fileName = document.getElementById('fileName');
-        const fileSize = document.getElementById('fileSize');
-        const removeFile = document.getElementById('removeFile');
-        const extractionStatus = document.getElementById('extractionStatus');
+3. INTELLECTUAL PROPERTY
+All work product created by Provider shall be owned by Client upon full payment.
 
-        // Upload state
-        let currentFile = null;
-        let isUploadMode = false;
+4. CONFIDENTIALITY
+Provider agrees to maintain confidentiality of all Client information.
 
-        // Theme management
-        let isDarkMode = localStorage.getItem('darkMode') === 'true';
-        
-        function updateTheme() {
-            if (isDarkMode) {
-                document.documentElement.setAttribute('data-theme', 'dark');
-                themeToggle.classList.add('active');
+5. TERMINATION
+Either party may terminate this agreement with 30 days written notice.
+
+6. LIABILITY LIMITATION
+Provider's liability shall not exceed the total amount paid under this agreement.
+
+7. GOVERNING LAW
+This agreement shall be governed by the laws of [STATE].
+
+8. ENTIRE AGREEMENT
+This agreement constitutes the entire agreement between the parties.`,
+
+            employment: `EMPLOYMENT AGREEMENT
+
+This Employment Agreement is entered into between [COMPANY NAME] ("Company") and [EMPLOYEE NAME] ("Employee").
+
+1. POSITION AND DUTIES
+Employee is hired as [POSITION] and agrees to perform duties as assigned.
+
+2. COMPENSATION
+Employee will receive an annual salary of $[AMOUNT] payable in accordance with Company's standard payroll practices.
+
+3. BENEFITS
+Employee is eligible for standard company benefits including health insurance and paid time off.
+
+4. CONFIDENTIALITY
+Employee agrees to maintain confidentiality of all proprietary company information.
+
+5. NON-COMPETE
+Employee agrees not to compete with Company for a period of one year following termination within a 50-mile radius.
+
+6. TERMINATION
+Employment may be terminated by either party with two weeks notice, or immediately for cause.
+
+7. INTELLECTUAL PROPERTY
+All work product created during employment shall be owned by Company.
+
+8. DISPUTE RESOLUTION
+Any disputes shall be resolved through binding arbitration.
+
+9. GOVERNING LAW
+This agreement is governed by the laws of [STATE].`,
+
+            freelance: `FREELANCE AGREEMENT
+
+This Freelance Agreement is between [CLIENT] ("Client") and [FREELANCER] ("Freelancer").
+
+1. SERVICES
+Freelancer will provide [DESCRIPTION] services as an independent contractor.
+
+2. PAYMENT
+Client will pay Freelancer $[RATE] per [HOUR/PROJECT]. Payment due within 15 days of invoice.
+
+3. TIMELINE
+Project to be completed by [DATE].
+
+4. REVISIONS
+Client entitled to [NUMBER] rounds of revisions at no additional cost.
+
+5. INTELLECTUAL PROPERTY
+Upon full payment, all rights transfer to Client.
+
+6. CONFIDENTIALITY
+Freelancer agrees to keep all project information confidential.
+
+7. CANCELLATION
+Either party may cancel with 7 days written notice.
+
+8. LIABILITY
+Freelancer's liability limited to amount paid for services.
+
+9. INDEPENDENT CONTRACTOR
+Freelancer is an independent contractor, not an employee.`
+        };
+
+        let contractText = '';
+        let analysisResults = {};
+        let currentStep = 1;
+
+        // Initialize the application
+        document.addEventListener('DOMContentLoaded', function() {
+            setupEventListeners();
+            updateCharCounter();
+        });
+
+        function setupEventListeners() {
+            // File upload drag and drop
+            const uploadArea = document.getElementById('file-upload-area');
+            
+            uploadArea.addEventListener('dragover', function(e) {
+                e.preventDefault();
+                uploadArea.classList.add('dragover');
+            });
+
+            uploadArea.addEventListener('dragleave', function(e) {
+                e.preventDefault();
+                uploadArea.classList.remove('dragover');
+            });
+
+            uploadArea.addEventListener('drop', function(e) {
+                e.preventDefault();
+                uploadArea.classList.remove('dragover');
+                const files = e.dataTransfer.files;
+                if (files.length > 0) {
+                    document.getElementById('file-input').files = files;
+                    handleFileUpload({ target: { files: files } });
+                }
+            });
+
+            uploadArea.addEventListener('click', function() {
+                document.getElementById('file-input').click();
+            });
+
+            // Text area character counter
+            document.getElementById('contract-text').addEventListener('input', updateCharCounter);
+        }
+
+        function switchTab(tabName) {
+            document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            document.getElementById(tabName + '-tab').classList.add('active');
+
+            updateAnalyzeButton();
+        }
+
+        function updateCharCounter() {
+            const textArea = document.getElementById('contract-text');
+            const counter = document.getElementById('char-counter');
+            const length = textArea.value.length;
+            const maxLength = 500000;
+
+            counter.textContent = `${length.toLocaleString()} / ${maxLength.toLocaleString()} characters`;
+
+            if (length > maxLength * 0.9) {
+                counter.classList.add('warning');
+            } else if (length > maxLength) {
+                counter.classList.add('error');
+                textArea.value = textArea.value.substring(0, maxLength);
             } else {
-                document.documentElement.removeAttribute('data-theme');
-                themeToggle.classList.remove('active');
+                counter.classList.remove('warning', 'error');
             }
-        }
-        
-        themeToggle.addEventListener('click', function() {
-            isDarkMode = !isDarkMode;
-            localStorage.setItem('darkMode', isDarkMode);
-            updateTheme();
-        });
 
-        // Tooltip functionality
-        let currentTooltip = null;
-        
-        function createTooltip(element, text) {
-            const tooltip = document.createElement('div');
-            tooltip.className = 'tooltip';
-            tooltip.textContent = text;
-            document.body.appendChild(tooltip);
-            
-            const rect = element.getBoundingClientRect();
-            tooltip.style.left = rect.left + (rect.width / 2) - (tooltip.offsetWidth / 2) + 'px';
-            tooltip.style.top = rect.top - tooltip.offsetHeight - 10 + 'px';
-            
-            setTimeout(() => tooltip.classList.add('show'), 10);
-            return tooltip;
-        }
-        
-        function removeTooltip() {
-            if (currentTooltip) {
-                currentTooltip.remove();
-                currentTooltip = null;
-            }
+            updateAnalyzeButton();
         }
 
-        // Confetti animation
-        function createConfetti() {
-            const colors = ['#f59e0b', '#10b981', '#3b82f6', '#ef4444', '#8b5cf6'];
-            
-            for (let i = 0; i < 50; i++) {
-                setTimeout(() => {
-                    const confetti = document.createElement('div');
-                    confetti.className = 'confetti';
-                    confetti.style.left = Math.random() * 100 + 'vw';
-                    confetti.style.background = colors[Math.floor(Math.random() * colors.length)];
-                    confetti.style.animationDelay = Math.random() * 3 + 's';
-                    document.body.appendChild(confetti);
-                    
-                    setTimeout(() => confetti.remove(), 3000);
-                }, i * 50);
+        function handleFileUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            // Validate file size (50MB limit)
+            const maxSize = 50 * 1024 * 1024; // 50MB in bytes
+            if (file.size > maxSize) {
+                alert('File size exceeds 50MB limit. Please choose a smaller file.');
+                return;
             }
-        }
 
-        // Upload mode switching
-        pasteOption.addEventListener('click', function() {
-            isUploadMode = false;
-            pasteOption.classList.add('border-blue-500', 'bg-blue-50', 'text-blue-700');
-            pasteOption.classList.remove('border-gray-300', 'bg-white', 'text-gray-700');
-            uploadOption.classList.remove('border-blue-500', 'bg-blue-50', 'text-blue-700');
-            uploadOption.classList.add('border-gray-300', 'bg-white', 'text-gray-700');
+            // Validate file type
+            const allowedTypes = [
+                'text/plain',
+                'application/pdf',
+                'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+                'application/msword'
+            ];
             
-            pasteSection.classList.remove('hidden');
-            uploadSection.classList.add('hidden');
+            const fileExtension = file.name.toLowerCase().split('.').pop();
+            const allowedExtensions = ['txt', 'pdf', 'docx', 'doc'];
             
-            // Reset file upload
-            currentFile = null;
-            fileInput.value = '';
-            fileInfo.classList.add('hidden');
-            uploadArea.classList.remove('hidden');
-            
-            // Update analyze button state based on text
-            contractTextArea.dispatchEvent(new Event('input'));
-        });
-
-        uploadOption.addEventListener('click', function() {
-            isUploadMode = true;
-            uploadOption.classList.add('border-blue-500', 'bg-blue-50', 'text-blue-700');
-            uploadOption.classList.remove('border-gray-300', 'bg-white', 'text-gray-700');
-            pasteOption.classList.remove('border-blue-500', 'bg-blue-50', 'text-blue-700');
-            pasteOption.classList.add('border-gray-300', 'bg-white', 'text-gray-700');
-            
-            uploadSection.classList.remove('hidden');
-            pasteSection.classList.add('hidden');
-            
-            // Update analyze button state based on file
-            analyzeBtn.disabled = !currentFile;
-        });
-
-        // File upload functionality
-        uploadArea.addEventListener('click', () => fileInput.click());
-        
-        uploadArea.addEventListener('dragover', function(e) {
-            e.preventDefault();
-            this.classList.add('border-blue-400', 'bg-blue-50');
-        });
-        
-        uploadArea.addEventListener('dragleave', function(e) {
-            e.preventDefault();
-            this.classList.remove('border-blue-400', 'bg-blue-50');
-        });
-        
-        uploadArea.addEventListener('drop', function(e) {
-            e.preventDefault();
-            this.classList.remove('border-blue-400', 'bg-blue-50');
-            const files = e.dataTransfer.files;
-            if (files.length > 0) {
-                handleFileUpload(files[0]);
+            if (!allowedTypes.includes(file.type) && !allowedExtensions.includes(fileExtension)) {
+                alert('Unsupported file type. Please upload PDF, DOC, DOCX, or TXT files.');
+                return;
             }
-        });
 
-        fileInput.addEventListener('change', function(e) {
-            if (e.target.files.length > 0) {
-                handleFileUpload(e.target.files[0]);
-            }
-        });
+            // Show progress bar
+            const progressBar = document.getElementById('upload-progress');
+            const progressFill = document.getElementById('progress-fill');
+            progressBar.style.display = 'block';
 
-        removeFile.addEventListener('click', function() {
-            currentFile = null;
-            fileInput.value = '';
-            fileInfo.classList.add('hidden');
-            uploadArea.classList.remove('hidden');
-            analyzeBtn.disabled = true;
-        });
+            // Simulate upload progress
+            let progress = 0;
+            const progressInterval = setInterval(() => {
+                progress += Math.random() * 20;
+                if (progress > 85) progress = 85;
+                progressFill.style.width = progress + '%';
+            }, 150);
 
-        function handleFileUpload(file) {
-            try {
-                // Validate file type
-                const allowedTypes = [
-                    'application/pdf',
-                    'application/msword',
-                    'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
-                ];
-                if (!allowedTypes.includes(file.type)) {
-                    alert('Unsupported file type. Please upload a PDF, DOC, or DOCX file.');
-                    return;
-                }
-
-                // Validate file size (50MB limit)
-                if (file.size > 50 * 1024 * 1024) {
-                    alert('File size exceeds 50MB. Please upload a smaller document.');
-                    return;
-                }
-
-                currentFile = file;
-                fileName.textContent = file.name;
-                fileSize.textContent = `${(file.size / 1024 / 1024).toFixed(2)} MB`;
-                uploadArea.classList.add('hidden');
-                fileInfo.classList.remove('hidden');
-                analyzeBtn.disabled = false;
-
-                extractTextFromFile(file);
-            } catch (err) {
-                alert('An unexpected error occurred during file upload. Please try again.');
-                console.error('File upload error:', err);
-            }
-        }
-
-        function extractTextFromFile(file) {
-            extractionStatus.classList.remove('hidden');
-            try {
-                if (file.type === 'application/pdf') {
-                    const reader = new FileReader();
-                    reader.onload = async function() {
-                        try {
-                            const typedarray = new Uint8Array(reader.result);
-                            const pdf = await pdfjsLib.getDocument(typedarray).promise;
-                            let extractedText = '';
-                            for (let i = 1; i <= pdf.numPages; i++) {
-                                const page = await pdf.getPage(i);
-                                const textContent = await page.getTextContent();
-                                extractedText += textContent.items.map(item => item.str).join(' ') + '\n';
-                            }
-                            const charCount = extractedText.length;
-                            if (charCount > 300000) {
-                                alert('Document exceeds 300,000 character limit. Please upload a smaller document.');
-                                removeFile.click();
-                                extractionStatus.classList.add('hidden');
-                                return;
-                            }
-                            currentFile.extractedText = extractedText;
-                            extractionStatus.classList.add('hidden');
-                            fileSize.textContent = `${(file.size / 1024 / 1024).toFixed(2)} MB • ${charCount.toLocaleString()} characters`;
-                        } catch (pdfErr) {
-                            alert('Failed to extract text from PDF. The file may be encrypted, scanned, or corrupted.');
-                            console.error('PDF extraction error:', pdfErr);
-                            removeFile.click();
-                            extractionStatus.classList.add('hidden');
-                        }
-                    };
-                    reader.onerror = function() {
-                        alert('Error reading PDF file. Please try another document.');
-                        console.error('PDF read error:', reader.error);
-                        extractionStatus.classList.add('hidden');
-                    };
-                    reader.readAsArrayBuffer(file);
-                    return;
-                }
-
-                if (
-                    file.type === 'application/msword' ||
-                    file.type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
-                ) {
-                    const reader = new FileReader();
-                    reader.onload = function(event) {
-                        mammoth.extractRawText({ arrayBuffer: event.target.result })
-                            .then(result => {
-                                let extractedText = result.value;
-                                const charCount = extractedText.length;
-                                if (charCount > 300000) {
-                                    alert('Document exceeds 300,000 character limit. Please upload a smaller document.');
-                                    removeFile.click();
-                                    extractionStatus.classList.add('hidden');
-                                    return;
+            const reader = new FileReader();
+            
+            if (file.type === 'text/plain' || fileExtension === 'txt') {
+                reader.onload = function(e) {
+                    contractText = e.target.result;
+                    if (contractText.length > 500000) {
+                        contractText = contractText.substring(0, 500000);
+                        alert('File content was truncated to 500,000 characters limit.');
+                    }
+                    completeFileUpload(progressInterval, progressFill);
+                };
+                reader.readAsText(file);
+            } else if (file.type === 'application/pdf' || fileExtension === 'pdf') {
+                reader.onload = function(e) {
+                    try {
+                        const typedarray = new Uint8Array(e.target.result);
+                        pdfjsLib.getDocument({
+                            data: typedarray,
+                            cMapUrl: 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/cmaps/',
+                            cMapPacked: true
+                        }).promise.then(function(pdf) {
+                            extractTextFromPDF(pdf).then(text => {
+                                contractText = text;
+                                if (contractText.length > 500000) {
+                                    contractText = contractText.substring(0, 500000);
+                                    alert('PDF content was truncated to 500,000 characters limit.');
                                 }
-                                currentFile.extractedText = extractedText;
-                                extractionStatus.classList.add('hidden');
-                                fileSize.textContent = `${(file.size / 1024 / 1024).toFixed(2)} MB • ${charCount.toLocaleString()} characters`;
-                            })
-                            .catch((docErr) => {
-                                alert('Failed to extract text from Word document. The file may be corrupted or unsupported.');
-                                console.error('Word extraction error:', docErr);
-                                removeFile.click();
-                                extractionStatus.classList.add('hidden');
+                                completeFileUpload(progressInterval, progressFill);
+                            }).catch(error => {
+                                console.error('PDF text extraction error:', error);
+                                alert('Error extracting text from PDF. Please ensure the PDF contains selectable text.');
+                                resetUpload(progressInterval);
                             });
-                    };
-                    reader.onerror = function() {
-                        alert('Error reading Word file. Please try another document.');
-                        console.error('Word read error:', reader.error);
-                        extractionStatus.classList.add('hidden');
-                    };
-                    reader.readAsArrayBuffer(file);
-                    return;
-                }
-            } catch (err) {
-                alert('An unexpected error occurred during document extraction.');
-                console.error('Document extraction error:', err);
-                extractionStatus.classList.add('hidden');
+                        }).catch(error => {
+                            console.error('PDF parsing error:', error);
+                            alert('Error reading PDF file. Please try a different file or ensure it\'s not corrupted.');
+                            resetUpload(progressInterval);
+                        });
+                    } catch (error) {
+                        console.error('PDF processing error:', error);
+                        alert('Error processing PDF file. Please try a different file.');
+                        resetUpload(progressInterval);
+                    }
+                };
+                reader.readAsArrayBuffer(file);
+            } else if (file.type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' || 
+                       file.type === 'application/msword' || 
+                       fileExtension === 'docx' || fileExtension === 'doc') {
+                reader.onload = function(e) {
+                    try {
+                        mammoth.extractRawText({arrayBuffer: e.target.result})
+                            .then(function(result) {
+                                contractText = result.value;
+                                if (contractText.length > 500000) {
+                                    contractText = contractText.substring(0, 500000);
+                                    alert('Document content was truncated to 500,000 characters limit.');
+                                }
+                                completeFileUpload(progressInterval, progressFill);
+                            })
+                            .catch(error => {
+                                console.error('Document parsing error:', error);
+                                alert('Error reading document file. Please ensure the file is not corrupted.');
+                                resetUpload(progressInterval);
+                            });
+                    } catch (error) {
+                        console.error('Document processing error:', error);
+                        alert('Error processing document file. Please try a different file.');
+                        resetUpload(progressInterval);
+                    }
+                };
+                reader.readAsArrayBuffer(file);
+            } else {
+                alert('Unsupported file type. Please upload PDF, DOC, DOCX, or TXT files.');
+                resetUpload(progressInterval);
             }
         }
 
-        // Character count and validation
-        contractTextArea.addEventListener('input', function() {
-            const length = this.value.length;
-            const wordCount = this.value.trim().split(/\s+/).filter(word => word.length > 0).length;
-            
-            if (length > 300000) {
-                charCount.textContent = `${length.toLocaleString()} characters (exceeds 300,000 character limit)`;
-                charCount.style.color = '#dc2626';
-                analyzeBtn.disabled = true;
-            } else {
-                charCount.textContent = `${length} characters • ${wordCount.toLocaleString()} words ${length < 50 ? '(minimum 50 characters required)' : ''}`;
-                charCount.style.color = '';
-                analyzeBtn.disabled = length < 50;
+        function extractTextFromPDF(pdf) {
+            const numPages = pdf.numPages;
+            const textPromises = [];
+
+            for (let i = 1; i <= numPages; i++) {
+                textPromises.push(
+                    pdf.getPage(i).then(page => 
+                        page.getTextContent().then(content => 
+                            content.items.map(item => item.str).join(' ')
+                        )
+                    )
+                );
             }
-        });
 
-        // Clear button
-        clearBtn.addEventListener('click', function() {
-            if (isUploadMode) {
-                // Clear file upload
-                removeFile.click();
-            } else {
-                // Clear text area
-                contractTextArea.value = '';
-                contractTextArea.dispatchEvent(new Event('input'));
-            }
-            resultsSection.classList.add('hidden');
-        });
-
-        // Example button
-        exampleBtn.addEventListener('click', function() {
-            contractTextArea.value = exampleContract;
-            contractTextArea.dispatchEvent(new Event('input'));
-        });
-
-        // PDF Download functionality
-        downloadPdfBtn.addEventListener('click', function() {
-            generatePDFReport();
-        });
-
-        function generatePDFReport() {
-            const detectedClauses = Array.from(riskCardsGrid.children);
-            const currentDate = new Date().toLocaleDateString();
-            
-            // Create PDF content
-            let pdfContent = `
-                <div style="font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 40px;">
-                    <div style="text-align: center; margin-bottom: 40px; border-bottom: 3px solid #1e3a8a; padding-bottom: 20px;">
-                        <h1 style="color: #1e3a8a; font-size: 28px; margin: 0;">Legal Clause Analysis Report</h1>
-                        <p style="color: #6b7280; font-size: 16px; margin: 10px 0;">Generated by LegalClauseChecker.com</p>
-                        <p style="color: #6b7280; font-size: 14px; margin: 0;">Report Date: ${currentDate}</p>
-                    </div>
-                    
-                    <div style="margin-bottom: 30px;">
-                        <h2 style="color: #1f2937; font-size: 20px; margin-bottom: 15px;">📊 Analysis Summary</h2>
-            `;
-            
-            if (detectedClauses.length === 0) {
-                pdfContent += `
-                    <div style="background: #f0fdf4; border-left: 4px solid #22c55e; padding: 20px; margin-bottom: 20px;">
-                        <h3 style="color: #15803d; margin: 0 0 10px 0; font-size: 18px;">🎉 Great News!</h3>
-                        <p style="color: #166534; margin: 0; font-size: 16px;">No high-risk clauses detected in your contract.</p>
-                        <p style="color: #166534; margin: 10px 0 0 0; font-size: 14px;">This contract appears to have standard, low-risk language.</p>
-                    </div>
-                `;
-            } else {
-                pdfContent += `
-                    <div style="background: #fef3c7; border-left: 4px solid #f59e0b; padding: 20px; margin-bottom: 20px;">
-                        <h3 style="color: #92400e; margin: 0 0 10px 0; font-size: 18px;">⚠️ Clauses Requiring Attention</h3>
-                        <p style="color: #92400e; margin: 0; font-size: 16px;">Found ${detectedClauses.length} clause(s) that may need review.</p>
-                    </div>
-                    
-                    <h2 style="color: #1f2937; font-size: 20px; margin: 30px 0 15px 0;">📋 Detailed Clause Analysis</h2>
-                `;
-                
-                detectedClauses.forEach((card, index) => {
-                    const clauseName = card.querySelector('.card-front h4').textContent;
-                    const riskLevel = card.querySelector('.card-front .risk-badge').textContent;
-                    const explanation = card.querySelector('.card-back p').textContent;
-                    
-                    const riskColors = {
-                        'High Risk': { bg: '#fecaca', border: '#dc2626', text: '#991b1b' },
-                        'Medium Risk': { bg: '#fed7aa', border: '#ea580c', text: '#9a3412' },
-                        'Low Risk': { bg: '#fef3c7', border: '#f59e0b', text: '#92400e' }
-                    };
-                    
-                    const colors = riskColors[riskLevel] || riskColors['Low Risk'];
-                    
-                    pdfContent += `
-                        <div style="background: ${colors.bg}; border-left: 4px solid ${colors.border}; padding: 20px; margin-bottom: 20px; page-break-inside: avoid;">
-                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-                                <h3 style="color: ${colors.text}; margin: 0; font-size: 18px;">${index + 1}. ${clauseName}</h3>
-                                <span style="background: ${colors.border}; color: white; padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: bold;">${riskLevel}</span>
-                            </div>
-                            <p style="color: ${colors.text}; margin: 0; font-size: 14px; line-height: 1.5;">${explanation}</p>
-                        </div>
-                    `;
-                });
-            }
-            
-            pdfContent += `
-                    </div>
-                    
-                    <div style="margin-top: 40px; padding-top: 20px; border-top: 2px solid #e5e7eb;">
-                        <h2 style="color: #1f2937; font-size: 18px; margin-bottom: 15px;">⚖️ Important Legal Disclaimer</h2>
-                        <div style="background: #fef2f2; border: 1px solid #fecaca; padding: 15px; border-radius: 8px;">
-                            <p style="color: #991b1b; margin: 0; font-size: 13px; line-height: 1.4;">
-                                <strong>This report is for informational purposes only and does not constitute legal advice.</strong> 
-                                The automated analysis may not identify all potential risks or may flag clauses that are acceptable in your specific situation. 
-                                Always consult with a qualified attorney licensed in your jurisdiction before making important legal decisions.
-                            </p>
-                        </div>
-                    </div>
-                    
-                    <div style="text-align: center; margin-top: 30px; color: #6b7280; font-size: 12px;">
-                        <p>Generated by LegalClauseChecker.com - Free Legal Clause Analysis Tool</p>
-                        <p>Visit us at: https://legalclausechecker.com</p>
-                    </div>
-                </div>
-            `;
-            
-            // Create a new window for printing
-            const printWindow = window.open('', '_blank');
-            printWindow.document.write(`
-                <!DOCTYPE html>
-                <html>
-                <head>
-                    <title>Legal Clause Analysis Report</title>
-                    <style>
-                        @media print {
-                            body { margin: 0; }
-                            .no-print { display: none; }
-                        }
-                        body { font-family: Arial, sans-serif; }
-                    </style>
-                </head>
-                <body>
-                    ${pdfContent}
-                    <div class="no-print" style="text-align: center; margin: 20px;">
-                        <button onclick="window.print()" style="background: #1e3a8a; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; margin-right: 10px;">Print/Save as PDF</button>
-                        <button onclick="window.close()" style="background: #6b7280; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer;">Close</button>
-                    </div>
-                </body>
-                </html>
-            `);
-            printWindow.document.close();
-            
-            // Auto-focus the print window
-            printWindow.focus();
+            return Promise.all(textPromises).then(pages => pages.join('\n'));
         }
 
-        // Share functionality
-        shareBtn.addEventListener('click', function() {
-            const detectedClauses = Array.from(riskCardsGrid.children);
-            let reportText = "🔍 Contract Analysis Report\n\n";
+        function completeFileUpload(progressInterval, progressFill) {
+            clearInterval(progressInterval);
+            progressFill.style.width = '100%';
             
-            if (detectedClauses.length === 0) {
-                reportText += "✅ Great news! No high-risk clauses detected.\n";
-                reportText += "This contract appears to have standard, low-risk language.";
-            } else {
-                reportText += `Found ${detectedClauses.length} clause(s) requiring attention:\n\n`;
-                detectedClauses.forEach((card, index) => {
-                    const clauseName = card.querySelector('.card-front h4').textContent;
-                    const riskLevel = card.querySelector('.card-front .risk-badge').textContent;
-                    reportText += `${index + 1}. ${clauseName} (${riskLevel})\n`;
-                });
-            }
-            
-            reportText += "\n\n📋 Analyzed with Free Legal Clause Checker";
-            
-            if (navigator.share) {
-                navigator.share({
-                    title: 'Contract Analysis Report',
-                    text: reportText
-                });
-            } else {
-                navigator.clipboard.writeText(reportText).then(() => {
-                    const originalText = shareBtn.innerHTML;
-                    shareBtn.innerHTML = '✅ Copied!';
-                    setTimeout(() => shareBtn.innerHTML = originalText, 2000);
-                });
-            }
-        });
-
-        // Analyze button
-        analyzeBtn.addEventListener('click', function() {
-            let text = '';
-            
-            if (isUploadMode && currentFile && currentFile.extractedText) {
-                text = currentFile.extractedText;
-            } else if (!isUploadMode) {
-                text = contractTextArea.value.trim();
-                if (text.length < 50) return;
-            } else {
-                return; // No valid input
-            }
-
-            // Show scanning animation
-            scanProgress.classList.remove('hidden');
-            scanText.classList.remove('hidden');
-            analyzeText.textContent = 'Analyzing...';
-            loadingSpinner.classList.remove('hidden');
-            analyzeBtn.disabled = true;
-
-            // Simulate processing time for better UX
             setTimeout(() => {
-                analyzeContract(text);
-                
-                // Hide scanning animation
-                scanProgress.classList.add('hidden');
-                scanText.classList.add('hidden');
-                
-                // Reset button state
-                analyzeText.textContent = 'Analyze Contract';
-                loadingSpinner.classList.add('hidden');
-                
-                // Re-enable button based on current mode
-                if (isUploadMode) {
-                    analyzeBtn.disabled = !currentFile;
-                } else {
-                    analyzeBtn.disabled = contractTextArea.value.trim().length < 50;
-                }
-            }, 2500);
-        });
+                document.getElementById('upload-progress').style.display = 'none';
+                progressFill.style.width = '0%';
+                updateAnalyzeButton();
+            }, 500);
+        }
 
-        function analyzeContract(text) {
-            try {
-                if (!text || text.length < 50) {
-                    alert('Contract text is too short for analysis.');
-                    return;
-                }
-                const detectedClauses = [];
-                let highlightedContent = text;
-                const clauseMatches = new Map(); // Store clause matches for tooltips
+        function resetUpload(progressInterval) {
+            clearInterval(progressInterval);
+            document.getElementById('upload-progress').style.display = 'none';
+            document.getElementById('progress-fill').style.width = '0%';
+        }
 
-                // Find matches for each clause
-                clauseLibrary.forEach(clause => {
-                    let clauseDetected = false;
-                    
-                    clause.keywords.forEach(keyword => {
-                        const regex = new RegExp(`\\b${keyword.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\b`, 'gi');
-                        const matches = text.match(regex);
-                        
-                        if (matches && !clauseDetected) {
-                            detectedClauses.push(clause);
-                            clauseDetected = true;
-                            clauseMatches.set(clause.name, clause.explanation);
-                            
-                            // Highlight the text with tooltip data
-                            const riskClass = `highlight-${clause.riskLevel.toLowerCase()}`;
-                            highlightedContent = highlightedContent.replace(regex, 
-                                `<span class="${riskClass}" data-tooltip="${clause.explanation}" data-clause="${clause.name}">$&</span>`);
-                        }
-                    });
-                });
+        function loadSample(type) {
+            const textArea = document.getElementById('contract-text');
+            textArea.value = sampleContracts[type];
+            contractText = '';
+            updateCharCounter();
+            
+            // Switch to paste tab
+            switchTab('paste');
+            document.querySelector('.tab-button:nth-child(2)').classList.add('active');
+            document.querySelector('.tab-button:nth-child(1)').classList.remove('active');
+        }
 
-                // Display results
-                displayResults(highlightedContent, detectedClauses, clauseMatches);
-            } catch (err) {
-                alert('An error occurred during contract analysis. Please try again.');
-                console.error('Analysis error:', err);
+        function updateAnalyzeButton() {
+            const btn = document.getElementById('analyze-btn');
+            const textArea = document.getElementById('contract-text');
+            
+            const hasContent = contractText.trim() || textArea.value.trim();
+            btn.disabled = !hasContent;
+            
+            if (hasContent) {
+                updateStep(1, 'completed');
+                updateStep(2, 'active');
             }
         }
 
-        function displayResults(highlightedContent, detectedClauses, clauseMatches) {
-            // Sanitize highlightedContent before inserting
-            highlightedText.innerHTML = sanitizeHTML(highlightedContent);
+        function updateStep(stepNumber, status) {
+            const step = document.getElementById(`step-${stepNumber}`);
+            step.classList.remove('active', 'completed');
+            step.classList.add(status);
+        }
+
+        function analyzeContract() {
+            const textArea = document.getElementById('contract-text');
+            const finalText = contractText || textArea.value.trim();
             
-            // Add tooltip event listeners to highlighted text
-            const highlightedSpans = highlightedText.querySelectorAll('[data-tooltip]');
-            highlightedSpans.forEach(span => {
-                span.addEventListener('mouseenter', function(e) {
-                    removeTooltip();
-                    currentTooltip = createTooltip(e.target, e.target.getAttribute('data-tooltip'));
-                });
+            if (!finalText) {
+                alert('Please upload a document or paste contract text first.');
+                return;
+            }
+
+            // Validate text length
+            if (finalText.length > 500000) {
+                alert('Text exceeds 500,000 character limit. Please shorten the text.');
+                return;
+            }
+
+            updateStep(2, 'completed');
+            updateStep(3, 'active');
+
+            showLoadingOverlay();
+            
+            // Simulate realistic analysis time
+            setTimeout(() => {
+                performAdvancedAnalysis(finalText);
+                hideLoadingOverlay();
+                showResults();
+                updateStep(3, 'completed');
+                updateStep(4, 'active');
+            }, 3000);
+        }
+
+        function showLoadingOverlay() {
+            const overlay = document.getElementById('loading-overlay');
+            const loadingText = document.getElementById('loading-text');
+            overlay.style.display = 'flex';
+            
+            const messages = [
+                'Processing document...',
+                'Extracting clauses...',
+                'Analyzing risk factors...',
+                'Generating recommendations...',
+                'Finalizing report...'
+            ];
+            
+            let messageIndex = 0;
+            const messageInterval = setInterval(() => {
+                loadingText.textContent = messages[messageIndex];
+                messageIndex = (messageIndex + 1) % messages.length;
+            }, 600);
+            
+            setTimeout(() => clearInterval(messageInterval), 3000);
+        }
+
+        function hideLoadingOverlay() {
+            document.getElementById('loading-overlay').style.display = 'none';
+        }
+
+        function performAdvancedAnalysis(text) {
+            const textLower = text.toLowerCase();
+            analysisResults = {};
+            
+            let totalScore = 0;
+            let clausesFound = 0;
+            let missingCount = 0;
+            let highRiskCount = 0;
+
+            clauseDefinitions.forEach(clause => {
+                const analysis = analyzeClause(clause, text, textLower);
+                analysisResults[clause.id] = analysis;
                 
-                span.addEventListener('mouseleave', removeTooltip);
+                totalScore += analysis.score;
+                if (analysis.found) clausesFound++;
+                if (analysis.status === 'missing') missingCount++;
+                if (analysis.risk === 'high') highRiskCount++;
             });
 
-            // Clear previous results
-            riskCardsGrid.innerHTML = '';
-
-            if (detectedClauses.length === 0) {
-                noClausesFound.classList.remove('hidden');
-                riskCardsGrid.classList.add('hidden');
-                shareBtn.classList.add('hidden');
-                downloadPdfBtn.classList.add('hidden');
-                
-                // Trigger confetti animation
-                setTimeout(createConfetti, 500);
-            } else {
-                noClausesFound.classList.add('hidden');
-                riskCardsGrid.classList.remove('hidden');
-                shareBtn.classList.remove('hidden');
-                downloadPdfBtn.classList.remove('hidden');
-
-                // Sort by risk level (High -> Medium -> Low)
-                const riskOrder = { 'High': 3, 'Medium': 2, 'Low': 1 };
-                detectedClauses.sort((a, b) => riskOrder[b.riskLevel] - riskOrder[a.riskLevel]);
-
-                // Create risk cards
-                detectedClauses.forEach((clause, index) => {
-                    const card = createRiskCard(clause, index);
-                    riskCardsGrid.appendChild(card);
-                });
-            }
-
-            // Show results section with animation
-            resultsSection.classList.remove('hidden');
-            resultsSection.classList.add('fade-in');
-
-            // Scroll to results
-            resultsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            const overallScore = Math.round(totalScore / clauseDefinitions.length);
+            
+            // Update summary
+            document.getElementById('total-clauses').textContent = clausesFound;
+            document.getElementById('missing-clauses').textContent = missingCount;
+            document.getElementById('high-risk-count').textContent = highRiskCount;
+            document.getElementById('overall-score').textContent = overallScore + '%';
         }
 
-        function createRiskCard(clause, index) {
-            const card = document.createElement('div');
-            card.className = 'risk-card fade-in';
-            card.style.animationDelay = `${index * 0.1}s`;
+        function analyzeClause(clause, originalText, textLower) {
+            // Check for keyword presence
+            const keywordMatches = clause.keywords.filter(keyword => 
+                textLower.includes(keyword.toLowerCase())
+            );
             
-            const riskColors = {
-                'High': { bg: 'bg-red-500', text: 'text-white', icon: '🚨' },
-                'Medium': { bg: 'bg-orange-500', text: 'text-white', icon: '⚠️' },
-                'Low': { bg: 'bg-yellow-500', text: 'text-white', icon: '💡' }
+            const found = keywordMatches.length > 0;
+            let status, risk, score;
+            let extractedText = '';
+            let riskFactors = [];
+
+            if (found) {
+                // Extract relevant text sections
+                extractedText = extractClauseText(originalText, clause.keywords);
+                
+                // Analyze risk factors
+                riskFactors = analyzeRiskFactors(textLower, clause.riskFactors);
+                
+                // Determine risk level and score
+                const keywordDensity = keywordMatches.length / clause.keywords.length;
+                const riskScore = riskFactors.length;
+                
+                if (keywordDensity >= 0.6 && riskScore <= 1) {
+                    status = 'strong';
+                    risk = 'low';
+                    score = 85 + Math.random() * 15;
+                } else if (keywordDensity >= 0.4 && riskScore <= 2) {
+                    status = 'adequate';
+                    risk = 'medium';
+                    score = 65 + Math.random() * 20;
+                } else {
+                    status = 'weak';
+                    risk = riskScore > 2 ? 'high' : 'medium';
+                    score = 40 + Math.random() * 25;
+                }
+            } else {
+                status = 'missing';
+                risk = 'high';
+                score = 0;
+            }
+
+            return {
+                ...clause,
+                found,
+                status,
+                risk,
+                score: Math.round(score),
+                extractedText,
+                riskFactors,
+                keywordMatches
             };
+        }
+
+        function extractClauseText(text, keywords) {
+            // Find sentences containing keywords
+            const sentences = text.split(/[.!?]+/);
+            const relevantSentences = [];
             
-            const colors = riskColors[clause.riskLevel];
+            keywords.forEach(keyword => {
+                sentences.forEach(sentence => {
+                    if (sentence.toLowerCase().includes(keyword.toLowerCase()) && 
+                        !relevantSentences.includes(sentence.trim())) {
+                        relevantSentences.push(sentence.trim());
+                    }
+                });
+            });
             
+            return relevantSentences.slice(0, 3).join('. ') + (relevantSentences.length > 3 ? '...' : '');
+        }
+
+        function analyzeRiskFactors(textLower, riskFactors) {
+            const foundRisks = [];
+            
+            riskFactors.forEach(factor => {
+                // Simple risk detection based on common patterns
+                switch (factor) {
+                    case 'broad definition':
+                        if (textLower.includes('including but not limited to') || 
+                            textLower.includes('any and all')) {
+                            foundRisks.push('Overly broad definitions detected');
+                        }
+                        break;
+                    case 'unlimited duration':
+                        if (!textLower.includes('year') && !textLower.includes('month') && 
+                            !textLower.includes('expire')) {
+                            foundRisks.push('No time limitations specified');
+                        }
+                        break;
+                    case 'one-sided obligations':
+                        if (!textLower.includes('mutual') && !textLower.includes('both parties')) {
+                            foundRisks.push('Potentially one-sided obligations');
+                        }
+                        break;
+                }
+            });
+            
+            return foundRisks;
+        }
+
+        function showResults() {
+            document.getElementById('results-section').classList.add('active');
+            document.getElementById('export-btn').style.display = 'block';
+            renderClauseCards();
+            
+            // Scroll to results
+            document.getElementById('results-section').scrollIntoView({ 
+                behavior: 'smooth' 
+            });
+        }
+
+        function renderClauseCards() {
+            const grid = document.getElementById('clause-grid');
+            grid.innerHTML = '';
+
+            Object.values(analysisResults).forEach(clause => {
+                const card = createClauseCard(clause);
+                grid.appendChild(card);
+            });
+        }
+
+        function createClauseCard(clause) {
+            const card = document.createElement('div');
+            card.className = 'clause-card';
+            card.dataset.risk = clause.risk;
+            card.dataset.status = clause.status;
+            card.dataset.name = clause.title.toLowerCase();
+
+            const riskClass = `risk-${clause.risk}`;
+            const riskText = clause.risk.charAt(0).toUpperCase() + clause.risk.slice(1) + ' Risk';
+
             card.innerHTML = `
-                <div class="card-inner">
-                    <div class="card-front ${colors.bg} ${colors.text}">
-                        <div class="text-3xl mb-3">${colors.icon}</div>
-                        <h4 class="font-bold text-lg mb-2">${clause.name}</h4>
-                        <span class="risk-badge px-3 py-1 rounded-full text-sm font-medium bg-white bg-opacity-20">
-                            ${clause.riskLevel} Risk
-                        </span>
-                        <div class="mt-4 text-sm opacity-75">
-                            Hover to learn more
-                        </div>
+                <div class="clause-header" onclick="toggleClauseCard('${clause.id}')">
+                    <div class="clause-title-section">
+                        <div class="clause-title">${clause.title}</div>
+                        <div class="clause-subtitle">${clause.subtitle}</div>
+                        ${clause.found ? `<div style="font-size: 0.8rem; color: #059669;">✓ Detected</div>` : 
+                                        `<div style="font-size: 0.8rem; color: #dc2626;">✗ Missing</div>`}
                     </div>
-                    <div class="card-back border shadow-lg">
-                        <div class="text-2xl mb-3">${colors.icon}</div>
-                        <h4 class="font-bold text-lg mb-3" style="color: var(--text-primary);">${clause.name}</h4>
-                        <p class="text-sm leading-relaxed" style="color: var(--text-secondary);">
-                            ${clause.explanation}
-                        </p>
+                    <div class="clause-status-section">
+                        <div class="risk-badge ${riskClass}">${riskText}</div>
+                        <div class="chevron">▼</div>
+                    </div>
+                </div>
+                <div class="clause-content" id="content-${clause.id}">
+                    <div class="content-section">
+                        <div class="content-tabs">
+                            <button class="content-tab active" onclick="switchContentTab('${clause.id}', 'text')">Clause Text</button>
+                            <button class="content-tab" onclick="switchContentTab('${clause.id}', 'explanation')">Explanation</button>
+                            <button class="content-tab" onclick="switchContentTab('${clause.id}', 'risks')">Risk Analysis</button>
+                            <button class="content-tab" onclick="switchContentTab('${clause.id}', 'recommendations')">Recommendations</button>
+                        </div>
+                        
+                        <div class="tab-panel active" id="text-${clause.id}">
+                            <div class="clause-text">
+                                ${clause.extractedText || 'No relevant text found in the document.'}
+                            </div>
+                        </div>
+                        
+                        <div class="tab-panel" id="explanation-${clause.id}">
+                            <div class="explanation-text">
+                                <h4>📋 What this clause does:</h4>
+                                <p>${clause.explanation}</p>
+                                ${clause.keywordMatches.length > 0 ? 
+                                    `<p><strong>Keywords found:</strong> ${clause.keywordMatches.join(', ')}</p>` : ''}
+                            </div>
+                        </div>
+                        
+                        <div class="tab-panel" id="risks-${clause.id}">
+                            <div class="risk-analysis">
+                                <h4>⚠️ Risk Assessment:</h4>
+                                <p>${clause.risks}</p>
+                                ${clause.riskFactors.length > 0 ? 
+                                    `<div style="margin-top: 15px;">
+                                        <strong>Identified Risk Factors:</strong>
+                                        <ul style="margin-top: 5px;">
+                                            ${clause.riskFactors.map(risk => `<li>${risk}</li>`).join('')}
+                                        </ul>
+                                    </div>` : ''}
+                            </div>
+                        </div>
+                        
+                        <div class="tab-panel" id="recommendations-${clause.id}">
+                            <div class="recommendations">
+                                <h4>💡 Recommendations:</h4>
+                                <p>${clause.recommendations}</p>
+                                <div style="margin-top: 15px;">
+                                    <strong>Priority Level:</strong> 
+                                    <span class="risk-badge ${riskClass}" style="margin-left: 10px;">
+                                        ${clause.risk === 'high' ? 'High Priority' : 
+                                          clause.risk === 'medium' ? 'Medium Priority' : 'Low Priority'}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             `;
-            
-            // Add click handler for mobile
-            card.addEventListener('click', function() {
-                card.classList.toggle('flipped');
-            });
-            
+
             return card;
         }
 
+        function toggleClauseCard(clauseId) {
+            const content = document.getElementById(`content-${clauseId}`);
+            const header = content.previousElementSibling;
+            
+            content.classList.toggle('active');
+            header.classList.toggle('active');
+        }
 
+        function switchContentTab(clauseId, tabName) {
+            // Update tab buttons
+            const tabContainer = document.querySelector(`#content-${clauseId} .content-tabs`);
+            tabContainer.querySelectorAll('.content-tab').forEach(tab => tab.classList.remove('active'));
+            event.target.classList.add('active');
 
-        // Accessibility improvements
-        contractTextArea.addEventListener('keydown', function(e) {
-            if (e.ctrlKey && e.key === 'Enter') {
-                if (!analyzeBtn.disabled) {
-                    analyzeBtn.click();
+            // Update tab panels
+            const contentSection = document.querySelector(`#content-${clauseId} .content-section`);
+            contentSection.querySelectorAll('.tab-panel').forEach(panel => panel.classList.remove('active'));
+            document.getElementById(`${tabName}-${clauseId}`).classList.add('active');
+        }
+
+        function filterClauses() {
+            const filter = document.getElementById('risk-filter').value;
+            const cards = document.querySelectorAll('.clause-card');
+            
+            cards.forEach(card => {
+                if (filter === 'all' || card.dataset.risk === filter || card.dataset.status === filter) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
                 }
-            }
-        });
+            });
+        }
 
-        // Modal functionality for legal pages
-        const pageModal = document.getElementById('pageModal');
-        const modalTitle = document.getElementById('modalTitle');
-        const modalContent = document.getElementById('modalContent');
+        function sortClauses() {
+            const sortBy = document.getElementById('sort-filter').value;
+            const grid = document.getElementById('clause-grid');
+            const cards = Array.from(grid.querySelectorAll('.clause-card'));
+            
+            cards.sort((a, b) => {
+                switch (sortBy) {
+                    case 'risk':
+                        const riskOrder = { 'high': 3, 'medium': 2, 'low': 1 };
+                        return riskOrder[b.dataset.risk] - riskOrder[a.dataset.risk];
+                    case 'name':
+                        return a.dataset.name.localeCompare(b.dataset.name);
+                    case 'status':
+                        const statusOrder = { 'missing': 4, 'weak': 3, 'adequate': 2, 'strong': 1 };
+                        return statusOrder[b.dataset.status] - statusOrder[a.dataset.status];
+                    default:
+                        return 0;
+                }
+            });
+            
+            cards.forEach(card => grid.appendChild(card));
+        }
 
-        const pageContent = {
+        function searchClauses() {
+            const searchTerm = document.getElementById('search-input').value.toLowerCase();
+            const cards = document.querySelectorAll('.clause-card');
+            
+            cards.forEach(card => {
+                const title = card.querySelector('.clause-title').textContent.toLowerCase();
+                const subtitle = card.querySelector('.clause-subtitle').textContent.toLowerCase();
+                
+                if (title.includes(searchTerm) || subtitle.includes(searchTerm)) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+
+        function exportToPDF() {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            
+            // Set up document
+            let yPosition = 30;
+            const pageHeight = doc.internal.pageSize.height;
+            const margin = 20;
+            const lineHeight = 7;
+            
+            // Title
+            doc.setFontSize(24);
+            doc.setFont(undefined, 'bold');
+            doc.text('Contract Analysis Report', margin, yPosition);
+            yPosition += 20;
+            
+            // Date
+            doc.setFontSize(12);
+            doc.setFont(undefined, 'normal');
+            doc.text(`Generated on: ${new Date().toLocaleDateString()}`, margin, yPosition);
+            yPosition += 20;
+            
+            // Summary
+            doc.setFontSize(16);
+            doc.setFont(undefined, 'bold');
+            doc.text('Executive Summary', margin, yPosition);
+            yPosition += 15;
+            
+            doc.setFontSize(12);
+            doc.setFont(undefined, 'normal');
+            
+            const summary = [
+                `Total Clauses Analyzed: ${clauseDefinitions.length}`,
+                `Clauses Detected: ${document.getElementById('total-clauses').textContent}`,
+                `Missing Clauses: ${document.getElementById('missing-clauses').textContent}`,
+                `High Risk Items: ${document.getElementById('high-risk-count').textContent}`,
+                `Overall Score: ${document.getElementById('overall-score').textContent}`
+            ];
+            
+            summary.forEach(line => {
+                doc.text(line, margin, yPosition);
+                yPosition += lineHeight;
+            });
+            
+            yPosition += 15;
+            
+            // Detailed Analysis
+            doc.setFontSize(16);
+            doc.setFont(undefined, 'bold');
+            doc.text('Detailed Clause Analysis', margin, yPosition);
+            yPosition += 15;
+            
+            Object.values(analysisResults).forEach(clause => {
+                // Check if we need a new page
+                if (yPosition > pageHeight - 60) {
+                    doc.addPage();
+                    yPosition = 30;
+                }
+                
+                // Clause title
+                doc.setFontSize(14);
+                doc.setFont(undefined, 'bold');
+                doc.text(clause.title, margin, yPosition);
+                yPosition += 10;
+                
+                // Status and risk
+                doc.setFontSize(10);
+                doc.setFont(undefined, 'normal');
+                doc.text(`Status: ${clause.status.toUpperCase()} | Risk Level: ${clause.risk.toUpperCase()}`, margin, yPosition);
+                yPosition += 8;
+                
+                // Explanation
+                doc.setFontSize(10);
+                const explanationLines = doc.splitTextToSize(clause.explanation, 170);
+                doc.text(explanationLines, margin, yPosition);
+                yPosition += explanationLines.length * 5 + 5;
+                
+                // Recommendations
+                if (clause.recommendations) {
+                    doc.setFont(undefined, 'bold');
+                    doc.text('Recommendations:', margin, yPosition);
+                    yPosition += 5;
+                    
+                    doc.setFont(undefined, 'normal');
+                    const recLines = doc.splitTextToSize(clause.recommendations, 170);
+                    doc.text(recLines, margin, yPosition);
+                    yPosition += recLines.length * 5 + 10;
+                }
+            });
+            
+            // Add disclaimer
+            doc.addPage();
+            doc.setFontSize(16);
+            doc.setFont(undefined, 'bold');
+            doc.text('Legal Disclaimer', margin, 30);
+            
+            doc.setFontSize(10);
+            doc.setFont(undefined, 'normal');
+            const disclaimer = doc.splitTextToSize(
+                'This analysis is generated by an automated system and is for informational purposes only. ' +
+                'It does not constitute legal advice and should not be relied upon as such. ' +
+                'The analysis may not identify all potential issues or risks in the contract. ' +
+                'Always consult with qualified legal professionals for contract review and legal advice. ' +
+                'The creators of this tool disclaim any liability for decisions made based on this analysis.',
+                170
+            );
+            doc.text(disclaimer, margin, 50);
+            
+            // Save the PDF
+            doc.save(`contract-analysis-report-${new Date().toISOString().split('T')[0]}.pdf`);
+        }
+
+        // Footer page content
+        const footerPages = {
             about: {
                 title: 'About Us',
                 content: `
-                    <div class="prose max-w-none">
-                        <h2 class="text-2xl font-bold mb-6 text-blue-600">About LegalClauseChecker – Your Free, Instant Legal Clause Checker</h2>
-                        
-                        <p class="mb-6 text-lg">Welcome to LegalClauseChecker, the simple yet powerful tool designed to help individuals, business owners, and professionals quickly scan and evaluate legal clauses for clarity, compliance, and potential risks — all for free.</p>
-                        
-                        <p class="mb-8">Our mission is to make legal information accessible, understandable, and actionable for everyone, whether you're reviewing a contract, drafting an agreement, or simply trying to understand the fine print.</p>
-                        
-                        <h3 class="text-xl font-semibold mb-4 text-green-600">What We Do</h3>
-                        <div class="bg-gray-50 rounded-lg p-6 mb-6">
-                            <ul class="space-y-3">
-                                <li class="flex items-start">
-                                    <span class="text-blue-500 mr-3">✓</span>
-                                    <div>
-                                        <strong>Free Legal Clause Checks</strong> – Instantly analyze text for legal clarity and common red flags.
-                                    </div>
-                                </li>
-                                <li class="flex items-start">
-                                    <span class="text-blue-500 mr-3">✓</span>
-                                    <div>
-                                        <strong>Educational Guidance</strong> – Learn what a clause means in plain English.
-                                    </div>
-                                </li>
-                                <li class="flex items-start">
-                                    <span class="text-blue-500 mr-3">✓</span>
-                                    <div>
-                                        <strong>Accessible Anywhere</strong> – No downloads, no sign-ups, no hidden costs.
-                                    </div>
-                                </li>
-                            </ul>
-                        </div>
-                        
-                        <div class="bg-yellow-50 border-l-4 border-yellow-400 p-6 mb-6">
-                            <p class="text-gray-700">
-                                <strong>Important:</strong> We are not a law firm, but we believe in empowering people with knowledge. Our tool is designed to complement — not replace — professional legal advice.
-                            </p>
-                        </div>
-                    </div>
+                    <h3>LegalClauseChecker – Your Free, Instant Legal Clause Checker</h3>
+                    <p>Welcome to LegalClauseChecker, the simple yet powerful tool designed to help individuals, business owners, and professionals quickly scan and evaluate legal clauses for clarity, compliance, and potential risks — all for free.</p>
+                    
+                    <p>Our mission is to make legal information accessible, understandable, and actionable for everyone, whether you're reviewing a contract, drafting an agreement, or simply trying to understand the fine print.</p>
+                    
+                    <h4>What We Do</h4>
+                    <ul>
+                        <li><strong>Free Legal Clause Checks</strong> – Instantly analyze text for legal clarity and common red flags.</li>
+                        <li><strong>Educational Guidance</strong> – Learn what a clause means in plain English.</li>
+                        <li><strong>Accessible Anywhere</strong> – No downloads, no sign-ups, no hidden costs.</li>
+                    </ul>
+                    
+                    <p>We are not a law firm, but we believe in empowering people with knowledge. Our tool is designed to complement — not replace — professional legal advice.</p>
                 `
             },
             privacy: {
                 title: 'Privacy Policy',
                 content: `
-                    <div class="prose max-w-none">
-                        <h2 class="text-2xl font-bold mb-6 text-blue-600">Privacy Policy – How We Protect Your Data</h2>
-                        
-                        <p class="mb-6 text-lg">At LegalClauseChecker, your privacy matters. This Privacy Policy explains how we collect, use, and protect your personal information when you use our services.</p>
-                        
-                        <h3 class="text-xl font-semibold mb-4 text-green-600">Information We Collect</h3>
-                        <div class="bg-blue-50 rounded-lg p-6 mb-6">
-                            <ul class="space-y-3">
-                                <li class="flex items-start">
-                                    <span class="text-blue-500 mr-3">•</span>
-                                    <div>Text you input for clause analysis (processed instantly, not stored).</div>
-                                </li>
-                                <li class="flex items-start">
-                                    <span class="text-blue-500 mr-3">•</span>
-                                    <div>Basic usage data (browser type, device, and general location) for analytics.</div>
-                                </li>
-                            </ul>
-                        </div>
-                        
-                        <h3 class="text-xl font-semibold mb-4 text-green-600">How We Use Your Information</h3>
-                        <div class="bg-green-50 rounded-lg p-6 mb-6">
-                            <ul class="space-y-3">
-                                <li class="flex items-start">
-                                    <span class="text-green-500 mr-3">✓</span>
-                                    <div>To provide accurate clause analysis.</div>
-                                </li>
-                                <li class="flex items-start">
-                                    <span class="text-green-500 mr-3">✓</span>
-                                    <div>To improve tool performance and user experience.</div>
-                                </li>
-                                <li class="flex items-start">
-                                    <span class="text-green-500 mr-3">✓</span>
-                                    <div>To ensure compliance with legal and security standards.</div>
-                                </li>
-                            </ul>
-                        </div>
-                        
-                        <h3 class="text-xl font-semibold mb-4 text-purple-600">Your Data Protection Rights</h3>
-                        <p class="mb-4">You have the right to:</p>
-                        <div class="bg-purple-50 rounded-lg p-6 mb-6">
-                            <ul class="space-y-2">
-                                <li class="flex items-start">
-                                    <span class="text-purple-500 mr-3">→</span>
-                                    <div>Request deletion of your data.</div>
-                                </li>
-                                <li class="flex items-start">
-                                    <span class="text-purple-500 mr-3">→</span>
-                                    <div>Opt out of any tracking or analytics.</div>
-                                </li>
-                            </ul>
-                        </div>
-                        
-                        <div class="bg-yellow-50 border-l-4 border-yellow-400 p-6 mb-6">
-                            <p class="text-gray-700">
-                                <strong>We never sell, rent, or trade your personal information to third parties.</strong> For questions, email [your email].
-                            </p>
-                        </div>
-                    </div>
+                    <h3>How We Protect Your Data</h3>
+                    <p>At LegalClauseChecker, your privacy matters. This Privacy Policy explains how we collect, use, and protect your personal information when you use our services.</p>
+                    
+                    <h4>Information We Collect</h4>
+                    <ul>
+                        <li>Text you input for clause analysis (processed instantly, not stored).</li>
+                        <li>Basic usage data (browser type, device, and general location) for analytics.</li>
+                    </ul>
+                    
+                    <h4>How We Use Your Information</h4>
+                    <ul>
+                        <li>To provide accurate clause analysis.</li>
+                        <li>To improve tool performance and user experience.</li>
+                        <li>To ensure compliance with legal and security standards.</li>
+                    </ul>
+                    
+                    <h4>Your Data Protection Rights</h4>
+                    <p>You have the right to:</p>
+                    <ul>
+                        <li>Request deletion of your data.</li>
+                        <li>Opt out of any tracking or analytics.</li>
+                    </ul>
+                    
+                    <p>We never sell, rent, or trade your personal information to third parties. For questions, email hello@legalclausechecker.com</p>
                 `
             },
             terms: {
                 title: 'Terms of Service',
                 content: `
-                    <div class="prose max-w-none">
-                        <h2 class="text-2xl font-bold mb-6 text-blue-600">Terms of Service – User Agreement</h2>
-                        
-                        <p class="mb-6 text-lg">By using LegalClauseChecker, you agree to the following terms:</p>
-                        
-                        <div class="space-y-6">
-                            <div class="bg-blue-50 rounded-lg p-6">
-                                <h3 class="text-xl font-semibold mb-3 text-blue-800">1. Acceptance of Terms</h3>
-                                <p class="text-gray-700">By accessing or using the tool, you agree to comply with these terms.</p>
-                            </div>
-                            
-                            <div class="bg-red-50 rounded-lg p-6">
-                                <h3 class="text-xl font-semibold mb-3 text-red-800">2. No Legal Advice</h3>
-                                <p class="text-gray-700">Our tool provides automated clause checking for educational purposes only. It does not replace the services of a qualified lawyer.</p>
-                            </div>
-                            
-                            <div class="bg-green-50 rounded-lg p-6">
-                                <h3 class="text-xl font-semibold mb-3 text-green-800">3. User Responsibilities</h3>
-                                <p class="text-gray-700 mb-3">You are responsible for:</p>
-                                <ul class="space-y-2">
-                                    <li class="flex items-start">
-                                        <span class="text-green-500 mr-3">•</span>
-                                        <div>Ensuring your content is lawful and free from harmful material.</div>
-                                    </li>
-                                    <li class="flex items-start">
-                                        <span class="text-green-500 mr-3">•</span>
-                                        <div>Using the tool in compliance with all applicable laws.</div>
-                                    </li>
-                                </ul>
-                            </div>
-                            
-                            <div class="bg-orange-50 rounded-lg p-6">
-                                <h3 class="text-xl font-semibold mb-3 text-orange-800">4. Limitation of Liability</h3>
-                                <p class="text-gray-700">We are not liable for any damages, losses, or legal issues arising from the use of this tool.</p>
-                            </div>
-                            
-                            <div class="bg-purple-50 rounded-lg p-6">
-                                <h3 class="text-xl font-semibold mb-3 text-purple-800">5. Changes to Terms</h3>
-                                <p class="text-gray-700">We reserve the right to update these terms at any time.</p>
-                            </div>
-                        </div>
-                    </div>
+                    <h3>User Agreement</h3>
+                    <p>By using LegalClauseChecker, you agree to the following terms:</p>
+                    
+                    <h4>1. Acceptance of Terms</h4>
+                    <p>By accessing or using the tool, you agree to comply with these terms.</p>
+                    
+                    <h4>2. No Legal Advice</h4>
+                    <p>Our tool provides automated clause checking for educational purposes only. It does not replace the services of a qualified lawyer.</p>
+                    
+                    <h4>3. User Responsibilities</h4>
+                    <p>You are responsible for:</p>
+                    <ul>
+                        <li>Ensuring your content is lawful and free from harmful material.</li>
+                        <li>Using the tool in compliance with all applicable laws.</li>
+                    </ul>
+                    
+                    <h4>4. Limitation of Liability</h4>
+                    <p>We are not liable for any damages, losses, or legal issues arising from the use of this tool.</p>
+                    
+                    <h4>5. Changes to Terms</h4>
+                    <p>We reserve the right to update these terms at any time.</p>
                 `
             },
             disclaimer: {
                 title: 'Legal Disclaimer',
                 content: `
-                    <div class="prose max-w-none">
-                        <h2 class="text-2xl font-bold mb-6 text-red-600">Legal Disclaimer – Important Notice</h2>
-                        
-                        <div class="bg-red-50 border-l-4 border-red-500 p-6 mb-8">
-                            <div class="flex">
-                                <div class="flex-shrink-0">
-                                    <svg class="h-6 w-6 text-red-500" viewBox="0 0 20 20" fill="currentColor">
-                                        <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
-                                </div>
-                                <div class="ml-3">
-                                    <p class="text-red-700 font-bold text-lg">
-                                        The information provided by LegalClauseChecker is for general informational purposes only.
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="space-y-6">
-                            <div class="bg-gray-50 rounded-lg p-6">
-                                <h3 class="text-xl font-semibold mb-3 text-gray-800">❌ No Legal Representation</h3>
-                                <p class="text-gray-700">We do not act as your lawyer.</p>
-                            </div>
-                            
-                            <div class="bg-yellow-50 rounded-lg p-6">
-                                <h3 class="text-xl font-semibold mb-3 text-yellow-800">⚠️ No Guarantee of Accuracy</h3>
-                                <p class="text-gray-700">Automated checks may not identify all legal risks.</p>
-                            </div>
-                            
-                            <div class="bg-blue-50 rounded-lg p-6">
-                                <h3 class="text-xl font-semibold mb-3 text-blue-800">👨‍⚖️ Always Seek Professional Help</h3>
-                                <p class="text-gray-700">Consult a licensed attorney before making decisions based on our tool's results.</p>
-                            </div>
-                        </div>
-                        
-                        <div class="bg-red-100 border border-red-300 rounded-lg p-6 mt-8">
-                            <p class="text-red-800 font-bold text-center text-lg">
-                                ⚠️ Use of our service is entirely at your own risk. ⚠️
-                            </p>
-                        </div>
-                    </div>
+                    <h3>Important Notice</h3>
+                    <p>The information provided by LegalClauseChecker is for general informational purposes only.</p>
+                    
+                    <h4>No Legal Representation</h4>
+                    <p>We do not act as your lawyer.</p>
+                    
+                    <h4>No Guarantee of Accuracy</h4>
+                    <p>Automated checks may not identify all legal risks.</p>
+                    
+                    <h4>Always Seek Professional Help</h4>
+                    <p>Consult a licensed attorney before making decisions based on our tool's results.</p>
+                    
+                    <p><strong>Use of our service is entirely at your own risk.</strong></p>
                 `
             },
             contact: {
                 title: 'Contact Us',
                 content: `
-                    <div class="prose max-w-none">
-                        <p class="mb-6">We'd love to hear from you! Get in touch with our team for support, feedback, or partnership opportunities.</p>
-                        
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
-                            <div>
-                                <h3 class="text-xl font-semibold mb-4">General Inquiries</h3>
-                                <div class="space-y-3">
-                                    <div class="flex items-center">
-                                        <svg class="w-5 h-5 mr-3 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 012 2z"></path>
-                                        </svg>
-                                        <span>hello@legalclausechecker.com</span>
-                                    </div>
-                                    <div class="flex items-center">
-                                        <svg class="w-5 h-5 mr-3 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path>
-                                        </svg>
-                                        <span>+1 (555) 123-4567</span>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <div>
-                                <h3 class="text-xl font-semibold mb-4">Support</h3>
-                                <div class="space-y-3">
-                                    <div class="flex items-center">
-                                        <svg class="w-5 h-5 mr-3 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192L5.636 18.364M12 2.25a9.75 9.75 0 11-9.75 9.75 9.75 9.75 0 019.75-9.75z"></path>
-                                        </svg>
-                                        <span>support@legalclausechecker.com</span>
-                                    </div>
-                                    <div class="flex items-center">
-                                        <svg class="w-5 h-5 mr-3 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                                        </svg>
-                                        <span>Response time: 24-48 hours</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="bg-gray-50 rounded-lg p-6">
-                            <h3 class="text-xl font-semibold mb-4">Send us a Message</h3>
-                            <form class="space-y-4">
-                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                    <div>
-                                        <label class="block text-sm font-medium mb-2">Name</label>
-                                        <input type="text" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                                    </div>
-                                    <div>
-                                        <label class="block text-sm font-medium mb-2">Email</label>
-                                        <input type="email" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                                    </div>
-                                </div>
-                                <div>
-                                    <label class="block text-sm font-medium mb-2">Subject</label>
-                                    <input type="text" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                                </div>
-                                <div>
-                                    <label class="block text-sm font-medium mb-2">Message</label>
-                                    <textarea rows="4" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"></textarea>
-                                </div>
-                                <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium transition-colors">
-                                    Send Message
-                                </button>
-                            </form>
-                        </div>
-                    </div>
-                `
-            },
-            howItWorks: {
-                title: 'How It Works – Step-by-Step',
-                content: `
-                    <div class="prose max-w-none">
-                        <div class="space-y-8">
-                            <!-- Step 1 -->
-                            <div class="bg-blue-50 rounded-lg p-8 border-l-4 border-blue-500">
-                                <div class="flex items-start">
-                                    <div class="flex-shrink-0">
-                                        <div class="w-12 h-12 bg-blue-500 text-white rounded-full flex items-center justify-center font-bold text-lg">1</div>
-                                    </div>
-                                    <div class="ml-6">
-                                        <h3 class="text-2xl font-bold mb-4 text-blue-800">📄 Upload Your Document</h3>
-                                        <p class="text-gray-700 text-lg">Upload a PDF, DOCX, or paste your text directly into the tool.</p>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Step 2 -->
-                            <div class="bg-green-50 rounded-lg p-8 border-l-4 border-green-500">
-                                <div class="flex items-start">
-                                    <div class="flex-shrink-0">
-                                        <div class="w-12 h-12 bg-green-500 text-white rounded-full flex items-center justify-center font-bold text-lg">2</div>
-                                    </div>
-                                    <div class="ml-6">
-                                        <h3 class="text-2xl font-bold mb-4 text-green-800">🔍 AI Clause Scanning</h3>
-                                        <p class="text-gray-700 text-lg mb-4">The AI instantly scans your document to identify key clauses, including:</p>
-                                        <ul class="list-disc pl-6 text-gray-700 space-y-2">
-                                            <li><strong>Payment & refund terms</strong></li>
-                                            <li><strong>Termination & breach clauses</strong></li>
-                                            <li><strong>Confidentiality & IP rights</strong></li>
-                                            <li><strong>Indemnity & liability limits</strong></li>
-                                            <li><strong>Dispute resolution terms</strong></li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Step 3 -->
-                            <div class="bg-purple-50 rounded-lg p-8 border-l-4 border-purple-500">
-                                <div class="flex items-start">
-                                    <div class="flex-shrink-0">
-                                        <div class="w-12 h-12 bg-purple-500 text-white rounded-full flex items-center justify-center font-bold text-lg">3</div>
-                                    </div>
-                                    <div class="ml-6">
-                                        <h3 class="text-2xl font-bold mb-4 text-purple-800">💡 Plain-Language Explanations</h3>
-                                        <p class="text-gray-700 text-lg">The tool explains each clause in clear, simple English — so you understand what it means without needing a law degree.</p>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Step 4 -->
-                            <div class="bg-orange-50 rounded-lg p-8 border-l-4 border-orange-500">
-                                <div class="flex items-start">
-                                    <div class="flex-shrink-0">
-                                        <div class="w-12 h-12 bg-orange-500 text-white rounded-full flex items-center justify-center font-bold text-lg">4</div>
-                                    </div>
-                                    <div class="ml-6">
-                                        <h3 class="text-2xl font-bold mb-4 text-orange-800">⚠️ Risk Highlighting</h3>
-                                        <p class="text-gray-700 text-lg">Any potentially risky or unfair clauses are flagged, so you can spot red flags instantly.</p>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Step 5 -->
-                            <div class="bg-indigo-50 rounded-lg p-8 border-l-4 border-indigo-500">
-                                <div class="flex items-start">
-                                    <div class="flex-shrink-0">
-                                        <div class="w-12 h-12 bg-indigo-500 text-white rounded-full flex items-center justify-center font-bold text-lg">5</div>
-                                    </div>
-                                    <div class="ml-6">
-                                        <h3 class="text-2xl font-bold mb-4 text-indigo-800">📤 Download or Share Your Report</h3>
-                                        <p class="text-gray-700 text-lg">Get a detailed clause analysis report in PDF format, or share it directly with your lawyer, business partner, or client.</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Why Choose Section -->
-                        <div class="mt-16 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl p-10">
-                            <h2 class="text-3xl font-bold mb-8 text-center">Why Choose Our Free Legal Clause Checker?</h2>
-                            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                                <div class="text-center">
-                                    <div class="text-4xl mb-4">💰</div>
-                                    <h3 class="text-xl font-bold mb-2">100% Free</h3>
-                                    <p class="text-blue-100">No hidden fees</p>
-                                </div>
-                                <div class="text-center">
-                                    <div class="text-4xl mb-4">⚡</div>
-                                    <h3 class="text-xl font-bold mb-2">Instant Results</h3>
-                                    <p class="text-blue-100">Analysis in seconds</p>
-                                </div>
-                                <div class="text-center">
-                                    <div class="text-4xl mb-4">💬</div>
-                                    <h3 class="text-xl font-bold mb-2">Plain Language</h3>
-                                    <p class="text-blue-100">Understand complex terms easily</p>
-                                </div>
-                                <div class="text-center">
-                                    <div class="text-4xl mb-4">🔒</div>
-                                    <h3 class="text-xl font-bold mb-2">Secure & Private</h3>
-                                    <p class="text-blue-100">Your documents remain confidential</p>
-                                </div>
-                                <div class="text-center">
-                                    <div class="text-4xl mb-4">🤖</div>
-                                    <h3 class="text-xl font-bold mb-2">AI-Powered Accuracy</h3>
-                                    <p class="text-blue-100">Advanced legal clause recognition</p>
-                                </div>
-                                <div class="text-center">
-                                    <div class="text-4xl mb-4">📊</div>
-                                    <h3 class="text-xl font-bold mb-2">Detailed Reports</h3>
-                                    <p class="text-blue-100">Comprehensive analysis results</p>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- CTA Section -->
-                        <div class="mt-12 text-center bg-gray-50 rounded-lg p-8">
-                            <h3 class="text-2xl font-bold mb-4">Ready to analyze your contract?</h3>
-                            <p class="text-gray-600 mb-6">Start checking your legal clauses in seconds with our free AI-powered tool.</p>
-                            <button onclick="closeModal(); document.getElementById('contractText').focus();" class="bg-blue-600 text-white px-8 py-4 rounded-lg font-semibold hover:bg-blue-700 transition-colors text-lg">
-                                🚀 Start Free Analysis
-                            </button>
-                        </div>
-                    </div>
-                `
-            },
-            reportIssue: {
-                title: 'Report Issue',
-                content: `
-                    <div class="prose max-w-none">
-                        <h2 class="text-2xl font-bold mb-6 text-red-600">Legal Clause Checker Feedback Form</h2>
-                        
-                        <p class="mb-6 text-lg">Found a bug or incorrect clause detection? Use our report form to help us improve the Legal Clause Checker.</p>
-                        
-                        <div class="bg-blue-50 border-l-4 border-blue-500 p-6 mb-8">
-                            <p class="text-blue-800">
-                                We strive to make Legal Clause Checker accurate and reliable. If you notice any bugs, errors, or incorrect clause interpretations, please let us know.
-                            </p>
-                        </div>
-                        
-                        <h3 class="text-xl font-semibold mb-4 text-gray-800">When reporting an issue, try to include:</h3>
-                        <div class="bg-gray-50 rounded-lg p-6 mb-8">
-                            <ul class="space-y-3">
-                                <li class="flex items-start">
-                                    <span class="text-blue-500 mr-3">•</span>
-                                    <div>A brief description of the problem.</div>
-                                </li>
-                                <li class="flex items-start">
-                                    <span class="text-blue-500 mr-3">•</span>
-                                    <div>The type of document you were checking.</div>
-                                </li>
-                                <li class="flex items-start">
-                                    <span class="text-blue-500 mr-3">•</span>
-                                    <div>Screenshots or copied text (if possible).</div>
-                                </li>
-                                <li class="flex items-start">
-                                    <span class="text-blue-500 mr-3">•</span>
-                                    <div>Steps to reproduce the error.</div>
-                                </li>
-                            </ul>
-                        </div>
-                        
-                        <div class="bg-green-50 border-l-4 border-green-500 p-6 mb-8">
-                            <p class="text-green-800">
-                                Our technical team reviews all submissions and works to resolve issues quickly. Your feedback helps us keep the tool accurate and useful for everyone.
-                            </p>
-                        </div>
-                        
-                        <!-- Report Form -->
-                        <div class="bg-white border rounded-lg p-6 mb-8">
-                            <h3 class="text-xl font-semibold mb-4">Report an Issue</h3>
-                            <form class="space-y-4">
-                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                    <div>
-                                        <label class="block text-sm font-medium mb-2">Your Name</label>
-                                        <input type="text" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                                    </div>
-                                    <div>
-                                        <label class="block text-sm font-medium mb-2">Email Address</label>
-                                        <input type="email" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                                    </div>
-                                </div>
-                                <div>
-                                    <label class="block text-sm font-medium mb-2">Issue Type</label>
-                                    <select class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                                        <option>Select issue type...</option>
-                                        <option>Incorrect clause detection</option>
-                                        <option>Missing clause detection</option>
-                                        <option>Wrong risk level assigned</option>
-                                        <option>Technical bug/error</option>
-                                        <option>Upload/file processing issue</option>
-                                        <option>Other</option>
-                                    </select>
-                                </div>
-                                <div>
-                                    <label class="block text-sm font-medium mb-2">Document Type</label>
-                                    <input type="text" placeholder="e.g., Employment Contract, NDA, Service Agreement" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                                </div>
-                                <div>
-                                    <label class="block text-sm font-medium mb-2">Detailed Description</label>
-                                    <textarea rows="5" placeholder="Please describe the issue in detail, including steps to reproduce if applicable..." class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"></textarea>
-                                </div>
-                                <div>
-                                    <label class="block text-sm font-medium mb-2">Sample Text (Optional)</label>
-                                    <textarea rows="3" placeholder="If relevant, paste the contract text that caused the issue..." class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"></textarea>
-                                </div>
-                                <button type="submit" class="bg-red-600 hover:bg-red-700 text-white px-6 py-3 rounded-lg font-medium transition-colors">
-                                    🐛 Submit Issue Report
-                                </button>
-                            </form>
-                        </div>
-                        
-                        <div class="text-center bg-gray-50 rounded-lg p-6">
-                            <p class="text-gray-600 mb-2">You can also email us directly at:</p>
-                            <p class="text-lg font-semibold text-blue-600">hello@legalclausechecker.com</p>
-                        </div>
-                    </div>
-                `
-            },
-            featureRequest: {
-                title: 'Feature Request',
-                content: `
-                    <div class="prose max-w-none">
-                        <h2 class="text-2xl font-bold mb-6 text-green-600">Suggest a New Legal Clause Checker Feature</h2>
-                        
-                        <p class="mb-6 text-lg">Have an idea to make Legal Clause Checker better? Submit your feature request and help us improve our tool.</p>
-                        
-                        <div class="bg-green-50 border-l-4 border-green-500 p-6 mb-8">
-                            <p class="text-green-800">
-                                We're constantly improving Legal Clause Checker based on user feedback. If you have a suggestion for a new feature, filter, or enhancement, we'd love to hear it.
-                            </p>
-                        </div>
-                        
-                        <h3 class="text-xl font-semibold mb-4 text-gray-800">When submitting a feature request, please tell us:</h3>
-                        <div class="bg-gray-50 rounded-lg p-6 mb-8">
-                            <ul class="space-y-3">
-                                <li class="flex items-start">
-                                    <span class="text-green-500 mr-3">•</span>
-                                    <div>What you want to see added.</div>
-                                </li>
-                                <li class="flex items-start">
-                                    <span class="text-green-500 mr-3">•</span>
-                                    <div>Why it would help you.</div>
-                                </li>
-                                <li class="flex items-start">
-                                    <span class="text-green-500 mr-3">•</span>
-                                    <div>Any examples of how it would work.</div>
-                                </li>
-                            </ul>
-                        </div>
-                        
-                        <div class="bg-blue-50 border-l-4 border-blue-500 p-6 mb-8">
-                            <p class="text-blue-800">
-                                Your ideas could be part of our next big update. Submit your feature request today!
-                            </p>
-                        </div>
-                        
-                        <!-- Feature Request Form -->
-                        <div class="bg-white border rounded-lg p-6 mb-8">
-                            <h3 class="text-xl font-semibold mb-4">Submit Feature Request</h3>
-                            <form class="space-y-4">
-                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                    <div>
-                                        <label class="block text-sm font-medium mb-2">Your Name</label>
-                                        <input type="text" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent">
-                                    </div>
-                                    <div>
-                                        <label class="block text-sm font-medium mb-2">Email Address</label>
-                                        <input type="email" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent">
-                                    </div>
-                                </div>
-                                <div>
-                                    <label class="block text-sm font-medium mb-2">Feature Category</label>
-                                    <select class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent">
-                                        <option>Select category...</option>
-                                        <option>New clause detection</option>
-                                        <option>Analysis improvements</option>
-                                        <option>User interface enhancement</option>
-                                        <option>Export/sharing features</option>
-                                        <option>Document processing</option>
-                                        <option>Integration with other tools</option>
-                                        <option>Other</option>
-                                    </select>
-                                </div>
-                                <div>
-                                    <label class="block text-sm font-medium mb-2">Feature Title</label>
-                                    <input type="text" placeholder="Brief title for your feature idea" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent">
-                                </div>
-                                <div>
-                                    <label class="block text-sm font-medium mb-2">Detailed Description</label>
-                                    <textarea rows="5" placeholder="Describe your feature idea in detail. What should it do? How would it work?" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"></textarea>
-                                </div>
-                                <div>
-                                    <label class="block text-sm font-medium mb-2">Why is this useful?</label>
-                                    <textarea rows="3" placeholder="Explain how this feature would help you and other users..." class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"></textarea>
-                                </div>
-                                <div>
-                                    <label class="block text-sm font-medium mb-2">Priority Level</label>
-                                    <select class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent">
-                                        <option>How important is this to you?</option>
-                                        <option>Nice to have</option>
-                                        <option>Would be helpful</option>
-                                        <option>Very important</option>
-                                        <option>Critical for my workflow</option>
-                                    </select>
-                                </div>
-                                <button type="submit" class="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg font-medium transition-colors">
-                                    💡 Submit Feature Request
-                                </button>
-                            </form>
-                        </div>
-                        
-                        <!-- Popular Feature Requests -->
-                        <div class="bg-gradient-to-r from-green-50 to-blue-50 rounded-lg p-6 mb-8">
-                            <h3 class="text-xl font-semibold mb-4 text-gray-800">💭 Popular Feature Requests</h3>
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                <div class="bg-white rounded-lg p-4 shadow-sm">
-                                    <h4 class="font-semibold text-green-600 mb-2">🔍 Industry-Specific Analysis</h4>
-                                    <p class="text-sm text-gray-600">Specialized clause detection for healthcare, tech, real estate, etc.</p>
-                                </div>
-                                <div class="bg-white rounded-lg p-4 shadow-sm">
-                                    <h4 class="font-semibold text-blue-600 mb-2">📊 Comparison Tool</h4>
-                                    <p class="text-sm text-gray-600">Side-by-side contract comparison and difference highlighting.</p>
-                                </div>
-                                <div class="bg-white rounded-lg p-4 shadow-sm">
-                                    <h4 class="font-semibold text-purple-600 mb-2">🤖 AI Clause Suggestions</h4>
-                                    <p class="text-sm text-gray-600">AI-powered suggestions for improving problematic clauses.</p>
-                                </div>
-                                <div class="bg-white rounded-lg p-4 shadow-sm">
-                                    <h4 class="font-semibold text-orange-600 mb-2">📱 Mobile App</h4>
-                                    <p class="text-sm text-gray-600">Native mobile app for on-the-go contract analysis.</p>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="text-center bg-gray-50 rounded-lg p-6">
-                            <p class="text-gray-600 mb-2">Have a quick idea? Email us directly:</p>
-                            <p class="text-lg font-semibold text-green-600">hello@legalclausechecker.com</p>
-                        </div>
-                    </div>
-                `
-            },
-            faq: {
-                title: 'Frequently Asked Questions (FAQ)',
-                content: `
-                    <div class="prose max-w-none">
-                        <div class="space-y-8">
-                            <div class="bg-blue-50 rounded-lg p-6">
-                                <h3 class="text-xl font-semibold mb-3 text-blue-800">❓ What is a Legal Clause Checker?</h3>
-                                <p class="text-gray-700">A legal clause checker is an AI-powered tool that scans your contract, agreement, or legal document for specific clauses — such as termination terms, hidden fees, non-compete agreements, liability limits, and confidentiality obligations — and explains them in plain language.</p>
-                            </div>
-
-                            <div class="bg-green-50 rounded-lg p-6">
-                                <h3 class="text-xl font-semibold mb-3 text-green-800">💰 Is the Free Legal Clause Checker really free?</h3>
-                                <p class="text-gray-700">Yes! You can check unlimited legal clauses for free. There's no credit card required to start, and you can upgrade only if you need advanced features.</p>
-                            </div>
-
-                            <div class="bg-purple-50 rounded-lg p-6">
-                                <h3 class="text-xl font-semibold mb-3 text-purple-800">👥 Who can use this tool?</h3>
-                                <ul class="list-disc pl-6 text-gray-700 space-y-2">
-                                    <li><strong>Business owners</strong> reviewing supplier contracts</li>
-                                    <li><strong>Freelancers</strong> checking client agreements</li>
-                                    <li><strong>Homeowners or tenants</strong> reviewing leases</li>
-                                    <li><strong>Consumers</strong> reading terms of service</li>
-                                    <li><strong>Students or researchers</strong> studying legal clauses</li>
-                                </ul>
-                            </div>
-
-                            <div class="bg-orange-50 rounded-lg p-6">
-                                <h3 class="text-xl font-semibold mb-3 text-orange-800">🎯 How accurate is it?</h3>
-                                <p class="text-gray-700">Our tool uses advanced AI trained on thousands of verified legal clauses. While it is highly accurate for clause detection and explanations, we recommend consulting a licensed lawyer for final legal decisions.</p>
-                            </div>
-
-                            <div class="bg-indigo-50 rounded-lg p-6">
-                                <h3 class="text-xl font-semibold mb-3 text-indigo-800">📄 Can it check any type of contract?</h3>
-                                <p class="text-gray-700">Yes — from employment contracts to rental agreements, service contracts, NDAs, partnership agreements, and more. Our tool supports both text input and document uploads (PDF, DOC, DOCX).</p>
-                            </div>
-
-                            <div class="bg-red-50 rounded-lg p-6">
-                                <h3 class="text-xl font-semibold mb-3 text-red-800">🔒 Is my document safe?</h3>
-                                <p class="text-gray-700">Absolutely. Your documents are processed securely, and we never store your uploaded files. All analysis happens in your browser for maximum privacy and security.</p>
-                            </div>
-
-                            <div class="bg-teal-50 rounded-lg p-6">
-                                <h3 class="text-xl font-semibold mb-3 text-teal-800">📊 What file formats are supported?</h3>
-                                <p class="text-gray-700">We support PDF, DOC, and DOCX files up to 10MB in size. You can also paste text directly for contracts up to 50,000 words.</p>
-                            </div>
-
-                            <div class="bg-yellow-50 rounded-lg p-6">
-                                <h3 class="text-xl font-semibold mb-3 text-yellow-800">⚡ How fast is the analysis?</h3>
-                                <p class="text-gray-700">Most contracts are analyzed within seconds. Larger documents may take a bit longer, but you'll typically see results in under a minute.</p>
-                            </div>
-
-                            <div class="bg-pink-50 rounded-lg p-6">
-                                <h3 class="text-xl font-semibold mb-3 text-pink-800">🤖 What makes this different from other tools?</h3>
-                                <p class="text-gray-700">Our tool combines AI accuracy with plain-English explanations, making legal language accessible to everyone. Plus, it's completely free with no hidden costs or registration required.</p>
-                            </div>
-
-                            <div class="bg-gray-50 rounded-lg p-6">
-                                <h3 class="text-xl font-semibold mb-3 text-gray-800">❗ What are the limitations?</h3>
-                                <p class="text-gray-700">While our tool is highly accurate, it provides general guidance and should not replace professional legal advice. Always consult with a qualified attorney for important legal decisions.</p>
-                            </div>
-                        </div>
-
-                        <div class="mt-12 text-center bg-blue-600 text-white rounded-lg p-8">
-                            <h3 class="text-2xl font-bold mb-4">Still have questions?</h3>
-                            <p class="mb-6">Our support team is here to help you get the most out of our legal clause checker.</p>
-                            <button onclick="showPage('contact')" class="bg-white text-blue-600 px-6 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors">
-                                Contact Support
-                            </button>
-                        </div>
-                    </div>
+                    <h3>Contact LegalClauseChecker</h3>
+                    <p>We welcome your questions, feedback, and suggestions.</p>
+                    
+                    <h4>Get in Touch</h4>
+                    <p><strong>Email:</strong> hello@legalclausechecker.com</p>
+                    <p><strong>Business Hours:</strong> Monday – Friday, 9 AM – 5 PM</p>
+                    <p><strong>Response Time:</strong> 24 - 48 hours</p>
+                    
+                    <p>Whether you have a question about how the tool works, want to report a bug, or would like to explore partnership opportunities, we're here to help.</p>
                 `
             }
         };
 
-        function showPage(pageKey) {
-            const page = pageContent[pageKey];
+        function showFooterPage(pageId) {
+            const modal = document.getElementById('footer-modal');
+            const title = document.getElementById('footer-modal-title');
+            const body = document.getElementById('footer-modal-body');
+            
+            const page = footerPages[pageId];
             if (page) {
-                modalTitle.textContent = page.title;
-                modalContent.innerHTML = page.content;
-                pageModal.classList.remove('hidden');
+                title.textContent = page.title;
+                body.innerHTML = page.content;
+                modal.style.display = 'block';
                 document.body.style.overflow = 'hidden';
             }
         }
 
-        function closeModal() {
-            pageModal.classList.add('hidden');
+        function closeFooterModal() {
+            const modal = document.getElementById('footer-modal');
+            modal.style.display = 'none';
             document.body.style.overflow = 'auto';
         }
 
         // Close modal when clicking outside
-        pageModal.addEventListener('click', function(e) {
-            if (e.target === pageModal) {
-                closeModal();
+        document.addEventListener('click', function(event) {
+            const modal = document.getElementById('footer-modal');
+            if (event.target === modal) {
+                closeFooterModal();
             }
         });
 
         // Close modal with Escape key
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape' && !pageModal.classList.contains('hidden')) {
-                closeModal();
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                closeFooterModal();
             }
         });
 
-        // Initialize
-        document.addEventListener('DOMContentLoaded', function() {
-            contractTextArea.focus();
-            updateTheme(); // Apply saved theme on load
-        });
-
-        function sanitizeHTML(str) {
-            return DOMPurify.sanitize(str, {USE_PROFILES: {html: true}});
-        }
-
-        window.onerror = function(message, source, lineno, colno, error) {
-            alert('A critical error occurred. Please refresh the page or contact support.');
-            console.error('Global error:', { message, source, lineno, colno, error });
-        };
+        // Initialize character counter on page load
+        updateAnalyzeButton();
     </script>
-    <script defer data-domain="legalclausechecker.com" src="https://plausible.io/js/plausible.js"></script>
-</body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'96cb31e552c51bf8',t:'MTc1NDc4MzgzNy4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
