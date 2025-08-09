@@ -830,12 +830,54 @@ This agreement shall automatically renew for successive one-year terms unless te
             setTimeout(() => {
                 let extractedText = '';
                 
-                if (file.type === 'application/pdf') {
-                    // Simulated PDF text extraction
-                    extractedText = `SAMPLE EXTRACTED TEXT FROM PDF: ${file.name}\n\n` + exampleContract;
-                } else {
-                    // Simulated Word document text extraction
-                    extractedText = `SAMPLE EXTRACTED TEXT FROM WORD DOCUMENT: ${file.name}\n\n` + exampleContract;
+                function extractTextFromFile(file) {
+    extractionStatus.classList.remove('hidden');
+
+    if (file.type === 'application/pdf') {
+        // Real PDF extraction using PDF.js
+        const reader = new FileReader();
+        reader.onload = async function() {
+            const typedarray = new Uint8Array(reader.result);
+            try {
+                const pdf = await pdfjsLib.getDocument(typedarray).promise;
+                let extractedText = '';
+                for (let i = 1; i <= pdf.numPages; i++) {
+                    const page = await pdf.getPage(i);
+                    const textContent = await page.getTextContent();
+                    extractedText += textContent.items.map(item => item.str).join(' ') + '\n';
+                }
+                // Validate character count (300,000 characters max)
+                const charCount = extractedText.length;
+                const wordCount = extractedText.split(/\s+/).length;
+                if (charCount > 300000) {
+                    alert('Document exceeds 300,000 character limit. Please upload a smaller document.');
+                    removeFile.click();
+                    extractionStatus.classList.add('hidden');
+                    return;
+                }
+                currentFile.extractedText = extractedText;
+                extractionStatus.classList.add('hidden');
+                fileSize.textContent = `${(file.size / 1024 / 1024).toFixed(2)} MB • ${charCount.toLocaleString()} characters • ${wordCount.toLocaleString()} words`;
+            } catch (err) {
+                alert('Failed to extract text from PDF.');
+                removeFile.click();
+                extractionStatus.classList.add('hidden');
+            }
+        };
+        reader.readAsArrayBuffer(file);
+        return;
+    }
+
+    // ...existing DOC/DOCX extraction or fallback...
+    setTimeout(() => {
+        let extractedText = '';
+        extractedText = `SAMPLE EXTRACTED TEXT FROM WORD DOCUMENT: ${file.name}\n\n` + exampleContract;
+        // ...existing code...
+        currentFile.extractedText = extractedText;
+        extractionStatus.classList.add('hidden');
+        fileSize.textContent = `${(file.size / 1024 / 1024).toFixed(2)} MB • ${extractedText.length.toLocaleString()} characters • ${extractedText.split(/\s+/).length.toLocaleString()} words`;
+    }, 1500);
+}
                 }
                 
                 // Validate character count (300,000 characters max)
@@ -1948,4 +1990,5 @@ This agreement shall automatically renew for successive one-year terms unless te
     </script>
 <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'96c6afbba58a8cce',t:'MTc1NDczNjU2Mi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
+
 
