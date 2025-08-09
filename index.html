@@ -5,9 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>LegalClauseChecker.com - Free Legal Clause Checker</title>
     <meta name="description" content="Analyze contracts instantly with our free tool. Detect risky clauses, get plain-English explanations, and understand contract terms in seconds.">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.2.67/pdf.min.js" integrity="sha512-7Xw6Qw7hXwQvKkQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQw==" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.7.0/mammoth.browser.min.js" integrity="sha512-+kQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQw==" crossorigin="anonymous"></script>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.tailwindcss.com" integrity="sha384-..." crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.2.67/pdf.min.js" integrity="sha512-7Xw6Qw7hXwQvKkQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQw==" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.7.0/mammoth.browser.min.js" integrity="sha512-+kQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQw==" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/dompurify@3.0.9/dist/purify.min.js" integrity="sha384-..." crossorigin="anonymous"></script>
     <style>
         /* Dark mode variables */
         :root {
@@ -795,85 +796,117 @@ This agreement shall automatically renew for successive one-year terms unless te
         });
 
         function handleFileUpload(file) {
-            // Validate file type
-            const allowedTypes = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
-            if (!allowedTypes.includes(file.type)) {
-                alert('Please upload a PDF, DOC, or DOCX file.');
-                return;
-            }
-
-            // Validate file size (50MB limit)
-            if (file.size > 50 * 1024 * 1024) {
-                alert('File size must be less than 50MB.');
-                return;
-            }
-
-            currentFile = file;
-            
-            // Show file info
-            fileName.textContent = file.name;
-            fileSize.textContent = `${(file.size / 1024 / 1024).toFixed(2)} MB`;
-            uploadArea.classList.add('hidden');
-            fileInfo.classList.remove('hidden');
-            
-            // Enable analyze button
-            analyzeBtn.disabled = false;
-            
-            // Extract text from file
-            extractTextFromFile(file);
-        }
-
-        async function extractTextFromFile(file) {
-            extractionStatus.classList.remove('hidden');
-
             try {
-                let extractedText = '';
-
-                if (file.type === 'application/pdf') {
-                    // Load PDF.js worker
-                    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.2.67/pdf.worker.min.js';
-
-                    // Read the file as an ArrayBuffer
-                    const arrayBuffer = await file.arrayBuffer();
-                    const pdf = await pdfjsLib.getDocument(arrayBuffer).promise;
-
-                    // Extract text from all pages
-                    let textContent = '';
-                    for (let i = 1; i <= pdf.numPages; i++) {
-                        const page = await pdf.getPage(i);
-                        const text = await page.getTextContent();
-                        textContent += text.items.map(item => item.str).join(' ') + '\n';
-                    }
-                    extractedText = textContent;
-
-                } else if (file.type === 'application/msword' || file.type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') {
-                    // Read the file as an ArrayBuffer
-                    const arrayBuffer = await file.arrayBuffer();
-                    const result = await mammoth.extractRawText({ arrayBuffer });
-                    extractedText = result.value;
-                }
-
-                // Validate character count (300,000 characters max)
-                const charCount = extractedText.length;
-                const wordCount = extractedText.split(/\s+/).filter(word => word.length > 0).length;
-                if (charCount > 300000) {
-                    alert('Document exceeds 300,000 character limit. Please upload a smaller document.');
-                    removeFile.click();
-                    extractionStatus.classList.add('hidden');
+                // Validate file type
+                const allowedTypes = [
+                    'application/pdf',
+                    'application/msword',
+                    'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+                ];
+                if (!allowedTypes.includes(file.type)) {
+                    alert('Unsupported file type. Please upload a PDF, DOC, or DOCX file.');
                     return;
                 }
 
-                // Store extracted text for analysis
-                currentFile.extractedText = extractedText;
-                extractionStatus.classList.add('hidden');
+                // Validate file size (50MB limit)
+                if (file.size > 50 * 1024 * 1024) {
+                    alert('File size exceeds 50MB. Please upload a smaller document.');
+                    return;
+                }
 
-                // Update file info with character and word count
-                fileSize.textContent = `${(file.size / 1024 / 1024).toFixed(2)} MB • ${charCount.toLocaleString()} characters • ${wordCount.toLocaleString()} words`;
+                currentFile = file;
+                fileName.textContent = file.name;
+                fileSize.textContent = `${(file.size / 1024 / 1024).toFixed(2)} MB`;
+                uploadArea.classList.add('hidden');
+                fileInfo.classList.remove('hidden');
+                analyzeBtn.disabled = false;
 
-            } catch (error) {
-                console.error('Error extracting text:', error);
-                alert('Failed to extract text from the document. Please try another file.');
-                removeFile.click();
+                extractTextFromFile(file);
+            } catch (err) {
+                alert('An unexpected error occurred during file upload. Please try again.');
+                console.error('File upload error:', err);
+            }
+        }
+
+        function extractTextFromFile(file) {
+            extractionStatus.classList.remove('hidden');
+            try {
+                if (file.type === 'application/pdf') {
+                    const reader = new FileReader();
+                    reader.onload = async function() {
+                        try {
+                            const typedarray = new Uint8Array(reader.result);
+                            const pdf = await pdfjsLib.getDocument(typedarray).promise;
+                            let extractedText = '';
+                            for (let i = 1; i <= pdf.numPages; i++) {
+                                const page = await pdf.getPage(i);
+                                const textContent = await page.getTextContent();
+                                extractedText += textContent.items.map(item => item.str).join(' ') + '\n';
+                            }
+                            const charCount = extractedText.length;
+                            if (charCount > 300000) {
+                                alert('Document exceeds 300,000 character limit. Please upload a smaller document.');
+                                removeFile.click();
+                                extractionStatus.classList.add('hidden');
+                                return;
+                            }
+                            currentFile.extractedText = extractedText;
+                            extractionStatus.classList.add('hidden');
+                            fileSize.textContent = `${(file.size / 1024 / 1024).toFixed(2)} MB • ${charCount.toLocaleString()} characters`;
+                        } catch (pdfErr) {
+                            alert('Failed to extract text from PDF. The file may be encrypted, scanned, or corrupted.');
+                            console.error('PDF extraction error:', pdfErr);
+                            removeFile.click();
+                            extractionStatus.classList.add('hidden');
+                        }
+                    };
+                    reader.onerror = function() {
+                        alert('Error reading PDF file. Please try another document.');
+                        console.error('PDF read error:', reader.error);
+                        extractionStatus.classList.add('hidden');
+                    };
+                    reader.readAsArrayBuffer(file);
+                    return;
+                }
+
+                if (
+                    file.type === 'application/msword' ||
+                    file.type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+                ) {
+                    const reader = new FileReader();
+                    reader.onload = function(event) {
+                        mammoth.extractRawText({ arrayBuffer: event.target.result })
+                            .then(result => {
+                                let extractedText = result.value;
+                                const charCount = extractedText.length;
+                                if (charCount > 300000) {
+                                    alert('Document exceeds 300,000 character limit. Please upload a smaller document.');
+                                    removeFile.click();
+                                    extractionStatus.classList.add('hidden');
+                                    return;
+                                }
+                                currentFile.extractedText = extractedText;
+                                extractionStatus.classList.add('hidden');
+                                fileSize.textContent = `${(file.size / 1024 / 1024).toFixed(2)} MB • ${charCount.toLocaleString()} characters`;
+                            })
+                            .catch((docErr) => {
+                                alert('Failed to extract text from Word document. The file may be corrupted or unsupported.');
+                                console.error('Word extraction error:', docErr);
+                                removeFile.click();
+                                extractionStatus.classList.add('hidden');
+                            });
+                    };
+                    reader.onerror = function() {
+                        alert('Error reading Word file. Please try another document.');
+                        console.error('Word read error:', reader.error);
+                        extractionStatus.classList.add('hidden');
+                    };
+                    reader.readAsArrayBuffer(file);
+                    return;
+                }
+            } catch (err) {
+                alert('An unexpected error occurred during document extraction.');
+                console.error('Document extraction error:', err);
                 extractionStatus.classList.add('hidden');
             }
         }
@@ -1104,38 +1137,47 @@ This agreement shall automatically renew for successive one-year terms unless te
         });
 
         function analyzeContract(text) {
-            const detectedClauses = [];
-            let highlightedContent = text;
-            const clauseMatches = new Map(); // Store clause matches for tooltips
+            try {
+                if (!text || text.length < 50) {
+                    alert('Contract text is too short for analysis.');
+                    return;
+                }
+                const detectedClauses = [];
+                let highlightedContent = text;
+                const clauseMatches = new Map(); // Store clause matches for tooltips
 
-            // Find matches for each clause
-            clauseLibrary.forEach(clause => {
-                let clauseDetected = false;
-                
-                clause.keywords.forEach(keyword => {
-                    const regex = new RegExp(`\\b${keyword.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\b`, 'gi');
-                    const matches = text.match(regex);
+                // Find matches for each clause
+                clauseLibrary.forEach(clause => {
+                    let clauseDetected = false;
                     
-                    if (matches && !clauseDetected) {
-                        detectedClauses.push(clause);
-                        clauseDetected = true;
-                        clauseMatches.set(clause.name, clause.explanation);
+                    clause.keywords.forEach(keyword => {
+                        const regex = new RegExp(`\\b${keyword.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\b`, 'gi');
+                        const matches = text.match(regex);
                         
-                        // Highlight the text with tooltip data
-                        const riskClass = `highlight-${clause.riskLevel.toLowerCase()}`;
-                        highlightedContent = highlightedContent.replace(regex, 
-                            `<span class="${riskClass}" data-tooltip="${clause.explanation}" data-clause="${clause.name}">$&</span>`);
-                    }
+                        if (matches && !clauseDetected) {
+                            detectedClauses.push(clause);
+                            clauseDetected = true;
+                            clauseMatches.set(clause.name, clause.explanation);
+                            
+                            // Highlight the text with tooltip data
+                            const riskClass = `highlight-${clause.riskLevel.toLowerCase()}`;
+                            highlightedContent = highlightedContent.replace(regex, 
+                                `<span class="${riskClass}" data-tooltip="${clause.explanation}" data-clause="${clause.name}">$&</span>`);
+                        }
+                    });
                 });
-            });
 
-            // Display results
-            displayResults(highlightedContent, detectedClauses, clauseMatches);
+                // Display results
+                displayResults(highlightedContent, detectedClauses, clauseMatches);
+            } catch (err) {
+                alert('An error occurred during contract analysis. Please try again.');
+                console.error('Analysis error:', err);
+            }
         }
 
         function displayResults(highlightedContent, detectedClauses, clauseMatches) {
-            // Show highlighted text with animated reveals
-            highlightedText.innerHTML = highlightedContent;
+            // Sanitize highlightedContent before inserting
+            highlightedText.innerHTML = sanitizeHTML(highlightedContent);
             
             // Add tooltip event listeners to highlighted text
             const highlightedSpans = highlightedText.querySelectorAll('[data-tooltip]');
@@ -1343,7 +1385,7 @@ This agreement shall automatically renew for successive one-year terms unless te
                         
                         <div class="bg-yellow-50 border-l-4 border-yellow-400 p-6 mb-6">
                             <p class="text-gray-700">
-                                <strong>We never sell, rent, or trade your personal information to third parties.</strong> For questions, email hello@legalclausechecker.com.
+                                <strong>We never sell, rent, or trade your personal information to third parties.</strong> For questions, email [your email].
                             </p>
                         </div>
                     </div>
@@ -1407,7 +1449,6 @@ This agreement shall automatically renew for successive one-year terms unless te
                                 <div class="flex-shrink-0">
                                     <svg class="h-6 w-6 text-red-500" viewBox="0 0 20 20" fill="currentColor">
                                         <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
-                                    </svg>
                                 </div>
                                 <div class="ml-3">
                                     <p class="text-red-700 font-bold text-lg">
@@ -1454,7 +1495,7 @@ This agreement shall automatically renew for successive one-year terms unless te
                                 <div class="space-y-3">
                                     <div class="flex items-center">
                                         <svg class="w-5 h-5 mr-3 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 012 2z"></path>
                                         </svg>
                                         <span>hello@legalclausechecker.com</span>
                                     </div>
@@ -1462,7 +1503,7 @@ This agreement shall automatically renew for successive one-year terms unless te
                                         <svg class="w-5 h-5 mr-3 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path>
                                         </svg>
-                                        <span>+234 (901)1780 7688 </span>
+                                        <span>+1 (555) 123-4567</span>
                                     </div>
                                 </div>
                             </div>
@@ -1471,7 +1512,7 @@ This agreement shall automatically renew for successive one-year terms unless te
                                 <h3 class="text-xl font-semibold mb-4">Support</h3>
                                 <div class="space-y-3">
                                     <div class="flex items-center">
-                                       <svg class="w-5 h-5 mr-3 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <svg class="w-5 h-5 mr-3 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192L5.636 18.364M12 2.25a9.75 9.75 0 11-9.75 9.75 9.75 9.75 0 019.75-9.75z"></path>
                                         </svg>
                                         <span>support@legalclausechecker.com</span>
@@ -1965,6 +2006,140 @@ This agreement shall automatically renew for successive one-year terms unless te
             contractTextArea.focus();
             updateTheme(); // Apply saved theme on load
         });
+
+        function sanitizeHTML(str) {
+            return DOMPurify.sanitize(str, {USE_PROFILES: {html: true}});
+        }
+
+        window.onerror = function(message, source, lineno, colno, error) {
+            alert('A critical error occurred. Please refresh the page or contact support.');
+            console.error('Global error:', { message, source, lineno, colno, error });
+        };
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'96c6afbba58a8cce',t:'MTc1NDczNjU2Mi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+    <script defer data-domain="legalclausechecker.com" src="https://plausible.io/js/plausible.js"></script>
+</body>
 </html>
+
+
+
+<!-- ========================= UPDATED FUNCTION: handleFileUpload ========================= -->
+<script>
+function handleFileUpload(file) {
+    try {
+        const allowedTypes = [
+            'application/pdf',
+            'application/msword',
+            'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+        ];
+        if (!allowedTypes.includes(file.type)) {
+            alert('Unsupported file type. Please upload a PDF, DOC, or DOCX file.');
+            return;
+        }
+
+        if (file.size > 50 * 1024 * 1024) {
+            alert('File size exceeds 50MB. Please upload a smaller document.');
+            return;
+        }
+
+        analyzeBtn.disabled = true;
+        currentFile = file;
+        fileName.textContent = file.name;
+        fileSize.textContent = `${(file.size / 1024 / 1024).toFixed(2)} MB`;
+        uploadArea.classList.add('hidden');
+        fileInfo.classList.remove('hidden');
+        extractionStatus.classList.remove('hidden');
+
+        extractTextFromFile(file)
+            .then((extractedText) => {
+                currentFile.extractedText = extractedText || '';
+                const charCount = (currentFile.extractedText || '').length;
+                fileSize.textContent = `${(file.size / 1024 / 1024).toFixed(2)} MB • ${charCount.toLocaleString()} characters`;
+                contractTextArea.value = currentFile.extractedText;
+                contractTextArea.dispatchEvent(new Event('input'));
+                analyzeBtn.disabled = false;
+                extractionStatus.classList.add('hidden');
+                downloadTxtBtn.classList.remove('hidden');
+            })
+            .catch((err) => {
+                alert('Failed to extract text from the uploaded document. The file may be encrypted, scanned, or unsupported.');
+                console.error('Document extraction error:', err);
+                removeFile.click();
+                extractionStatus.classList.add('hidden');
+            });
+    } catch (err) {
+        alert('An unexpected error occurred during file upload. Please try again.');
+        console.error('File upload error:', err);
+    }
+}
+</script>
+
+<!-- ========================= UPDATED FUNCTION: extractTextFromFile ========================= -->
+<script>
+function extractTextFromFile(file) {
+    return new Promise((resolve, reject) => {
+        try {
+            function finalizeExtraction(extractedText) {
+                if (typeof extractedText !== 'string') extractedText = String(extractedText || '');
+                const charCount = extractedText.length;
+                if (charCount > 300000) {
+                    alert('Document exceeds 300,000 character limit. Please upload a smaller document.');
+                    reject(new Error('char_limit_exceeded'));
+                    return;
+                }
+                resolve(extractedText);
+            }
+
+            if (file.type === 'application/pdf') {
+                const reader = new FileReader();
+                reader.onload = async function() {
+                    try {
+                        const typedarray = new Uint8Array(reader.result);
+                        const pdf = await pdfjsLib.getDocument(typedarray).promise;
+                        let extractedText = '';
+                        for (let i = 1; i <= pdf.numPages; i++) {
+                            const page = await pdf.getPage(i);
+                            const textContent = await page.getTextContent();
+                            extractedText += textContent.items.map(item => item.str).join(' ') + '\n';
+                        }
+                        finalizeExtraction(extractedText);
+                    } catch (pdfErr) {
+                        console.error('PDF extraction error:', pdfErr);
+                        reject(pdfErr);
+                    }
+                };
+                reader.onerror = function() {
+                    console.error('PDF read error:', reader.error);
+                    reject(reader.error || new Error('pdf_read_error'));
+                };
+                reader.readAsArrayBuffer(file);
+                return;
+            }
+
+            if (file.type === 'application/msword' ||
+                file.type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    mammoth.extractRawText({ arrayBuffer: event.target.result })
+                        .then(result => {
+                            finalizeExtraction(result.value || '');
+                        })
+                        .catch((docErr) => {
+                            console.error('Word extraction error:', docErr);
+                            reject(docErr);
+                        });
+                };
+                reader.onerror = function() {
+                    console.error('Word read error:', reader.error);
+                    reject(reader.error || new Error('word_read_error'));
+                };
+                reader.readAsArrayBuffer(file);
+                return;
+            }
+
+            reject(new Error('unsupported_file_type'));
+        } catch (err) {
+            reject(err);
+        }
+    });
+}
+</script>
