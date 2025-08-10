@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>LegalClauseChecker - Advanced Contract Analysis</title>
     <meta name="description" content="Free AI-powered legal contract analysis tool. Instantly analyze contracts for risks, missing clauses, and compliance issues.">
-    <meta name="keywords" content="legal contract analysis, clause checker, contract review, legal AI, free legal tool">
+    <meta name="keywords" content="legal contract analysis, clause checker, contract review, legal AI, free legal contract review, contract review online, clause analyzer, legal clause detection tool, identify risky contract clauses, find missing contract clauses, contract clause explanation tool, how to detect hidden risks in contracts, contract law tool to highlight indemnity clause, free legal tool">
     <meta name="robots" content="index, follow">
     <link rel="preconnect" href="https://cdnjs.cloudflare.com">
     <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
@@ -15,6 +15,21 @@
     <meta http-equiv="X-Frame-Options" content="DENY">
     <meta http-equiv="X-XSS-Protection" content="1; mode=block">
     <meta name="referrer" content="strict-origin-when-cross-origin">
+    
+    <!-- Google Analytics (Replace GA_MEASUREMENT_ID with your actual ID) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=GA_MEASUREMENT_ID"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'GA_MEASUREMENT_ID', {
+            page_title: 'LegalClauseChecker - Free Contract Analysis',
+            page_location: window.location.href,
+            custom_map: {
+                'custom_parameter_1': 'user_engagement_level'
+            }
+        });
+    </script>
     <style>
         * {
             margin: 0;
@@ -1872,6 +1887,15 @@ Freelancer is an independent contractor, not an employee.`
             document.getElementById('missing-clauses').textContent = missingCount;
             document.getElementById('high-risk-count').textContent = highRiskCount;
             document.getElementById('overall-score').textContent = overallScore + '%';
+            
+            // Track analysis completion
+            Analytics.trackAnalysis({
+                totalClauses: clauseDefinitions.length,
+                clausesFound: clausesFound,
+                missingClauses: missingCount,
+                highRiskCount: highRiskCount,
+                overallScore: overallScore
+            });
         }
 
         function updateLoadingProgress(percentage) {
@@ -2446,5 +2470,5 @@ Freelancer is an independent contractor, not an employee.`
             PerformanceManager.cleanup();
         });
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'96cb4401c769777a',t:'MTc1NDc4NDU3OS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'96cb4f0a21fe1b54',t:'MTc1NDc4NTAzMC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
