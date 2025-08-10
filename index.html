@@ -1,3 +1,5 @@
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -21,33 +23,9 @@
     <meta http-equiv="X-XSS-Protection" content="1; mode=block">
     <meta name="referrer" content="strict-origin-when-cross-origin">
     
-    <!-- Google Analytics (Replace GA_MEASUREMENT_ID with your actual ID) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=GA_MEASUREMENT_ID"></script>
-    <script>
-        window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
-        gtag('js', new Date());
-        gtag('config', 'GA_MEASUREMENT_ID', {
-            page_title: 'LegalClauseChecker - Free Contract Analysis',
-            page_location: window.location.href,
-            custom_map: {
-                'custom_parameter_1': 'user_engagement_level'
-            }
-        });
-    </script>
 
-    <!-- Google AdSense (Replace ca-pub-XXXXXXXXXXXXXXXXX with your actual AdSense ID) -->
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXXX" crossorigin="anonymous"></script>
-    <script>
-        // Initialize AdSense ads when page loads
-        window.addEventListener('load', function() {
-            try {
-                (adsbygoogle = window.adsbygoogle || []).push({});
-            } catch (e) {
-                console.warn('AdSense initialization failed:', e);
-            }
-        });
-    </script>
+
+
     <style>
         * {
             margin: 0;
@@ -1352,15 +1330,7 @@ Example: You can paste any legal agreement, contract, or document text for analy
             },
             
             initializeHotjar() {
-                // Hotjar implementation (replace HOTJAR_ID with actual ID)
-                (function(h,o,t,j,a,r){
-                    h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};
-                    h._hjSettings={hjid:3000000,hjsv:6}; // Replace with actual Hotjar ID
-                    a=o.getElementsByTagName('head')[0];
-                    r=o.createElement('script');r.async=1;
-                    r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;
-                    a.appendChild(r);
-                })(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');
+                // Hotjar initialization removed - add manually if needed
             },
             
             initializeCustomAnalytics() {
@@ -2662,34 +2632,219 @@ Freelancer is an independent contractor, not an employee.`
                 
                 const { jsPDF } = jsPDFLib;
                 const doc = new jsPDF();
+                const pageWidth = doc.internal.pageSize.width;
+                const margin = 20;
+                const maxWidth = pageWidth - (margin * 2);
+                let y = 30;
                 
-                // Simple, safe PDF generation
-                doc.setFontSize(16);
-                doc.text('Contract Analysis Report', 20, 30);
+                // Helper function to add text with word wrapping
+                function addWrappedText(text, x, startY, maxWidth, fontSize = 10) {
+                    doc.setFontSize(fontSize);
+                    const lines = doc.splitTextToSize(text, maxWidth);
+                    doc.text(lines, x, startY);
+                    return startY + (lines.length * (fontSize * 0.4));
+                }
+                
+                // Helper function to check if we need a new page
+                function checkNewPage(currentY, neededSpace = 40) {
+                    if (currentY + neededSpace > 280) {
+                        doc.addPage();
+                        return 30;
+                    }
+                    return currentY;
+                }
+                
+                // Title and Header
+                doc.setFontSize(20);
+                doc.setFont(undefined, 'bold');
+                doc.text('Contract Analysis Report', margin, y);
+                y += 20;
                 
                 doc.setFontSize(12);
-                doc.text(`Date: ${new Date().toLocaleDateString()}`, 20, 50);
-                
-                doc.text('Summary:', 20, 70);
-                doc.text(`Clauses Found: ${document.getElementById('total-clauses').textContent}`, 20, 85);
-                doc.text(`Missing: ${document.getElementById('missing-clauses').textContent}`, 20, 95);
-                doc.text(`High Risk: ${document.getElementById('high-risk-count').textContent}`, 20, 105);
-                doc.text(`Score: ${document.getElementById('overall-score').textContent}`, 20, 115);
-                
-                let y = 140;
-                doc.text('Clause Analysis:', 20, y);
+                doc.setFont(undefined, 'normal');
+                doc.text(`Generated: ${new Date().toLocaleDateString()} at ${new Date().toLocaleTimeString()}`, margin, y);
                 y += 15;
                 
+                // Executive Summary Box
+                doc.setDrawColor(30, 60, 114);
+                doc.setFillColor(240, 248, 255);
+                doc.rect(margin, y, maxWidth, 50, 'FD');
+                
+                y += 10;
+                doc.setFontSize(14);
+                doc.setFont(undefined, 'bold');
+                doc.text('Executive Summary', margin + 10, y);
+                y += 10;
+                
+                doc.setFontSize(11);
+                doc.setFont(undefined, 'normal');
+                const totalClauses = document.getElementById('total-clauses').textContent;
+                const missingClauses = document.getElementById('missing-clauses').textContent;
+                const highRiskCount = document.getElementById('high-risk-count').textContent;
+                const overallScore = document.getElementById('overall-score').textContent;
+                
+                doc.text(`• Clauses Analyzed: ${Object.keys(analysisResults).length}`, margin + 10, y);
+                y += 7;
+                doc.text(`• Clauses Found: ${totalClauses}`, margin + 10, y);
+                y += 7;
+                doc.text(`• Missing Clauses: ${missingClauses}`, margin + 10, y);
+                y += 7;
+                doc.text(`• High Risk Items: ${highRiskCount}`, margin + 10, y);
+                y += 7;
+                doc.text(`• Overall Contract Score: ${overallScore}`, margin + 10, y);
+                y += 20;
+                
+                // Risk Assessment Summary
+                y = checkNewPage(y, 60);
+                doc.setFontSize(16);
+                doc.setFont(undefined, 'bold');
+                doc.text('Risk Assessment Overview', margin, y);
+                y += 15;
+                
+                const riskCounts = { high: 0, medium: 0, low: 0, missing: 0 };
                 Object.values(analysisResults).forEach(clause => {
-                    if (y > 270) {
-                        doc.addPage();
-                        y = 30;
-                    }
-                    doc.text(`${clause.title}: ${clause.status} (${clause.risk} risk)`, 20, y);
-                    y += 10;
+                    if (clause.status === 'missing') riskCounts.missing++;
+                    else riskCounts[clause.risk]++;
                 });
                 
-                doc.save(`analysis-report-${Date.now()}.pdf`);
+                doc.setFontSize(11);
+                doc.setFont(undefined, 'normal');
+                y = addWrappedText(
+                    `This contract analysis identified ${riskCounts.high} high-risk items, ${riskCounts.medium} medium-risk items, and ${riskCounts.low} low-risk items. ${riskCounts.missing} important clauses are missing entirely. Below is a detailed breakdown of each clause category with explanations and recommendations.`,
+                    margin, y, maxWidth, 11
+                );
+                y += 15;
+                
+                // Detailed Clause Analysis
+                doc.setFontSize(16);
+                doc.setFont(undefined, 'bold');
+                doc.text('Detailed Clause Analysis', margin, y);
+                y += 15;
+                
+                // Sort clauses by risk level for better presentation
+                const sortedClauses = Object.values(analysisResults).sort((a, b) => {
+                    const riskOrder = { 'missing': 4, 'high': 3, 'medium': 2, 'low': 1 };
+                    return riskOrder[b.status === 'missing' ? 'missing' : b.risk] - riskOrder[a.status === 'missing' ? 'missing' : a.risk];
+                });
+                
+                sortedClauses.forEach((clause, index) => {
+                    y = checkNewPage(y, 80);
+                    
+                    // Clause header with colored background
+                    const riskColor = clause.status === 'missing' ? [128, 128, 128] : 
+                                     clause.risk === 'high' ? [239, 68, 68] :
+                                     clause.risk === 'medium' ? [245, 158, 11] : [34, 197, 94];
+                    
+                    doc.setFillColor(riskColor[0], riskColor[1], riskColor[2]);
+                    doc.rect(margin, y - 5, maxWidth, 12, 'F');
+                    
+                    doc.setTextColor(255, 255, 255);
+                    doc.setFontSize(12);
+                    doc.setFont(undefined, 'bold');
+                    const statusText = clause.status === 'missing' ? 'MISSING' : 
+                                      clause.risk.toUpperCase() + ' RISK';
+                    doc.text(`${index + 1}. ${clause.title} - ${statusText}`, margin + 5, y + 5);
+                    y += 20;
+                    
+                    // Reset text color
+                    doc.setTextColor(0, 0, 0);
+                    doc.setFont(undefined, 'normal');
+                    doc.setFontSize(10);
+                    
+                    // Status and description
+                    const statusDescription = clause.status === 'missing' ? 
+                        'This important clause was not found in your contract.' :
+                        `This clause was found but has ${clause.risk} risk level (${clause.status} implementation).`;
+                    
+                    y = addWrappedText(`Status: ${statusDescription}`, margin, y, maxWidth, 10);
+                    y += 8;
+                    
+                    // What this clause does
+                    doc.setFont(undefined, 'bold');
+                    doc.text('What this clause does:', margin, y);
+                    y += 5;
+                    doc.setFont(undefined, 'normal');
+                    y = addWrappedText(clause.explanation, margin, y, maxWidth, 10);
+                    y += 8;
+                    
+                    // Risk analysis (if not missing)
+                    if (clause.status !== 'missing') {
+                        doc.setFont(undefined, 'bold');
+                        doc.text('Risk Analysis:', margin, y);
+                        y += 5;
+                        doc.setFont(undefined, 'normal');
+                        y = addWrappedText(clause.risks, margin, y, maxWidth, 10);
+                        
+                        // Add specific risk factors if found
+                        if (clause.riskFactors && clause.riskFactors.length > 0) {
+                            y += 5;
+                            doc.setFont(undefined, 'bold');
+                            doc.text('Identified Issues:', margin, y);
+                            y += 5;
+                            doc.setFont(undefined, 'normal');
+                            clause.riskFactors.forEach(risk => {
+                                y = addWrappedText(`• ${risk}`, margin + 5, y, maxWidth - 5, 10);
+                                y += 3;
+                            });
+                        }
+                        y += 5;
+                    }
+                    
+                    // Recommendations
+                    doc.setFont(undefined, 'bold');
+                    doc.text('Recommendations:', margin, y);
+                    y += 5;
+                    doc.setFont(undefined, 'normal');
+                    y = addWrappedText(clause.recommendations, margin, y, maxWidth, 10);
+                    
+                    // Priority level
+                    y += 8;
+                    doc.setFont(undefined, 'bold');
+                    const priority = clause.status === 'missing' || clause.risk === 'high' ? 'HIGH PRIORITY' :
+                                    clause.risk === 'medium' ? 'MEDIUM PRIORITY' : 'LOW PRIORITY';
+                    doc.text(`Action Priority: ${priority}`, margin, y);
+                    
+                    y += 20;
+                });
+                
+                // Add disclaimer page
+                doc.addPage();
+                y = 30;
+                
+                doc.setFontSize(16);
+                doc.setFont(undefined, 'bold');
+                doc.text('Important Legal Disclaimer', margin, y);
+                y += 20;
+                
+                doc.setFontSize(11);
+                doc.setFont(undefined, 'normal');
+                const disclaimerText = `This automated contract analysis is provided for informational purposes only and does not constitute legal advice. The analysis is based on automated keyword detection and general legal principles, and may not identify all potential issues or risks in your specific contract.
+
+Key Limitations:
+• This tool cannot replace the expertise of a qualified attorney
+• Results may not be comprehensive or applicable to your specific situation
+• Legal requirements vary by jurisdiction and industry
+• Contract interpretation often requires human judgment and legal expertise
+
+Recommendations:
+• Always consult with a licensed attorney before making important legal decisions
+• Have complex contracts reviewed by legal professionals
+• Consider the specific context and requirements of your situation
+• Use this analysis as a starting point, not a final assessment
+
+By using this report, you acknowledge that LegalClauseChecker provides educational information only and assumes no liability for decisions made based on this analysis.`;
+                
+                y = addWrappedText(disclaimerText, margin, y, maxWidth, 11);
+                
+                // Footer with generation info
+                doc.setFontSize(8);
+                doc.setTextColor(128, 128, 128);
+                doc.text(`Generated by LegalClauseChecker.com on ${new Date().toLocaleString()}`, margin, 280);
+                
+                // Save the PDF
+                const fileName = `contract-analysis-report-${new Date().toISOString().split('T')[0]}.pdf`;
+                doc.save(fileName);
+                
                 Analytics.trackExport('pdf');
                 Analytics.trackConversion('report_download', 1);
                 
@@ -2897,5 +3052,5 @@ Freelancer is an independent contractor, not an employee.`
             PerformanceManager.cleanup();
         });
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'96cbaa20546dc198',t:'MTc1NDc4ODc2MS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'96cbb529651e6536',t:'MTc1NDc4OTIxMy4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
