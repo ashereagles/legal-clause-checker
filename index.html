@@ -530,6 +530,47 @@
             margin-bottom: 15px;
         }
 
+        .legal-term-highlight {
+            font-weight: bold !important;
+            padding: 2px 4px;
+            border-radius: 3px;
+            transition: all 0.2s ease;
+            cursor: help;
+            position: relative;
+        }
+
+        .legal-term-highlight:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .legal-term-legend {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+            font-size: 0.8rem;
+        }
+
+        .legend-item {
+            display: inline-block;
+            margin: 4px 6px 4px 0;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-weight: bold;
+            font-size: 0.8rem;
+            text-align: center;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            transition: all 0.2s ease;
+            cursor: help;
+        }
+        
+        .legend-item:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+        }
+
         .explanation-text {
             background: #f0f9ff;
             padding: 20px;
@@ -1563,7 +1604,7 @@ Example: You can paste any legal agreement, contract, or document text for analy
                 id: 'termination',
                 title: 'Termination Clauses',
                 subtitle: 'Conditions for ending the agreement',
-                keywords: ['terminate', 'termination', 'end', 'expire', 'breach', 'notice', 'cause', 'without cause', 'dissolution'],
+                keywords: ['terminate', 'termination', 'end', 'expire', 'breach', 'notice', 'cause', 'without cause', 'dissolution', 'default', 'cancel', 'void'],
                 riskFactors: ['notice period', 'termination triggers', 'post-termination obligations', 'survival clauses'],
                 explanation: 'Termination clauses specify how and when the contract can be ended, including notice requirements and consequences of termination.',
                 risks: 'Unclear termination procedures can lead to disputes. Lack of termination for convenience options can trap parties in unwanted relationships.',
@@ -1573,7 +1614,7 @@ Example: You can paste any legal agreement, contract, or document text for analy
                 id: 'dispute_resolution',
                 title: 'Dispute Resolution Clauses',
                 subtitle: 'Methods for resolving conflicts',
-                keywords: ['dispute', 'arbitration', 'mediation', 'litigation', 'court', 'jurisdiction', 'resolution', 'adr'],
+                keywords: ['dispute', 'arbitration', 'mediation', 'litigation', 'court', 'jurisdiction', 'resolution', 'adr', 'venue', 'governing law'],
                 riskFactors: ['mandatory arbitration', 'jurisdiction selection', 'cost allocation', 'appeal rights'],
                 explanation: 'These clauses establish the process for resolving disputes that may arise under the contract, including mediation, arbitration, or court proceedings.',
                 risks: 'Mandatory arbitration can limit legal remedies. Unfavorable jurisdiction selection can increase costs and complexity of dispute resolution.',
@@ -1603,7 +1644,7 @@ Example: You can paste any legal agreement, contract, or document text for analy
                 id: 'indemnification',
                 title: 'Indemnification Clauses',
                 subtitle: 'Protection from third-party claims',
-                keywords: ['indemnify', 'indemnification', 'hold harmless', 'defend', 'third party', 'claims', 'losses'],
+                keywords: ['indemnify', 'indemnification', 'hold harmless', 'defend', 'third party', 'claims', 'losses', 'damages', 'liability', 'consequential', 'punitive'],
                 riskFactors: ['scope of indemnity', 'mutual obligations', 'defense obligations', 'notice requirements'],
                 explanation: 'Indemnification clauses require one party to protect the other from certain third-party claims and associated costs.',
                 risks: 'One-sided indemnification can create significant financial exposure. Broad indemnification scope may cover unintended risks.',
@@ -1613,7 +1654,7 @@ Example: You can paste any legal agreement, contract, or document text for analy
                 id: 'payment_terms',
                 title: 'Payment Terms',
                 subtitle: 'Financial obligations and schedules',
-                keywords: ['payment', 'fee', 'compensation', 'invoice', 'due', 'payable', 'amount', 'schedule', 'interest', 'late'],
+                keywords: ['payment', 'fee', 'compensation', 'invoice', 'due', 'payable', 'amount', 'schedule', 'interest', 'late', 'penalty'],
                 riskFactors: ['payment schedule', 'late fees', 'dispute procedures', 'currency'],
                 explanation: 'Payment terms specify amounts due, payment schedules, accepted payment methods, and consequences of late payment.',
                 risks: 'Unclear payment terms can cause cash flow problems. Lack of late payment penalties may encourage delayed payment.',
@@ -1683,7 +1724,7 @@ Example: You can paste any legal agreement, contract, or document text for analy
                 id: 'warranties',
                 title: 'Warranties and Representations',
                 subtitle: 'Promises and statements of fact',
-                keywords: ['warranty', 'represent', 'guarantee', 'warrants', 'represents', 'assure', 'covenant', 'promise'],
+                keywords: ['warranty', 'represent', 'guarantee', 'warrants', 'represents', 'assure', 'covenant', 'promise', 'performance', 'obligation'],
                 riskFactors: ['warranty scope', 'disclaimer language', 'remedy limitations', 'survival periods'],
                 explanation: 'Warranties and representations are promises and statements of fact that parties make to each other as part of the contract.',
                 risks: 'Broad warranties can create unexpected liability. Inadequate warranties may leave parties without recourse for defective performance.',
@@ -2411,7 +2452,127 @@ Freelancer is an independent contractor, not an employee.`
                 });
             });
             
-            return relevantSentences.slice(0, 3).join('. ') + (relevantSentences.length > 3 ? '...' : '');
+            let extractedText = relevantSentences.slice(0, 3).join('. ') + (relevantSentences.length > 3 ? '...' : '');
+            
+            // Highlight legal terms with colors and bold formatting
+            extractedText = highlightLegalTerms(extractedText, keywords);
+            
+            return extractedText;
+        }
+
+        function highlightLegalTerms(text, keywords) {
+            if (!text) return text;
+            
+            // Comprehensive color coding system for legal terms
+            const termColorMap = {
+                // 🔴 HIGH RISK TERMS (Red) - Critical liability and indemnification
+                'indemnification': '#dc2626',
+                'indemnify': '#dc2626',
+                'hold harmless': '#dc2626',
+                'liability': '#dc2626',
+                'damages': '#dc2626',
+                'consequential': '#dc2626',
+                'punitive': '#dc2626',
+                'losses': '#dc2626',
+                
+                // 🔵 CONTRACT CONTROL (Blue) - Termination and breach terms
+                'termination': '#2563eb',
+                'terminate': '#2563eb',
+                'breach': '#2563eb',
+                'default': '#2563eb',
+                'expire': '#2563eb',
+                'dissolution': '#2563eb',
+                'end': '#2563eb',
+                'cancel': '#2563eb',
+                'void': '#2563eb',
+                
+                // 🟣 CONFIDENTIALITY (Purple) - Information protection
+                'confidential': '#7c3aed',
+                'non-disclosure': '#7c3aed',
+                'proprietary': '#7c3aed',
+                'secret': '#7c3aed',
+                'nda': '#7c3aed',
+                'information': '#7c3aed',
+                'disclose': '#7c3aed',
+                'confidentiality': '#7c3aed',
+                
+                // 🟠 COMPETITION RESTRICTIONS (Orange) - Non-compete and restraints
+                'non-compete': '#ea580c',
+                'non-competition': '#ea580c',
+                'compete': '#ea580c',
+                'competitive': '#ea580c',
+                'restraint': '#ea580c',
+                'restriction': '#ea580c',
+                'covenant not to compete': '#ea580c',
+                'solicit': '#ea580c',
+                'non-solicitation': '#ea580c',
+                
+                // 🟢 INTELLECTUAL PROPERTY (Green) - IP rights and ownership
+                'intellectual property': '#059669',
+                'copyright': '#059669',
+                'trademark': '#059669',
+                'patent': '#059669',
+                'ip': '#059669',
+                'ownership': '#059669',
+                'license': '#059669',
+                'work product': '#059669',
+                'proprietary rights': '#059669',
+                
+                // 🟦 LEGAL PROCESS (Teal) - Dispute resolution and jurisdiction
+                'arbitration': '#0d9488',
+                'mediation': '#0d9488',
+                'litigation': '#0d9488',
+                'jurisdiction': '#0d9488',
+                'governing law': '#0d9488',
+                'dispute': '#0d9488',
+                'resolution': '#0d9488',
+                'court': '#0d9488',
+                'venue': '#0d9488',
+                'adr': '#0d9488',
+                
+                // 🟡 FINANCIAL TERMS (Amber) - Payment and monetary obligations
+                'payment': '#d97706',
+                'fee': '#d97706',
+                'compensation': '#d97706',
+                'invoice': '#d97706',
+                'penalty': '#d97706',
+                'interest': '#d97706',
+                'amount': '#d97706',
+                'due': '#d97706',
+                'payable': '#d97706',
+                'late': '#d97706',
+                
+                // 🟤 PERFORMANCE TERMS (Brown) - Obligations and warranties
+                'warranty': '#92400e',
+                'represent': '#92400e',
+                'guarantee': '#92400e',
+                'warrants': '#92400e',
+                'represents': '#92400e',
+                'performance': '#92400e',
+                'obligation': '#92400e',
+                'covenant': '#92400e',
+                'promise': '#92400e'
+            };
+            
+            let highlightedText = text;
+            
+            // Sort keywords by length (longest first) to avoid partial matches
+            const sortedKeywords = keywords.sort((a, b) => b.length - a.length);
+            
+            sortedKeywords.forEach(keyword => {
+                const keywordLower = keyword.toLowerCase();
+                const color = termColorMap[keywordLower] || '#6366f1'; // Default indigo for unmatched terms
+                
+                // Create regex pattern that matches whole words or phrases
+                const escapedKeyword = keyword.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+                const regex = new RegExp(`\\b(${escapedKeyword})\\b`, 'gi');
+                
+                highlightedText = highlightedText.replace(regex, 
+                    `<span class="legal-term-highlight" style="background: ${color}20; color: ${color}; font-weight: bold; padding: 3px 6px; border-radius: 4px; border: 1px solid ${color}60; box-shadow: 0 1px 2px ${color}30;">$1</span>`
+                );
+            });
+            
+            return highlightedText;
         }
 
         function analyzeRiskFactors(textLower, riskFactors) {
@@ -2497,6 +2658,21 @@ Freelancer is an independent contractor, not an employee.`
                         </div>
                         
                         <div class="tab-panel active" id="text-${clause.id}">
+                            ${clause.extractedText && clause.extractedText !== 'No relevant text found in the document.' ? `
+                                <div class="legal-term-legend">
+                                    <strong>📋 Color Code Reference:</strong><br>
+                                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 8px; margin-top: 8px;">
+                                        <span class="legend-item" style="background: #dc262620; color: #dc2626; border: 1px solid #dc262660; font-weight: bold;">🔴 High Risk Terms</span>
+                                        <span class="legend-item" style="background: #2563eb20; color: #2563eb; border: 1px solid #2563eb60; font-weight: bold;">🔵 Contract Control</span>
+                                        <span class="legend-item" style="background: #7c3aed20; color: #7c3aed; border: 1px solid #7c3aed60; font-weight: bold;">🟣 Confidentiality</span>
+                                        <span class="legend-item" style="background: #ea580c20; color: #ea580c; border: 1px solid #ea580c60; font-weight: bold;">🟠 Competition</span>
+                                        <span class="legend-item" style="background: #05966920; color: #059669; border: 1px solid #05966960; font-weight: bold;">🟢 Intellectual Property</span>
+                                        <span class="legend-item" style="background: #0d948820; color: #0d9488; border: 1px solid #0d948860; font-weight: bold;">🟦 Legal Process</span>
+                                        <span class="legend-item" style="background: #d9770620; color: #d97706; border: 1px solid #d9770660; font-weight: bold;">🟡 Financial Terms</span>
+                                        <span class="legend-item" style="background: #92400e20; color: #92400e; border: 1px solid #92400e60; font-weight: bold;">🟤 Performance Terms</span>
+                                    </div>
+                                </div>
+                            ` : ''}
                             <div class="clause-text">
                                 ${clause.extractedText || 'No relevant text found in the document.'}
                             </div>
@@ -3050,6 +3226,5 @@ By using this report, you acknowledge that LegalClauseChecker provides education
             PerformanceManager.cleanup();
         });
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'96cbb529651e6536',t:'MTc1NDc4OTIxMy4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'96cbc81f44b0cce2',t:'MTc1NDc4OTk5MC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
-
