@@ -3,10 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LegalClauseChecker - Advanced Contract Analysis</title>
+    <title>LegalClauseChecker - Free AI Contract Analysis Tool</title>
     <meta name="description" content="Free AI-powered legal contract analysis tool. Instantly analyze contracts for risks, missing clauses, and compliance issues.">
     <meta name="keywords" content="legal contract analysis, clause checker, contract review, legal AI, free legal contract review, contract review online, clause analyzer, legal clause detection tool, identify risky contract clauses, find missing contract clauses, contract clause explanation tool, how to detect hidden risks in contracts, contract law tool to highlight indemnity clause, free legal tool">
     <meta name="robots" content="index, follow">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cdefs%3E%3ClinearGradient id='grad' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%231e3c72;stop-opacity:1' /%3E%3Cstop offset='100%25' style='stop-color:%232a5298;stop-opacity:1' /%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='100' height='100' rx='20' fill='url(%23grad)'/%3E%3Ctext x='50' y='35' font-family='Arial,sans-serif' font-size='24' font-weight='bold' fill='white' text-anchor='middle'%3E⚖️%3C/text%3E%3Ctext x='50' y='55' font-family='Arial,sans-serif' font-size='12' font-weight='bold' fill='white' text-anchor='middle'%3ELEGAL%3C/text%3E%3Ctext x='50' y='70' font-family='Arial,sans-serif' font-size='10' fill='white' text-anchor='middle'%3ECLAUSE%3C/text%3E%3Ctext x='50' y='82' font-family='Arial,sans-serif' font-size='10' fill='white' text-anchor='middle'%3ECHECKER%3C/text%3E%3C/svg%3E">
+    <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cdefs%3E%3ClinearGradient id='grad' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%231e3c72;stop-opacity:1' /%3E%3Cstop offset='100%25' style='stop-color:%232a5298;stop-opacity:1' /%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='100' height='100' rx='20' fill='url(%23grad)'/%3E%3Ctext x='50' y='35' font-family='Arial,sans-serif' font-size='24' font-weight='bold' fill='white' text-anchor='middle'%3E⚖️%3C/text%3E%3Ctext x='50' y='55' font-family='Arial,sans-serif' font-size='12' font-weight='bold' fill='white' text-anchor='middle'%3ELEGAL%3C/text%3E%3Ctext x='50' y='70' font-family='Arial,sans-serif' font-size='10' fill='white' text-anchor='middle'%3ECLAUSE%3C/text%3E%3Ctext x='50' y='82' font-family='Arial,sans-serif' font-size='10' fill='white' text-anchor='middle'%3ECHECKER%3C/text%3E%3C/svg%3E">
+    <meta name="theme-color" content="#1e3c72">
     <link rel="preconnect" href="https://cdnjs.cloudflare.com">
     <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
     <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" as="script">
@@ -15,6 +20,34 @@
     <meta http-equiv="X-Frame-Options" content="DENY">
     <meta http-equiv="X-XSS-Protection" content="1; mode=block">
     <meta name="referrer" content="strict-origin-when-cross-origin">
+    
+    <!-- Google Analytics (Replace GA_MEASUREMENT_ID with your actual ID) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=GA_MEASUREMENT_ID"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'GA_MEASUREMENT_ID', {
+            page_title: 'LegalClauseChecker - Free Contract Analysis',
+            page_location: window.location.href,
+            custom_map: {
+                'custom_parameter_1': 'user_engagement_level'
+            }
+        });
+    </script>
+
+    <!-- Google AdSense (Replace ca-pub-XXXXXXXXXXXXXXXXX with your actual AdSense ID) -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXXX" crossorigin="anonymous"></script>
+    <script>
+        // Initialize AdSense ads when page loads
+        window.addEventListener('load', function() {
+            try {
+                (adsbygoogle = window.adsbygoogle || []).push({});
+            } catch (e) {
+                console.warn('AdSense initialization failed:', e);
+            }
+        });
+    </script>
     <style>
         * {
             margin: 0;
@@ -757,7 +790,132 @@
             margin-bottom: 8px;
         }
 
+        /* Success notification and confetti styles */
+        .success-notification {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: linear-gradient(135deg, #22c55e, #16a34a);
+            color: white;
+            padding: 30px 40px;
+            border-radius: 16px;
+            box-shadow: 0 20px 40px rgba(34, 197, 94, 0.3);
+            z-index: 2000;
+            text-align: center;
+            display: none;
+            animation: slideInScale 0.5s ease-out;
+        }
+
+        .success-notification h3 {
+            margin: 0 0 10px 0;
+            font-size: 1.5rem;
+        }
+
+        .success-notification p {
+            margin: 0;
+            opacity: 0.9;
+        }
+
+        .confetti-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1999;
+            overflow: hidden;
+        }
+
+        .confetti {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: #ff6b6b;
+            animation: confetti-fall 3s linear infinite;
+        }
+
+        .confetti:nth-child(odd) {
+            background: #4ecdc4;
+            width: 8px;
+            height: 8px;
+            animation-duration: 2.5s;
+        }
+
+        .confetti:nth-child(3n) {
+            background: #45b7d1;
+            width: 6px;
+            height: 6px;
+            animation-duration: 3.5s;
+        }
+
+        .confetti:nth-child(4n) {
+            background: #f9ca24;
+            width: 8px;
+            height: 8px;
+            animation-duration: 2.8s;
+        }
+
+        .confetti:nth-child(5n) {
+            background: #6c5ce7;
+            width: 12px;
+            height: 12px;
+            animation-duration: 3.2s;
+        }
+
+        @keyframes confetti-fall {
+            0% {
+                transform: translateY(-100vh) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(100vh) rotate(720deg);
+                opacity: 0;
+            }
+        }
+
+        @keyframes slideInScale {
+            0% {
+                transform: translate(-50%, -50%) scale(0.5);
+                opacity: 0;
+            }
+            100% {
+                transform: translate(-50%, -50%) scale(1);
+                opacity: 1;
+            }
+        }
+
+        .file-upload.success {
+            border-color: #22c55e;
+            background: #f0fdf4;
+            transform: translateY(-2px);
+        }
+
+        .upload-success-indicator {
+            display: none;
+            background: #22c55e;
+            color: white;
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+            text-align: center;
+            font-weight: 600;
+            animation: slideInScale 0.5s ease-out;
+        }
+
         @media (max-width: 768px) {
+            .ad-container {
+                margin: 20px 0;
+                padding: 15px;
+            }
+            
+            .ad-banner-top,
+            .ad-results-bottom {
+                max-width: 320px;
+                min-height: 50px;
+            }
+            
             .container {
                 padding: 15px;
             }
@@ -820,6 +978,13 @@
         </div>
     </div>
 
+    <!-- Success notification and confetti -->
+    <div class="success-notification" id="success-notification">
+        <h3>🎉 Document Attached Successfully!</h3>
+        <p>Your contract is ready for analysis</p>
+    </div>
+    <div class="confetti-container" id="confetti-container"></div>
+
     <div class="container">
         <div class="header">
             <h1>LegalClauseChecker</h1>
@@ -849,6 +1014,8 @@
             <strong>⚠️ Legal Disclaimer:</strong> This tool provides automated analysis for informational purposes only and does not constitute legal advice. Results should be reviewed by qualified legal professionals. Always consult with an attorney for legal matters and contract review.
         </div>
 
+
+
         <div class="main-content">
             <div class="input-section" id="input-section">
                 <div class="input-tabs">
@@ -862,7 +1029,7 @@
                         <div class="upload-icon">📄</div>
                         <div class="upload-text">
                             <h3>Upload Contract Document</h3>
-                            <p>Drag and drop your file here, or click to browse</p>
+                            <p>Drag and drop your contract file here, or click to browse</p>
                             <p>Supports PDF, DOC, DOCX, and TXT files</p>
                         </div>
                         <div class="file-constraints">
@@ -871,6 +1038,9 @@
                     </div>
                     <div class="progress-bar" id="upload-progress">
                         <div class="progress-fill" id="progress-fill"></div>
+                    </div>
+                    <div class="upload-success-indicator" id="upload-success">
+                        🎉 Document successfully attached! Ready to analyze your contract.
                     </div>
                 </div>
 
@@ -947,6 +1117,8 @@ Example: You can paste any legal agreement, contract, or document text for analy
                 <div class="clause-grid" id="clause-grid">
                     <!-- Clause cards will be populated here -->
                 </div>
+
+
             </div>
         </div>
 
@@ -955,6 +1127,8 @@ Example: You can paste any legal agreement, contract, or document text for analy
                 📥 Export PDF Report
             </button>
         </div>
+
+
     </div>
 
     <!-- Footer -->
@@ -1007,18 +1181,13 @@ Example: You can paste any legal agreement, contract, or document text for analy
             },
             
             async loadJsPDF() {
-                await this.loadScript('https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js', 'jspdf');
-                return window.jspdf;
-            },
-            
-            async loadMammoth() {
-                await this.loadScript('https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.4.2/mammoth.browser.min.js', 'mammoth');
-                return window.mammoth;
-            },
-            
-            async loadPDFJS() {
-                await this.loadScript('https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js', 'pdfjsLib');
-                return window.pdfjsLib;
+                try {
+                    await this.loadScript('https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js', 'jspdf');
+                    return window.jspdf;
+                } catch (error) {
+                    console.warn('jsPDF failed to load:', error);
+                    return null;
+                }
             }
         };
 
@@ -1160,6 +1329,242 @@ Example: You can paste any legal agreement, contract, or document text for analy
                     localStorage.removeItem(key);
                 } catch (e) {
                     console.warn('Storage clear failed:', e);
+                }
+            }
+        };
+
+        // Analytics implementation
+        const Analytics = {
+            initialized: false,
+            
+            init() {
+                if (this.initialized) return;
+                
+                // Initialize Google Analytics if ID is provided
+                if (typeof gtag !== 'undefined') {
+                    this.initialized = true;
+                    this.trackPageView();
+                }
+                
+                // Initialize other analytics services
+                this.initializeHotjar();
+                this.initializeCustomAnalytics();
+            },
+            
+            initializeHotjar() {
+                // Hotjar implementation (replace HOTJAR_ID with actual ID)
+                (function(h,o,t,j,a,r){
+                    h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};
+                    h._hjSettings={hjid:3000000,hjsv:6}; // Replace with actual Hotjar ID
+                    a=o.getElementsByTagName('head')[0];
+                    r=o.createElement('script');r.async=1;
+                    r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;
+                    a.appendChild(r);
+                })(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');
+            },
+            
+            initializeCustomAnalytics() {
+                // Custom analytics for internal tracking
+                this.sessionId = this.generateSessionId();
+                this.startTime = Date.now();
+                this.trackSessionStart();
+            },
+            
+            generateSessionId() {
+                return 'session_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+            },
+            
+            trackPageView() {
+                if (typeof gtag !== 'undefined') {
+                    gtag('event', 'page_view', {
+                        page_title: 'LegalClauseChecker - Free Contract Analysis',
+                        page_location: window.location.href,
+                        content_group1: 'Legal Tools',
+                        content_group2: 'Contract Analysis'
+                    });
+                }
+                
+                this.trackCustomEvent('page_view', {
+                    url: window.location.href,
+                    referrer: document.referrer,
+                    timestamp: new Date().toISOString()
+                });
+            },
+            
+            trackFileUpload(fileType, fileSize) {
+                if (typeof gtag !== 'undefined') {
+                    gtag('event', 'file_upload', {
+                        event_category: 'User Interaction',
+                        event_label: fileType,
+                        value: Math.round(fileSize / 1024), // Size in KB
+                        custom_parameter_1: 'file_processing'
+                    });
+                }
+                
+                this.trackCustomEvent('file_upload', {
+                    fileType: fileType,
+                    fileSize: fileSize,
+                    timestamp: new Date().toISOString()
+                });
+            },
+            
+            trackAnalysis(results) {
+                if (typeof gtag !== 'undefined') {
+                    gtag('event', 'contract_analysis', {
+                        event_category: 'Core Feature',
+                        event_label: 'Analysis Complete',
+                        value: results.overallScore,
+                        custom_parameter_1: 'analysis_completion'
+                    });
+                    
+                    // Track analysis metrics
+                    gtag('event', 'analysis_metrics', {
+                        event_category: 'Analysis Data',
+                        clauses_found: results.clausesFound,
+                        missing_clauses: results.missingClauses,
+                        high_risk_count: results.highRiskCount,
+                        overall_score: results.overallScore
+                    });
+                }
+                
+                this.trackCustomEvent('analysis_complete', {
+                    ...results,
+                    timestamp: new Date().toISOString(),
+                    sessionId: this.sessionId
+                });
+            },
+            
+            trackExport(format) {
+                if (typeof gtag !== 'undefined') {
+                    gtag('event', 'export_report', {
+                        event_category: 'User Interaction',
+                        event_label: format.toUpperCase(),
+                        custom_parameter_1: 'report_export'
+                    });
+                }
+                
+                this.trackCustomEvent('export_report', {
+                    format: format,
+                    timestamp: new Date().toISOString()
+                });
+            },
+            
+            trackClauseInteraction(clauseId, action) {
+                if (typeof gtag !== 'undefined') {
+                    gtag('event', 'clause_interaction', {
+                        event_category: 'Content Engagement',
+                        event_label: clauseId,
+                        action: action,
+                        custom_parameter_1: 'clause_engagement'
+                    });
+                }
+                
+                this.trackCustomEvent('clause_interaction', {
+                    clauseId: clauseId,
+                    action: action,
+                    timestamp: new Date().toISOString()
+                });
+            },
+            
+            trackError(error, context) {
+                if (typeof gtag !== 'undefined') {
+                    gtag('event', 'exception', {
+                        description: error.message || 'Unknown error',
+                        fatal: false,
+                        custom_parameter_1: context || 'general_error'
+                    });
+                }
+                
+                this.trackCustomEvent('error', {
+                    message: error.message || 'Unknown error',
+                    stack: error.stack || 'No stack trace',
+                    context: context || 'general',
+                    timestamp: new Date().toISOString()
+                });
+            },
+            
+            trackUserEngagement() {
+                const timeOnPage = Date.now() - this.startTime;
+                
+                if (typeof gtag !== 'undefined') {
+                    gtag('event', 'user_engagement', {
+                        event_category: 'Engagement',
+                        engagement_time_msec: timeOnPage,
+                        custom_parameter_1: 'session_engagement'
+                    });
+                }
+                
+                this.trackCustomEvent('user_engagement', {
+                    timeOnPage: timeOnPage,
+                    sessionId: this.sessionId,
+                    timestamp: new Date().toISOString()
+                });
+            },
+            
+            trackConversion(type, value) {
+                if (typeof gtag !== 'undefined') {
+                    gtag('event', 'conversion', {
+                        event_category: 'Conversion',
+                        event_label: type,
+                        value: value || 1,
+                        custom_parameter_1: 'user_conversion'
+                    });
+                }
+                
+                this.trackCustomEvent('conversion', {
+                    type: type,
+                    value: value || 1,
+                    timestamp: new Date().toISOString()
+                });
+            },
+            
+            trackSessionStart() {
+                this.trackCustomEvent('session_start', {
+                    sessionId: this.sessionId,
+                    userAgent: navigator.userAgent,
+                    screenResolution: `${screen.width}x${screen.height}`,
+                    timestamp: new Date().toISOString()
+                });
+            },
+            
+            trackCustomEvent(eventName, data) {
+                // Store events locally for analysis
+                try {
+                    const events = JSON.parse(localStorage.getItem('analytics_events') || '[]');
+                    events.push({
+                        event: eventName,
+                        data: data,
+                        timestamp: new Date().toISOString()
+                    });
+                    
+                    // Keep only last 100 events to prevent storage bloat
+                    if (events.length > 100) {
+                        events.splice(0, events.length - 100);
+                    }
+                    
+                    localStorage.setItem('analytics_events', JSON.stringify(events));
+                } catch (e) {
+                    console.warn('Failed to store analytics event:', e);
+                }
+            },
+            
+            // Method to send analytics data to your server (implement as needed)
+            sendAnalyticsData() {
+                try {
+                    const events = JSON.parse(localStorage.getItem('analytics_events') || '[]');
+                    if (events.length > 0) {
+                        // Send to your analytics endpoint
+                        // fetch('/api/analytics', {
+                        //     method: 'POST',
+                        //     headers: { 'Content-Type': 'application/json' },
+                        //     body: JSON.stringify(events)
+                        // });
+                        
+                        // Clear sent events
+                        localStorage.removeItem('analytics_events');
+                    }
+                } catch (e) {
+                    console.warn('Failed to send analytics data:', e);
                 }
             }
         };
@@ -1443,6 +1848,20 @@ Freelancer is an independent contractor, not an employee.`
             updateCharCounter();
             initializePerformanceMonitoring();
             loadPreviousSession();
+            
+            // Initialize Analytics
+            Analytics.init();
+            
+            // Track user engagement periodically
+            setInterval(() => {
+                Analytics.trackUserEngagement();
+            }, 30000); // Every 30 seconds
+            
+            // Track page unload
+            window.addEventListener('beforeunload', () => {
+                Analytics.trackUserEngagement();
+                Analytics.sendAnalyticsData();
+            });
         });
 
         function initializePerformanceMonitoring() {
@@ -1558,13 +1977,18 @@ Freelancer is an independent contractor, not an employee.`
             // Security validations
             if (!SecurityUtils.validateFileSize(file)) {
                 alert('File size exceeds 50MB limit. Please choose a smaller file.');
+                Analytics.trackError(new Error('File size exceeded'), 'file_upload');
                 return;
             }
 
             if (!SecurityUtils.validateFileType(file)) {
                 alert('Unsupported file type. Please upload PDF, DOC, DOCX, or TXT files.');
+                Analytics.trackError(new Error('Invalid file type'), 'file_upload');
                 return;
             }
+
+            // Track file upload attempt
+            Analytics.trackFileUpload(file.type || file.name.split('.').pop(), file.size);
 
             // Check memory before processing
             const memoryInfo = PerformanceManager.checkMemory();
@@ -1595,16 +2019,18 @@ Freelancer is an independent contractor, not an employee.`
                     await processTextFile(file, progressInterval, progressFill);
                 } else if (file.type === 'application/pdf' || fileExtension === 'pdf') {
                     await processPDFFile(file, progressInterval, progressFill);
-                } else if (file.type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' || 
-                           file.type === 'application/msword' || 
-                           fileExtension === 'docx' || fileExtension === 'doc') {
+                } else if (file.type.includes('wordprocessingml') || 
+                          file.type === 'application/msword' || 
+                          fileExtension === 'docx' || fileExtension === 'doc') {
                     await processDocFile(file, progressInterval, progressFill);
                 } else {
-                    throw new Error('Unsupported file type');
+                    alert('Unsupported file type. Please upload PDF, DOC, DOCX, or TXT files.');
+                    resetUpload(progressInterval);
+                    return;
                 }
             } catch (error) {
                 console.error('File processing error:', error);
-                alert('Error processing file: ' + error.message);
+                alert('Please try copying and pasting your contract text instead.');
                 resetUpload(progressInterval);
             }
         }
@@ -1632,62 +2058,65 @@ Freelancer is an independent contractor, not an employee.`
         }
 
         async function processPDFFile(file, progressInterval, progressFill) {
-            const pdfjsLib = await LibraryLoader.loadPDFJS();
-            
-            return new Promise((resolve, reject) => {
-                const reader = new FileReader();
-                reader.onload = async function(e) {
-                    try {
-                        const typedarray = new Uint8Array(e.target.result);
-                        const pdf = await pdfjsLib.getDocument({
-                            data: typedarray,
-                            cMapUrl: 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/cmaps/',
-                            cMapPacked: true
-                        }).promise;
-                        
-                        const text = await extractTextFromPDF(pdf);
-                        contractText = SecurityUtils.sanitizeInput(text);
-                        
-                        if (contractText.length > 500000) {
-                            contractText = contractText.substring(0, 500000);
-                            alert('PDF content was truncated to 500,000 characters limit.');
+            try {
+                const pdfjsLib = await LibraryLoader.loadScript('https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js', 'pdfjsLib');
+                
+                return new Promise((resolve, reject) => {
+                    const reader = new FileReader();
+                    reader.onload = async function(e) {
+                        try {
+                            const typedarray = new Uint8Array(e.target.result);
+                            const pdf = await pdfjsLib.getDocument(typedarray).promise;
+                            const textContent = await extractTextFromPDF(pdf);
+                            
+                            contractText = SecurityUtils.sanitizeInput(textContent);
+                            if (contractText.length > 500000) {
+                                contractText = contractText.substring(0, 500000);
+                                alert('PDF content was truncated to 500,000 characters limit.');
+                            }
+                            
+                            completeFileUpload(progressInterval, progressFill);
+                            resolve();
+                        } catch (error) {
+                            reject(new Error('Failed to process PDF: ' + error.message));
                         }
-                        
-                        completeFileUpload(progressInterval, progressFill);
-                        resolve();
-                    } catch (error) {
-                        reject(new Error('Failed to process PDF: ' + error.message));
-                    }
-                };
-                reader.onerror = () => reject(new Error('Failed to read PDF file'));
-                reader.readAsArrayBuffer(file);
-            });
+                    };
+                    reader.onerror = () => reject(new Error('Failed to read PDF file'));
+                    reader.readAsArrayBuffer(file);
+                });
+            } catch (error) {
+                throw new Error('PDF processing library failed to load: ' + error.message);
+            }
         }
 
         async function processDocFile(file, progressInterval, progressFill) {
-            const mammoth = await LibraryLoader.loadMammoth();
-            
-            return new Promise((resolve, reject) => {
-                const reader = new FileReader();
-                reader.onload = async function(e) {
-                    try {
-                        const result = await mammoth.extractRawText({arrayBuffer: e.target.result});
-                        contractText = SecurityUtils.sanitizeInput(result.value);
-                        
-                        if (contractText.length > 500000) {
-                            contractText = contractText.substring(0, 500000);
-                            alert('Document content was truncated to 500,000 characters limit.');
+            try {
+                const mammoth = await LibraryLoader.loadScript('https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.4.2/mammoth.browser.min.js', 'mammoth');
+                
+                return new Promise((resolve, reject) => {
+                    const reader = new FileReader();
+                    reader.onload = async function(e) {
+                        try {
+                            const result = await mammoth.extractRawText({arrayBuffer: e.target.result});
+                            contractText = SecurityUtils.sanitizeInput(result.value);
+                            
+                            if (contractText.length > 500000) {
+                                contractText = contractText.substring(0, 500000);
+                                alert('Document content was truncated to 500,000 characters limit.');
+                            }
+                            
+                            completeFileUpload(progressInterval, progressFill);
+                            resolve();
+                        } catch (error) {
+                            reject(new Error('Failed to process document: ' + error.message));
                         }
-                        
-                        completeFileUpload(progressInterval, progressFill);
-                        resolve();
-                    } catch (error) {
-                        reject(new Error('Failed to process document: ' + error.message));
-                    }
-                };
-                reader.onerror = () => reject(new Error('Failed to read document file'));
-                reader.readAsArrayBuffer(file);
-            });
+                    };
+                    reader.onerror = () => reject(new Error('Failed to read document file'));
+                    reader.readAsArrayBuffer(file);
+                });
+            } catch (error) {
+                throw new Error('Document processing library failed to load: ' + error.message);
+            }
         }
 
         function extractTextFromPDF(pdf) {
@@ -1714,8 +2143,65 @@ Freelancer is an independent contractor, not an employee.`
             setTimeout(() => {
                 document.getElementById('upload-progress').style.display = 'none';
                 progressFill.style.width = '0%';
+                
+                // Show success notification with confetti
+                showSuccessNotification();
+                
                 updateAnalyzeButton();
             }, 500);
+        }
+
+        function showSuccessNotification() {
+            // Add success styling to upload area
+            const uploadArea = document.getElementById('file-upload-area');
+            uploadArea.classList.add('success');
+            
+            // Show success indicator
+            const successIndicator = document.getElementById('upload-success');
+            successIndicator.style.display = 'block';
+            
+            // Show success notification popup
+            const notification = document.getElementById('success-notification');
+            notification.style.display = 'block';
+            
+            // Create confetti effect
+            createConfetti();
+            
+            // Hide notification after 3 seconds
+            setTimeout(() => {
+                notification.style.display = 'none';
+                clearConfetti();
+            }, 3000);
+            
+            // Remove success styling after 5 seconds
+            setTimeout(() => {
+                uploadArea.classList.remove('success');
+            }, 5000);
+        }
+
+        function createConfetti() {
+            const container = document.getElementById('confetti-container');
+            
+            // Clear any existing confetti first
+            container.innerHTML = '';
+            
+            const colors = ['#ff6b6b', '#4ecdc4', '#45b7d1', '#f9ca24', '#6c5ce7'];
+            
+            // Create 25 confetti pieces (reduced for simpler effect)
+            for (let i = 0; i < 25; i++) {
+                const confetti = document.createElement('div');
+                confetti.className = 'confetti';
+                confetti.style.left = Math.random() * 100 + '%';
+                confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                confetti.style.animationDelay = Math.random() * 1 + 's';
+                confetti.style.animationDuration = '2.5s';
+                container.appendChild(confetti);
+            }
+        }
+
+        function clearConfetti() {
+            const container = document.getElementById('confetti-container');
+            container.innerHTML = '';
         }
 
         function resetUpload(progressInterval) {
@@ -1872,6 +2358,15 @@ Freelancer is an independent contractor, not an employee.`
             document.getElementById('missing-clauses').textContent = missingCount;
             document.getElementById('high-risk-count').textContent = highRiskCount;
             document.getElementById('overall-score').textContent = overallScore + '%';
+            
+            // Track analysis completion
+            Analytics.trackAnalysis({
+                totalClauses: clauseDefinitions.length,
+                clausesFound: clausesFound,
+                missingClauses: missingCount,
+                highRiskCount: highRiskCount,
+                overallScore: overallScore
+            });
         }
 
         function updateLoadingProgress(percentage) {
@@ -2088,6 +2583,10 @@ Freelancer is an independent contractor, not an employee.`
             
             content.classList.toggle('active');
             header.classList.toggle('active');
+            
+            // Track clause interaction
+            const action = content.classList.contains('active') ? 'expand' : 'collapse';
+            Analytics.trackClauseInteraction(clauseId, action);
         }
 
         function switchContentTab(clauseId, tabName) {
@@ -2156,122 +2655,74 @@ Freelancer is an independent contractor, not an employee.`
 
         async function exportToPDF() {
             try {
-                // Lazy load jsPDF only when needed
                 const jsPDFLib = await LibraryLoader.loadJsPDF();
+                if (!jsPDFLib || !jsPDFLib.jsPDF) {
+                    throw new Error('PDF library not available');
+                }
+                
                 const { jsPDF } = jsPDFLib;
                 const doc = new jsPDF();
-            
-            // Set up document
-            let yPosition = 30;
-            const pageHeight = doc.internal.pageSize.height;
-            const margin = 20;
-            const lineHeight = 7;
-            
-            // Title
-            doc.setFontSize(24);
-            doc.setFont(undefined, 'bold');
-            doc.text('Contract Analysis Report', margin, yPosition);
-            yPosition += 20;
-            
-            // Date
-            doc.setFontSize(12);
-            doc.setFont(undefined, 'normal');
-            doc.text(`Generated on: ${new Date().toLocaleDateString()}`, margin, yPosition);
-            yPosition += 20;
-            
-            // Summary
-            doc.setFontSize(16);
-            doc.setFont(undefined, 'bold');
-            doc.text('Executive Summary', margin, yPosition);
-            yPosition += 15;
-            
-            doc.setFontSize(12);
-            doc.setFont(undefined, 'normal');
-            
-            const summary = [
-                `Total Clauses Analyzed: ${clauseDefinitions.length}`,
-                `Clauses Detected: ${document.getElementById('total-clauses').textContent}`,
-                `Missing Clauses: ${document.getElementById('missing-clauses').textContent}`,
-                `High Risk Items: ${document.getElementById('high-risk-count').textContent}`,
-                `Overall Score: ${document.getElementById('overall-score').textContent}`
-            ];
-            
-            summary.forEach(line => {
-                doc.text(line, margin, yPosition);
-                yPosition += lineHeight;
-            });
-            
-            yPosition += 15;
-            
-            // Detailed Analysis
-            doc.setFontSize(16);
-            doc.setFont(undefined, 'bold');
-            doc.text('Detailed Clause Analysis', margin, yPosition);
-            yPosition += 15;
-            
-            Object.values(analysisResults).forEach(clause => {
-                // Check if we need a new page
-                if (yPosition > pageHeight - 60) {
-                    doc.addPage();
-                    yPosition = 30;
-                }
                 
-                // Clause title
-                doc.setFontSize(14);
-                doc.setFont(undefined, 'bold');
-                doc.text(clause.title, margin, yPosition);
-                yPosition += 10;
+                // Simple, safe PDF generation
+                doc.setFontSize(16);
+                doc.text('Contract Analysis Report', 20, 30);
                 
-                // Status and risk
-                doc.setFontSize(10);
-                doc.setFont(undefined, 'normal');
-                doc.text(`Status: ${clause.status.toUpperCase()} | Risk Level: ${clause.risk.toUpperCase()}`, margin, yPosition);
-                yPosition += 8;
+                doc.setFontSize(12);
+                doc.text(`Date: ${new Date().toLocaleDateString()}`, 20, 50);
                 
-                // Explanation
-                doc.setFontSize(10);
-                const explanationLines = doc.splitTextToSize(clause.explanation, 170);
-                doc.text(explanationLines, margin, yPosition);
-                yPosition += explanationLines.length * 5 + 5;
+                doc.text('Summary:', 20, 70);
+                doc.text(`Clauses Found: ${document.getElementById('total-clauses').textContent}`, 20, 85);
+                doc.text(`Missing: ${document.getElementById('missing-clauses').textContent}`, 20, 95);
+                doc.text(`High Risk: ${document.getElementById('high-risk-count').textContent}`, 20, 105);
+                doc.text(`Score: ${document.getElementById('overall-score').textContent}`, 20, 115);
                 
-                // Recommendations
-                if (clause.recommendations) {
-                    doc.setFont(undefined, 'bold');
-                    doc.text('Recommendations:', margin, yPosition);
-                    yPosition += 5;
-                    
-                    doc.setFont(undefined, 'normal');
-                    const recLines = doc.splitTextToSize(clause.recommendations, 170);
-                    doc.text(recLines, margin, yPosition);
-                    yPosition += recLines.length * 5 + 10;
-                }
-            });
-            
-            // Add disclaimer
-            doc.addPage();
-            doc.setFontSize(16);
-            doc.setFont(undefined, 'bold');
-            doc.text('Legal Disclaimer', margin, 30);
-            
-            doc.setFontSize(10);
-            doc.setFont(undefined, 'normal');
-            const disclaimer = doc.splitTextToSize(
-                'This analysis is generated by an automated system and is for informational purposes only. ' +
-                'It does not constitute legal advice and should not be relied upon as such. ' +
-                'The analysis may not identify all potential issues or risks in the contract. ' +
-                'Always consult with qualified legal professionals for contract review and legal advice. ' +
-                'The creators of this tool disclaim any liability for decisions made based on this analysis.',
-                170
-            );
-            doc.text(disclaimer, margin, 50);
-            
-            // Save the PDF
-            doc.save(`contract-analysis-report-${new Date().toISOString().split('T')[0]}.pdf`);
-            
+                let y = 140;
+                doc.text('Clause Analysis:', 20, y);
+                y += 15;
+                
+                Object.values(analysisResults).forEach(clause => {
+                    if (y > 270) {
+                        doc.addPage();
+                        y = 30;
+                    }
+                    doc.text(`${clause.title}: ${clause.status} (${clause.risk} risk)`, 20, y);
+                    y += 10;
+                });
+                
+                doc.save(`analysis-report-${Date.now()}.pdf`);
+                Analytics.trackExport('pdf');
+                Analytics.trackConversion('report_download', 1);
+                
             } catch (error) {
                 console.error('PDF export error:', error);
-                alert('Failed to export PDF. Please try again.');
+                Analytics.trackError(error, 'pdf_export');
+                // Fallback: Create text summary
+                createTextSummary();
             }
+        }
+        
+        function createTextSummary() {
+            let summary = 'CONTRACT ANALYSIS REPORT\n';
+            summary += `Generated: ${new Date().toLocaleDateString()}\n\n`;
+            summary += 'SUMMARY:\n';
+            summary += `Clauses Found: ${document.getElementById('total-clauses').textContent}\n`;
+            summary += `Missing: ${document.getElementById('missing-clauses').textContent}\n`;
+            summary += `High Risk: ${document.getElementById('high-risk-count').textContent}\n`;
+            summary += `Score: ${document.getElementById('overall-score').textContent}\n\n`;
+            summary += 'CLAUSE DETAILS:\n';
+            
+            Object.values(analysisResults).forEach(clause => {
+                summary += `${clause.title}: ${clause.status} (${clause.risk} risk)\n`;
+            });
+            
+            const blob = new Blob([summary], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `contract-analysis-${Date.now()}.txt`;
+            a.click();
+            URL.revokeObjectURL(url);
+            Analytics.trackExport('txt');
         }
 
         // Footer page content
@@ -2446,5 +2897,5 @@ Freelancer is an independent contractor, not an employee.`
             PerformanceManager.cleanup();
         });
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'96cb4401c769777a',t:'MTc1NDc4NDU3OS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'96cbaa20546dc198',t:'MTc1NDc4ODc2MS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
