@@ -873,16 +873,16 @@
 
                 <div id="upload-tab" class="tab-content active">
                     <div class="file-upload" id="file-upload-area">
-                        <input type="file" id="file-input" accept=".txt" onchange="handleFileUpload(event)">
+                        <input type="file" id="file-input" accept=".pdf,.doc,.docx,.txt" onchange="handleFileUpload(event)">
                         <div class="upload-icon">📄</div>
                         <div class="upload-text">
-                            <h3>Upload Text Document</h3>
-                            <p>Drag and drop your TXT file here, or click to browse</p>
-                            <p>Supports TXT files only (for best stability)</p>
+                            <h3>Upload Contract Document</h3>
+                            <p>Drag and drop your contract file here, or click to browse</p>
+                            <p>Supports PDF, DOC, DOCX, and TXT files</p>
                         </div>
                         <div class="file-constraints">
-                            Maximum file size: 10MB | Maximum text length: 500,000 characters<br>
-                            <strong>Tip:</strong> For PDF/DOC files, copy the text and use "Paste Text" tab instead
+                            Maximum file size: 50MB | Maximum text length: 500,000 characters<br>
+                            <strong>Supported formats:</strong> PDF, Microsoft Word (DOC/DOCX), and Text files
                         </div>
                     </div>
                     <div class="progress-bar" id="upload-progress">
@@ -1604,9 +1604,14 @@ Freelancer is an independent contractor, not an employee.`
             try {
                 if (file.type === 'text/plain' || fileExtension === 'txt') {
                     await processTextFile(file, progressInterval, progressFill);
+                } else if (file.type === 'application/pdf' || fileExtension === 'pdf') {
+                    await processPDFFile(file, progressInterval, progressFill);
+                } else if (file.type.includes('wordprocessingml') || 
+                          file.type === 'application/msword' || 
+                          fileExtension === 'docx' || fileExtension === 'doc') {
+                    await processDocFile(file, progressInterval, progressFill);
                 } else {
-                    // Simplified: Only support text files for maximum stability
-                    alert('For best results and stability, please use TXT files or copy/paste your contract text directly.');
+                    alert('Unsupported file type. Please upload PDF, DOC, DOCX, or TXT files.');
                     resetUpload(progressInterval);
                     return;
                 }
@@ -1640,39 +1645,65 @@ Freelancer is an independent contractor, not an employee.`
         }
 
         async function processPDFFile(file, progressInterval, progressFill) {
-            // Simplified PDF processing - convert to text only
-            return new Promise((resolve, reject) => {
-                // For now, show message that PDF processing is simplified
-                alert('PDF processing is temporarily simplified. Please copy and paste the text content instead for best results.');
-                resetUpload(progressInterval);
-                reject(new Error('PDF processing temporarily disabled for stability'));
-            });
+            try {
+                const pdfjsLib = await LibraryLoader.loadScript('https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js', 'pdfjsLib');
+                
+                return new Promise((resolve, reject) => {
+                    const reader = new FileReader();
+                    reader.onload = async function(e) {
+                        try {
+                            const typedarray = new Uint8Array(e.target.result);
+                            const pdf = await pdfjsLib.getDocument(typedarray).promise;
+                            const textContent = await extractTextFromPDF(pdf);
+                            
+                            contractText = SecurityUtils.sanitizeInput(textContent);
+                            if (contractText.length > 500000) {
+                                contractText = contractText.substring(0, 500000);
+                                alert('PDF content was truncated to 500,000 characters limit.');
+                            }
+                            
+                            completeFileUpload(progressInterval, progressFill);
+                            resolve();
+                        } catch (error) {
+                            reject(new Error('Failed to process PDF: ' + error.message));
+                        }
+                    };
+                    reader.onerror = () => reject(new Error('Failed to read PDF file'));
+                    reader.readAsArrayBuffer(file);
+                });
+            } catch (error) {
+                throw new Error('PDF processing library failed to load: ' + error.message);
+            }
         }
 
         async function processDocFile(file, progressInterval, progressFill) {
-            const mammoth = await LibraryLoader.loadMammoth();
-            
-            return new Promise((resolve, reject) => {
-                const reader = new FileReader();
-                reader.onload = async function(e) {
-                    try {
-                        const result = await mammoth.extractRawText({arrayBuffer: e.target.result});
-                        contractText = SecurityUtils.sanitizeInput(result.value);
-                        
-                        if (contractText.length > 500000) {
-                            contractText = contractText.substring(0, 500000);
-                            alert('Document content was truncated to 500,000 characters limit.');
+            try {
+                const mammoth = await LibraryLoader.loadScript('https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.4.2/mammoth.browser.min.js', 'mammoth');
+                
+                return new Promise((resolve, reject) => {
+                    const reader = new FileReader();
+                    reader.onload = async function(e) {
+                        try {
+                            const result = await mammoth.extractRawText({arrayBuffer: e.target.result});
+                            contractText = SecurityUtils.sanitizeInput(result.value);
+                            
+                            if (contractText.length > 500000) {
+                                contractText = contractText.substring(0, 500000);
+                                alert('Document content was truncated to 500,000 characters limit.');
+                            }
+                            
+                            completeFileUpload(progressInterval, progressFill);
+                            resolve();
+                        } catch (error) {
+                            reject(new Error('Failed to process document: ' + error.message));
                         }
-                        
-                        completeFileUpload(progressInterval, progressFill);
-                        resolve();
-                    } catch (error) {
-                        reject(new Error('Failed to process document: ' + error.message));
-                    }
-                };
-                reader.onerror = () => reject(new Error('Failed to read document file'));
-                reader.readAsArrayBuffer(file);
-            });
+                    };
+                    reader.onerror = () => reject(new Error('Failed to read document file'));
+                    reader.readAsArrayBuffer(file);
+                });
+            } catch (error) {
+                throw new Error('Document processing library failed to load: ' + error.message);
+            }
         }
 
         function extractTextFromPDF(pdf) {
@@ -2389,6 +2420,5 @@ Freelancer is an independent contractor, not an employee.`
             PerformanceManager.cleanup();
         });
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'96cb697b256f63be',t:'MTc1NDc4NjExNC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'96cb70cf46e963be',t:'MTc1NDc4NjQxNC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
-
