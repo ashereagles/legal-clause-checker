@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>LegalClauseChecker - Free AI Contract Analysis Tool</title>
     <meta name="description" content="Free AI-powered legal contract analysis tool. Instantly analyze contracts for risks, missing clauses, and compliance issues.">
-    <meta name="keywords" content="legal contract analysis, clause checker, contract review, legal AI, free legal contract review, contract review online, clause analyzer, legal clause detection tool, identify risky contract clauses, find missing contract clauses, contract clause explanation tool, how to detect hidden risks in contracts, contract law tool to highlight indemnity clause, free legal tool">
+    <meta name="keywords" content="legal contract analysis, clause checker, contract review, legal AI, free legal tool">
     <meta name="robots" content="index, follow">
     
     <!-- Favicon -->
@@ -307,6 +307,29 @@
             opacity: 0.6;
             cursor: not-allowed;
             transform: none;
+        }
+
+        .start-over-button {
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+            color: white;
+            border: none;
+            padding: 18px 40px;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(239, 68, 68, 0.3);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            height: auto;
+        }
+
+        .start-over-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(239, 68, 68, 0.4);
+            background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
         }
 
         .progress-bar {
@@ -1078,9 +1101,14 @@ Example: You can paste any legal agreement, contract, or document text for analy
                     </div>
                 </div>
 
-                <button class="analyze-button" onclick="analyzeContract()" id="analyze-btn" disabled>
-                    🔍 Analyze Contract
-                </button>
+                <div class="button-container" style="display: flex; gap: 15px; align-items: center; flex-wrap: wrap;">
+                    <button class="analyze-button" onclick="analyzeContract()" id="analyze-btn" disabled>
+                        🔍 Analyze Contract
+                    </button>
+                    <button class="start-over-button" onclick="startOver()" id="start-over-btn" style="display: none;">
+                        🔄 Start Over
+                    </button>
+                </div>
             </div>
 
             <div class="results-section" id="results-section">
@@ -1903,6 +1931,8 @@ Freelancer is an independent contractor, not an employee.`
                     showResults();
                     updateStep(3, 'completed');
                     updateStep(4, 'active');
+                    // Show Start Over button for restored session
+                    document.getElementById('start-over-btn').style.display = 'block';
                 }
             }
         }
@@ -2285,6 +2315,9 @@ Freelancer is an independent contractor, not an employee.`
                 updateStep(3, 'completed');
                 updateStep(4, 'active');
                 
+                // Show Start Over button after analysis is complete
+                document.getElementById('start-over-btn').style.display = 'block';
+                
                 // Save analysis to browser storage
                 StorageManager.save('lastAnalysis', {
                     timestamp: Date.now(),
@@ -2403,22 +2436,26 @@ Freelancer is an independent contractor, not an employee.`
                 // Analyze risk factors
                 riskFactors = analyzeRiskFactors(textLower, clause.riskFactors);
                 
-                // Determine risk level and score
+                // Determine risk level and score using deterministic calculation
                 const keywordDensity = keywordMatches.length / clause.keywords.length;
                 const riskScore = riskFactors.length;
+                
+                // Create deterministic "randomness" based on clause content
+                const contentHash = generateContentHash(clause.id + originalText.substring(0, 100));
+                const deterministicVariation = (contentHash % 100) / 100; // 0-1 range
                 
                 if (keywordDensity >= 0.6 && riskScore <= 1) {
                     status = 'strong';
                     risk = 'low';
-                    score = 85 + Math.random() * 15;
+                    score = 85 + (deterministicVariation * 15);
                 } else if (keywordDensity >= 0.4 && riskScore <= 2) {
                     status = 'adequate';
                     risk = 'medium';
-                    score = 65 + Math.random() * 20;
+                    score = 65 + (deterministicVariation * 20);
                 } else {
                     status = 'weak';
                     risk = riskScore > 2 ? 'high' : 'medium';
-                    score = 40 + Math.random() * 25;
+                    score = 40 + (deterministicVariation * 25);
                 }
             } else {
                 status = 'missing';
@@ -2436,6 +2473,18 @@ Freelancer is an independent contractor, not an employee.`
                 riskFactors,
                 keywordMatches
             };
+        }
+
+        // Generate deterministic hash from string for consistent "randomness"
+        function generateContentHash(str) {
+            let hash = 0;
+            if (str.length === 0) return hash;
+            for (let i = 0; i < str.length; i++) {
+                const char = str.charCodeAt(i);
+                hash = ((hash << 5) - hash) + char;
+                hash = hash & hash; // Convert to 32-bit integer
+            }
+            return Math.abs(hash);
         }
 
         function extractClauseText(text, keywords) {
@@ -3198,6 +3247,109 @@ By using this report, you acknowledge that LegalClauseChecker provides education
             }
         });
 
+        function startOver() {
+            // Show confirmation dialog
+            if (confirm('Are you sure you want to start over? This will clear your current analysis and start fresh.')) {
+                // Clear all data
+                contractText = '';
+                analysisResults = {};
+                currentStep = 1;
+                
+                // Reset form elements
+                document.getElementById('contract-text').value = '';
+                document.getElementById('file-input').value = '';
+                
+                // Reset upload area and clear all success indicators
+                const uploadArea = document.getElementById('file-upload-area');
+                uploadArea.classList.remove('success');
+                uploadArea.style.border = '3px dashed #d1d5db';
+                uploadArea.style.background = '#fafafa';
+                document.getElementById('upload-success').style.display = 'none';
+                
+                // Clear any confetti effects
+                clearConfetti();
+                
+                // Hide success notification if still visible
+                document.getElementById('success-notification').style.display = 'none';
+                
+                // Hide results section and export button
+                document.getElementById('results-section').classList.remove('active');
+                document.getElementById('export-btn').style.display = 'none';
+                
+                // Hide Start Over button until next analysis
+                document.getElementById('start-over-btn').style.display = 'none';
+                
+                // Show input section again
+                document.getElementById('input-section').style.display = 'block';
+                
+                // Reset progress steps
+                document.querySelectorAll('.step').forEach(step => {
+                    step.classList.remove('active', 'completed');
+                });
+                updateStep(1, 'active');
+                
+                // Switch back to upload tab
+                document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
+                document.querySelector('.tab-button:first-child').classList.add('active');
+                document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+                document.getElementById('upload-tab').classList.add('active');
+                
+                // Reset upload area to original state
+                const uploadIcon = uploadArea.querySelector('.upload-icon');
+                const uploadText = uploadArea.querySelector('.upload-text');
+                if (uploadIcon) uploadIcon.textContent = '📄';
+                if (uploadText) {
+                    uploadText.innerHTML = `
+                        <h3>Upload Contract Document</h3>
+                        <p>Drag and drop your contract file here, or click to browse</p>
+                        <p>Supports PDF, DOC, DOCX, and TXT files</p>
+                    `;
+                }
+                
+                // Reset character counter
+                const counter = document.getElementById('char-counter');
+                counter.textContent = '0 / 500,000 characters';
+                counter.classList.remove('warning', 'error');
+                
+                // Update analyze button state
+                updateAnalyzeButton();
+                
+                // Scroll to top smoothly
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+                
+                // Clear browser storage
+                StorageManager.clear('lastAnalysis');
+                
+                // Track start over action
+                Analytics.trackCustomEvent('start_over', {
+                    timestamp: new Date().toISOString()
+                });
+                
+                // Show a brief confirmation message
+                setTimeout(() => {
+                    const notification = document.createElement('div');
+                    notification.style.cssText = `
+                        position: fixed;
+                        top: 20px;
+                        right: 20px;
+                        background: #22c55e;
+                        color: white;
+                        padding: 15px 20px;
+                        border-radius: 8px;
+                        z-index: 1000;
+                        font-weight: 600;
+                        box-shadow: 0 4px 15px rgba(34, 197, 94, 0.3);
+                    `;
+                    notification.textContent = '✅ Ready for new contract analysis!';
+                    document.body.appendChild(notification);
+                    
+                    setTimeout(() => {
+                        notification.remove();
+                    }, 3000);
+                }, 500);
+            }
+        }
+
         // Initialize character counter on page load
         updateAnalyzeButton();
 
@@ -3226,5 +3378,5 @@ By using this report, you acknowledge that LegalClauseChecker provides education
             PerformanceManager.cleanup();
         });
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'96cbc81f44b0cce2',t:'MTc1NDc4OTk5MC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'96cea87665a263b4',t:'MTc1NDgyMDE1MC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
