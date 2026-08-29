@@ -1,32 +1,26 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>LegalClauseChecker - Free AI Contract Analysis Tool</title>
-    <meta name="description"
-        content="Free AI-powered legal contract analysis tool. Instantly analyze contracts for risks, missing clauses, and compliance issues.">
-    <meta name="keywords"
-        content="legal contract analysis, clause checker, contract review, legal AI, free legal contract review, contract review online, clause analyzer, legal clause detection tool, identify risky contract clauses, find missing contract clauses, contract clause explanation tool, how to detect hidden risks in contracts, contract law tool to highlight indemnity clause, free legal tool">
+    <meta name="description" content="Free AI-powered legal contract analysis tool. Instantly analyze contracts for risks, missing clauses, and compliance issues.">
+    <meta name="keywords" content="legal contract analysis, clause checker, contract review, legal AI, free legal contract review, contract review online, clause analyzer, legal clause detection tool, identify risky contract clauses, find missing contract clauses, contract clause explanation tool, how to detect hidden risks in contracts, contract law tool to highlight indemnity clause, free legal tool">
     <meta name="robots" content="index, follow">
-
+    
     <!-- Favicon -->
-    <link rel="icon" type="image/svg+xml"
-        href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cdefs%3E%3ClinearGradient id='grad' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%231e3c72;stop-opacity:1' /%3E%3Cstop offset='100%25' style='stop-color:%232a5298;stop-opacity:1' /%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='100' height='100' rx='20' fill='url(%23grad)'/%3E%3Ctext x='50' y='35' font-family='Arial,sans-serif' font-size='24' font-weight='bold' fill='white' text-anchor='middle'%3E⚖️%3C/text%3E%3Ctext x='50' y='55' font-family='Arial,sans-serif' font-size='12' font-weight='bold' fill='white' text-anchor='middle'%3ELEGAL%3C/text%3E%3Ctext x='50' y='70' font-family='Arial,sans-serif' font-size='10' fill='white' text-anchor='middle'%3ECLAUSE%3C/text%3E%3Ctext x='50' y='82' font-family='Arial,sans-serif' font-size='10' fill='white' text-anchor='middle'%3ECHECKER%3C/text%3E%3C/svg%3E">
-    <link rel="apple-touch-icon"
-        href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cdefs%3E%3ClinearGradient id='grad' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%231e3c72;stop-opacity:1' /%3E%3Cstop offset='100%25' style='stop-color:%232a5298;stop-opacity:1' /%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='100' height='100' rx='20' fill='url(%23grad)'/%3E%3Ctext x='50' y='35' font-family='Arial,sans-serif' font-size='24' font-weight='bold' fill='white' text-anchor='middle'%3E⚖️%3C/text%3E%3Ctext x='50' y='55' font-family='Arial,sans-serif' font-size='12' font-weight='bold' fill='white' text-anchor='middle'%3ELEGAL%3C/text%3E%3Ctext x='50' y='70' font-family='Arial,sans-serif' font-size='10' fill='white' text-anchor='middle'%3ECLAUSE%3C/text%3E%3Ctext x='50' y='82' font-family='Arial,sans-serif' font-size='10' fill='white' text-anchor='middle'%3ECHECKER%3C/text%3E%3C/svg%3E">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cdefs%3E%3ClinearGradient id='grad' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%231e3c72;stop-opacity:1' /%3E%3Cstop offset='100%25' style='stop-color:%232a5298;stop-opacity:1' /%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='100' height='100' rx='20' fill='url(%23grad)'/%3E%3Ctext x='50' y='35' font-family='Arial,sans-serif' font-size='24' font-weight='bold' fill='white' text-anchor='middle'%3E⚖️%3C/text%3E%3Ctext x='50' y='55' font-family='Arial,sans-serif' font-size='12' font-weight='bold' fill='white' text-anchor='middle'%3ELEGAL%3C/text%3E%3Ctext x='50' y='70' font-family='Arial,sans-serif' font-size='10' fill='white' text-anchor='middle'%3ECLAUSE%3C/text%3E%3Ctext x='50' y='82' font-family='Arial,sans-serif' font-size='10' fill='white' text-anchor='middle'%3ECHECKER%3C/text%3E%3C/svg%3E">
+    <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cdefs%3E%3ClinearGradient id='grad' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%231e3c72;stop-opacity:1' /%3E%3Cstop offset='100%25' style='stop-color:%232a5298;stop-opacity:1' /%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='100' height='100' rx='20' fill='url(%23grad)'/%3E%3Ctext x='50' y='35' font-family='Arial,sans-serif' font-size='24' font-weight='bold' fill='white' text-anchor='middle'%3E⚖️%3C/text%3E%3Ctext x='50' y='55' font-family='Arial,sans-serif' font-size='12' font-weight='bold' fill='white' text-anchor='middle'%3ELEGAL%3C/text%3E%3Ctext x='50' y='70' font-family='Arial,sans-serif' font-size='10' fill='white' text-anchor='middle'%3ECLAUSE%3C/text%3E%3Ctext x='50' y='82' font-family='Arial,sans-serif' font-size='10' fill='white' text-anchor='middle'%3ECHECKER%3C/text%3E%3C/svg%3E">
     <meta name="theme-color" content="#1e3c72">
     <link rel="preconnect" href="https://cdnjs.cloudflare.com">
     <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
     <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" as="script">
-    <meta http-equiv="Content-Security-Policy"
-        content="default-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdnjs.cloudflare.com; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self';">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdnjs.cloudflare.com; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self';">
     <meta http-equiv="X-Content-Type-Options" content="nosniff">
     <meta http-equiv="X-Frame-Options" content="DENY">
     <meta http-equiv="X-XSS-Protection" content="1; mode=block">
     <meta name="referrer" content="strict-origin-when-cross-origin">
-
+    
 
 
 
@@ -64,7 +58,7 @@
             font-size: 3rem;
             margin-bottom: 10px;
             font-weight: 700;
-            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
         }
 
         .header p {
@@ -83,7 +77,7 @@
         .step {
             display: flex;
             align-items: center;
-            color: rgba(255, 255, 255, 0.6);
+            color: rgba(255,255,255,0.6);
             font-weight: 500;
         }
 
@@ -99,7 +93,7 @@
             width: 30px;
             height: 30px;
             border-radius: 50%;
-            background: rgba(255, 255, 255, 0.2);
+            background: rgba(255,255,255,0.2);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -125,13 +119,13 @@
             margin-bottom: 30px;
             color: #92400e;
             font-size: 0.95rem;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
         }
 
         .main-content {
             background: white;
             border-radius: 16px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
             overflow: hidden;
         }
 
@@ -454,7 +448,7 @@
         }
 
         .clause-card:hover {
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
             transform: translateY(-2px);
         }
 
@@ -587,7 +581,7 @@
 
         .legal-term-highlight:hover {
             transform: translateY(-1px);
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
 
         .legal-term-legend {
@@ -607,14 +601,14 @@
             font-weight: bold;
             font-size: 0.8rem;
             text-align: center;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
             transition: all 0.2s ease;
             cursor: help;
         }
-
+        
         .legend-item:hover {
             transform: translateY(-1px);
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+            box-shadow: 0 2px 6px rgba(0,0,0,0.15);
         }
 
         .explanation-text {
@@ -676,7 +670,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.8);
+            background: rgba(0,0,0,0.8);
             display: none;
             align-items: center;
             justify-content: center;
@@ -702,13 +696,8 @@
         }
 
         @keyframes spin {
-            0% {
-                transform: rotate(0deg);
-            }
-
-            100% {
-                transform: rotate(360deg);
-            }
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
 
         .chevron {
@@ -1144,20 +1133,20 @@
                 grid-template-columns: 1fr;
                 gap: 30px;
             }
-
+            
             .comparison-divider {
                 padding: 0;
                 transform: rotate(90deg);
             }
-
+            
             .vs-badge {
                 transform: rotate(-90deg);
             }
-
+            
             .contract-comparison {
                 grid-template-columns: 1fr;
             }
-
+            
             .comparison-checkboxes {
                 grid-template-columns: 1fr;
             }
@@ -1242,7 +1231,6 @@
                 transform: translateY(-100vh) rotate(0deg);
                 opacity: 1;
             }
-
             100% {
                 transform: translateY(100vh) rotate(720deg);
                 opacity: 0;
@@ -1254,7 +1242,6 @@
                 transform: translate(-50%, -50%) scale(0.5);
                 opacity: 0;
             }
-
             100% {
                 transform: translate(-50%, -50%) scale(1);
                 opacity: 1;
@@ -1284,41 +1271,40 @@
                 margin: 20px 0;
                 padding: 15px;
             }
-
+            
             .ad-banner-top,
             .ad-results-bottom {
                 max-width: 320px;
                 min-height: 50px;
             }
-
+            
             .container {
                 padding: 15px;
             }
-
+            
             .header h1 {
                 font-size: 2rem;
             }
-
-            .input-section,
-            .results-section {
+            
+            .input-section, .results-section {
                 padding: 25px;
             }
-
+            
             .progress-steps {
                 flex-direction: column;
                 gap: 10px;
             }
-
+            
             .analysis-header {
                 flex-direction: column;
                 align-items: stretch;
             }
-
+            
             .filters-controls {
                 flex-direction: column;
                 align-items: stretch;
             }
-
+            
             .export-section {
                 bottom: 20px;
                 right: 20px;
@@ -1345,7 +1331,6 @@
         }
     </style>
 </head>
-
 <body>
     <div class="loading-overlay" id="loading-overlay">
         <div class="loading-content">
@@ -1366,7 +1351,7 @@
         <div class="header">
             <h1>LegalClauseChecker</h1>
             <p>Advanced AI-Powered Contract Analysis & Risk Assessment - for FREE!</p>
-
+            
             <div class="progress-steps">
                 <div class="step active" id="step-1">
                     <div class="step-number">1</div>
@@ -1388,9 +1373,7 @@
         </div>
 
         <div class="disclaimer">
-            <strong>⚠️ Legal Disclaimer:</strong> This tool provides automated analysis for informational purposes only
-            and does not constitute legal advice. Results should be reviewed by qualified legal professionals. Always
-            consult with an attorney for legal matters and contract review.
+            <strong>⚠️ Legal Disclaimer:</strong> This tool provides automated analysis for informational purposes only and does not constitute legal advice. Results should be reviewed by qualified legal professionals. Always consult with an attorney for legal matters and contract review.
         </div>
 
 
@@ -1405,8 +1388,7 @@
 
                 <div id="upload-tab" class="tab-content active">
                     <div class="file-upload" id="file-upload-area">
-                        <input type="file" id="file-input" accept=".pdf,.doc,.docx,.txt"
-                            onchange="handleFileUpload(event)">
+                        <input type="file" id="file-input" accept=".pdf,.doc,.docx,.txt" onchange="handleFileUpload(event)">
                         <div class="upload-icon">📄</div>
                         <div class="upload-text">
                             <h3>Upload Contract Document</h3>
@@ -1426,12 +1408,11 @@
                 </div>
 
                 <div id="paste-tab" class="tab-content">
-                    <textarea id="contract-text" class="text-input"
-                        placeholder="Paste your contract text here...
+                    <textarea id="contract-text" class="text-input" placeholder="Paste your contract text here...
 
 Example: You can paste any legal agreement, contract, or document text for analysis. The system will automatically detect and analyze all standard legal clauses."></textarea>
                     <div class="char-counter" id="char-counter">0 / 500,000 characters</div>
-
+                    
                     <div class="sample-contracts">
                         <h4>📋 Try Sample Contracts</h4>
                         <div class="sample-buttons">
@@ -1447,30 +1428,27 @@ Example: You can paste any legal agreement, contract, or document text for analy
                     <div class="comparison-container">
                         <div class="comparison-header">
                             <h3>📊 Contract Comparison Tool</h3>
-                            <p>Compare two contracts side-by-side to identify differences in clauses, terms, and risk
-                                levels</p>
+                            <p>Compare two contracts side-by-side to identify differences in clauses, terms, and risk levels</p>
                         </div>
-
+                        
                         <div class="comparison-inputs">
                             <div class="comparison-input-group">
                                 <label for="contract-a">Contract A (Original)</label>
-                                <textarea id="contract-a" class="text-input comparison-textarea"
-                                    placeholder="Paste your first contract here..."></textarea>
+                                <textarea id="contract-a" class="text-input comparison-textarea" placeholder="Paste your first contract here..."></textarea>
                                 <div class="char-counter" id="char-counter-a">0 / 250,000 characters</div>
                             </div>
-
+                            
                             <div class="comparison-divider">
                                 <div class="vs-badge">VS</div>
                             </div>
-
+                            
                             <div class="comparison-input-group">
                                 <label for="contract-b">Contract B (Comparison)</label>
-                                <textarea id="contract-b" class="text-input comparison-textarea"
-                                    placeholder="Paste your second contract here..."></textarea>
+                                <textarea id="contract-b" class="text-input comparison-textarea" placeholder="Paste your second contract here..."></textarea>
                                 <div class="char-counter" id="char-counter-b">0 / 250,000 characters</div>
                             </div>
                         </div>
-
+                        
                         <div class="comparison-options">
                             <h4>🎯 Comparison Focus</h4>
                             <div class="comparison-checkboxes">
@@ -1487,19 +1465,17 @@ Example: You can paste any legal agreement, contract, or document text for analy
                     <button class="analyze-button" onclick="analyzeContract()" id="analyze-btn" disabled>
                         🔍 Analyze Contract
                     </button>
-
                     <button class="analyze-button" onclick="compareContracts()" id="compare-btn" style="display: none;">
                         ⚖️ Compare Contracts
                     </button>
-
                     <button class="start-over-button" onclick="startOver()" id="start-over-btn" style="display: none;">
                         🔄 Start Over
                     </button>
                 </div>
-
+                
                 <!-- Legal Disclaimer -->
                 <div class="legal-disclaimer" role="note" aria-label="Legal disclaimer">
-                    <strong>⚖️ Legal information only:</strong>
+                    <strong>Legal information only:</strong>
                     This tool is intended for informational and educational purposes only
                     and does not provide legal advice. Risk classifications are general
                     indicators and do not determine whether a clause is legally valid,
@@ -1527,7 +1503,7 @@ Example: You can paste any legal agreement, contract, or document text for analy
                             <p>Recommended Contract</p>
                         </div>
                     </div>
-
+                    
                     <div class="comparison-grid" id="comparison-grid">
                         <!-- Comparison cards will be populated here -->
                     </div>
@@ -1578,8 +1554,7 @@ Example: You can paste any legal agreement, contract, or document text for analy
                         </select>
                     </div>
                     <div class="filter-group">
-                        <input type="text" class="search-input" id="search-input" placeholder="Search clauses..."
-                            oninput="searchClauses()">
+                        <input type="text" class="search-input" id="search-input" placeholder="Search clauses..." oninput="searchClauses()">
                     </div>
                 </div>
 
@@ -1632,14 +1607,14 @@ Example: You can paste any legal agreement, contract, or document text for analy
     <script>
         // Performance and Security Optimizations
         'use strict';
-
+        
         // Lazy load external libraries
         const LibraryLoader = {
             loaded: {},
-
+            
             async loadScript(url, name) {
                 if (this.loaded[name]) return this.loaded[name];
-
+                
                 return this.loaded[name] = new Promise((resolve, reject) => {
                     const script = document.createElement('script');
                     script.src = url;
@@ -1648,7 +1623,7 @@ Example: You can paste any legal agreement, contract, or document text for analy
                     document.head.appendChild(script);
                 });
             },
-
+            
             async loadJsPDF() {
                 try {
                     await this.loadScript('https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js', 'jspdf');
@@ -1663,33 +1638,33 @@ Example: You can paste any legal agreement, contract, or document text for analy
         // Memory management and performance monitoring
         const PerformanceManager = {
             memoryThreshold: 100 * 1024 * 1024, // 100MB
-
+            
             checkMemory() {
                 if (performance.memory) {
                     const used = performance.memory.usedJSHeapSize;
                     const limit = performance.memory.jsHeapSizeLimit;
-
+                    
                     if (used > this.memoryThreshold) {
                         this.cleanup();
                     }
-
+                    
                     return { used, limit, percentage: (used / limit) * 100 };
                 }
                 return null;
             },
-
+            
             cleanup() {
                 // Clear any cached data
                 if (window.contractCache) {
                     window.contractCache.clear();
                 }
-
+                
                 // Force garbage collection if available
                 if (window.gc) {
                     window.gc();
                 }
             },
-
+            
             debounce(func, wait) {
                 let timeout;
                 return function executedFunction(...args) {
@@ -1701,10 +1676,10 @@ Example: You can paste any legal agreement, contract, or document text for analy
                     timeout = setTimeout(later, wait);
                 };
             },
-
+            
             throttle(func, limit) {
                 let inThrottle;
-                return function () {
+                return function() {
                     const args = arguments;
                     const context = this;
                     if (!inThrottle) {
@@ -1720,7 +1695,7 @@ Example: You can paste any legal agreement, contract, or document text for analy
         const SecurityUtils = {
             sanitizeInput(input) {
                 if (typeof input !== 'string') return '';
-
+                
                 return input
                     .replace(/[<>]/g, '') // Remove potential HTML tags
                     .replace(/javascript:/gi, '') // Remove javascript: protocols
@@ -1728,7 +1703,7 @@ Example: You can paste any legal agreement, contract, or document text for analy
                     .trim()
                     .substring(0, 500000); // Enforce character limit
             },
-
+            
             validateFileType(file) {
                 const allowedTypes = [
                     'text/plain',
@@ -1736,13 +1711,13 @@ Example: You can paste any legal agreement, contract, or document text for analy
                     'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
                     'application/msword'
                 ];
-
+                
                 const allowedExtensions = ['txt', 'pdf', 'docx', 'doc'];
                 const fileExtension = file.name.toLowerCase().split('.').pop();
-
+                
                 return allowedTypes.includes(file.type) || allowedExtensions.includes(fileExtension);
             },
-
+            
             validateFileSize(file, maxSize = 50 * 1024 * 1024) {
                 return file.size <= maxSize;
             }
@@ -1758,7 +1733,7 @@ Example: You can paste any legal agreement, contract, or document text for analy
                     return JSON.stringify(data);
                 }
             },
-
+            
             decompress(data) {
                 try {
                     return JSON.parse(atob(data));
@@ -1771,7 +1746,7 @@ Example: You can paste any legal agreement, contract, or document text for analy
                     }
                 }
             },
-
+            
             save(key, data) {
                 try {
                     const compressed = this.compress(data);
@@ -1782,7 +1757,7 @@ Example: You can paste any legal agreement, contract, or document text for analy
                     return false;
                 }
             },
-
+            
             load(key) {
                 try {
                     const data = localStorage.getItem(key);
@@ -1792,7 +1767,7 @@ Example: You can paste any legal agreement, contract, or document text for analy
                     return null;
                 }
             },
-
+            
             clear(key) {
                 try {
                     localStorage.removeItem(key);
@@ -1805,36 +1780,36 @@ Example: You can paste any legal agreement, contract, or document text for analy
         // Analytics implementation
         const Analytics = {
             initialized: false,
-
+            
             init() {
                 if (this.initialized) return;
-
+                
                 // Initialize Google Analytics if ID is provided
                 if (typeof gtag !== 'undefined') {
                     this.initialized = true;
                     this.trackPageView();
                 }
-
+                
                 // Initialize other analytics services
                 this.initializeHotjar();
                 this.initializeCustomAnalytics();
             },
-
+            
             initializeHotjar() {
                 // Hotjar initialization removed - add manually if needed
             },
-
+            
             initializeCustomAnalytics() {
                 // Custom analytics for internal tracking
                 this.sessionId = this.generateSessionId();
                 this.startTime = Date.now();
                 this.trackSessionStart();
             },
-
+            
             generateSessionId() {
                 return 'session_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
             },
-
+            
             trackPageView() {
                 if (typeof gtag !== 'undefined') {
                     gtag('event', 'page_view', {
@@ -1844,14 +1819,14 @@ Example: You can paste any legal agreement, contract, or document text for analy
                         content_group2: 'Contract Analysis'
                     });
                 }
-
+                
                 this.trackCustomEvent('page_view', {
                     url: window.location.href,
                     referrer: document.referrer,
                     timestamp: new Date().toISOString()
                 });
             },
-
+            
             trackFileUpload(fileType, fileSize) {
                 if (typeof gtag !== 'undefined') {
                     gtag('event', 'file_upload', {
@@ -1861,14 +1836,14 @@ Example: You can paste any legal agreement, contract, or document text for analy
                         custom_parameter_1: 'file_processing'
                     });
                 }
-
+                
                 this.trackCustomEvent('file_upload', {
                     fileType: fileType,
                     fileSize: fileSize,
                     timestamp: new Date().toISOString()
                 });
             },
-
+            
             trackAnalysis(results) {
                 if (typeof gtag !== 'undefined') {
                     gtag('event', 'contract_analysis', {
@@ -1877,7 +1852,7 @@ Example: You can paste any legal agreement, contract, or document text for analy
                         value: results.overallScore,
                         custom_parameter_1: 'analysis_completion'
                     });
-
+                    
                     // Track analysis metrics
                     gtag('event', 'analysis_metrics', {
                         event_category: 'Analysis Data',
@@ -1887,14 +1862,14 @@ Example: You can paste any legal agreement, contract, or document text for analy
                         overall_score: results.overallScore
                     });
                 }
-
+                
                 this.trackCustomEvent('analysis_complete', {
                     ...results,
                     timestamp: new Date().toISOString(),
                     sessionId: this.sessionId
                 });
             },
-
+            
             trackExport(format) {
                 if (typeof gtag !== 'undefined') {
                     gtag('event', 'export_report', {
@@ -1903,13 +1878,13 @@ Example: You can paste any legal agreement, contract, or document text for analy
                         custom_parameter_1: 'report_export'
                     });
                 }
-
+                
                 this.trackCustomEvent('export_report', {
                     format: format,
                     timestamp: new Date().toISOString()
                 });
             },
-
+            
             trackClauseInteraction(clauseId, action) {
                 if (typeof gtag !== 'undefined') {
                     gtag('event', 'clause_interaction', {
@@ -1919,14 +1894,14 @@ Example: You can paste any legal agreement, contract, or document text for analy
                         custom_parameter_1: 'clause_engagement'
                     });
                 }
-
+                
                 this.trackCustomEvent('clause_interaction', {
                     clauseId: clauseId,
                     action: action,
                     timestamp: new Date().toISOString()
                 });
             },
-
+            
             trackError(error, context) {
                 if (typeof gtag !== 'undefined') {
                     gtag('event', 'exception', {
@@ -1935,7 +1910,7 @@ Example: You can paste any legal agreement, contract, or document text for analy
                         custom_parameter_1: context || 'general_error'
                     });
                 }
-
+                
                 this.trackCustomEvent('error', {
                     message: error.message || 'Unknown error',
                     stack: error.stack || 'No stack trace',
@@ -1943,10 +1918,10 @@ Example: You can paste any legal agreement, contract, or document text for analy
                     timestamp: new Date().toISOString()
                 });
             },
-
+            
             trackUserEngagement() {
                 const timeOnPage = Date.now() - this.startTime;
-
+                
                 if (typeof gtag !== 'undefined') {
                     gtag('event', 'user_engagement', {
                         event_category: 'Engagement',
@@ -1954,14 +1929,14 @@ Example: You can paste any legal agreement, contract, or document text for analy
                         custom_parameter_1: 'session_engagement'
                     });
                 }
-
+                
                 this.trackCustomEvent('user_engagement', {
                     timeOnPage: timeOnPage,
                     sessionId: this.sessionId,
                     timestamp: new Date().toISOString()
                 });
             },
-
+            
             trackConversion(type, value) {
                 if (typeof gtag !== 'undefined') {
                     gtag('event', 'conversion', {
@@ -1971,14 +1946,14 @@ Example: You can paste any legal agreement, contract, or document text for analy
                         custom_parameter_1: 'user_conversion'
                     });
                 }
-
+                
                 this.trackCustomEvent('conversion', {
                     type: type,
                     value: value || 1,
                     timestamp: new Date().toISOString()
                 });
             },
-
+            
             trackSessionStart() {
                 this.trackCustomEvent('session_start', {
                     sessionId: this.sessionId,
@@ -1987,7 +1962,7 @@ Example: You can paste any legal agreement, contract, or document text for analy
                     timestamp: new Date().toISOString()
                 });
             },
-
+            
             trackCustomEvent(eventName, data) {
                 // Store events locally for analysis
                 try {
@@ -1997,18 +1972,18 @@ Example: You can paste any legal agreement, contract, or document text for analy
                         data: data,
                         timestamp: new Date().toISOString()
                     });
-
+                    
                     // Keep only last 100 events to prevent storage bloat
                     if (events.length > 100) {
                         events.splice(0, events.length - 100);
                     }
-
+                    
                     localStorage.setItem('analytics_events', JSON.stringify(events));
                 } catch (e) {
                     console.warn('Failed to store analytics event:', e);
                 }
             },
-
+            
             // Method to send analytics data to your server (implement as needed)
             sendAnalyticsData() {
                 try {
@@ -2020,7 +1995,7 @@ Example: You can paste any legal agreement, contract, or document text for analy
                         //     headers: { 'Content-Type': 'application/json' },
                         //     body: JSON.stringify(events)
                         // });
-
+                        
                         // Clear sent events
                         localStorage.removeItem('analytics_events');
                     }
@@ -2304,20 +2279,20 @@ Freelancer is an independent contractor, not an employee.`
         let currentStep = 1;
 
         // Initialize the application
-        document.addEventListener('DOMContentLoaded', function () {
+        document.addEventListener('DOMContentLoaded', function() {
             setupEventListeners();
             updateCharCounter();
             initializePerformanceMonitoring();
             loadPreviousSession();
-
+            
             // Initialize Analytics
             Analytics.init();
-
+            
             // Track user engagement periodically
             setInterval(() => {
                 Analytics.trackUserEngagement();
             }, 30000); // Every 30 seconds
-
+            
             // Track page unload
             window.addEventListener('beforeunload', () => {
                 Analytics.trackUserEngagement();
@@ -2330,7 +2305,7 @@ Freelancer is an independent contractor, not an employee.`
             setInterval(() => {
                 PerformanceManager.checkMemory();
             }, 30000); // Check every 30 seconds
-
+            
             // Add performance observer if available
             if ('PerformanceObserver' in window) {
                 const observer = new PerformanceObserver((list) => {
@@ -2364,18 +2339,18 @@ Freelancer is an independent contractor, not an employee.`
         function setupEventListeners() {
             // File upload drag and drop with throttling
             const uploadArea = document.getElementById('file-upload-area');
-
-            uploadArea.addEventListener('dragover', PerformanceManager.throttle(function (e) {
+            
+            uploadArea.addEventListener('dragover', PerformanceManager.throttle(function(e) {
                 e.preventDefault();
                 uploadArea.classList.add('dragover');
             }, 100));
 
-            uploadArea.addEventListener('dragleave', function (e) {
+            uploadArea.addEventListener('dragleave', function(e) {
                 e.preventDefault();
                 uploadArea.classList.remove('dragover');
             });
 
-            uploadArea.addEventListener('drop', function (e) {
+            uploadArea.addEventListener('drop', function(e) {
                 e.preventDefault();
                 uploadArea.classList.remove('dragover');
                 const files = e.dataTransfer.files;
@@ -2385,20 +2360,20 @@ Freelancer is an independent contractor, not an employee.`
                 }
             });
 
-            uploadArea.addEventListener('click', function () {
+            uploadArea.addEventListener('click', function() {
                 document.getElementById('file-input').click();
             });
 
             // Text area character counter with debouncing
-            document.getElementById('contract-text').addEventListener('input',
+            document.getElementById('contract-text').addEventListener('input', 
                 PerformanceManager.debounce(updateCharCounter, 300));
-
+            
             // Add passive event listeners for better performance
-            document.addEventListener('scroll', function () {
+            document.addEventListener('scroll', function() {
                 // Handle scroll events if needed
             }, { passive: true });
-
-            document.addEventListener('touchstart', function () {
+            
+            document.addEventListener('touchstart', function() {
                 // Handle touch events if needed
             }, { passive: true });
         }
@@ -2411,7 +2386,7 @@ Freelancer is an independent contractor, not an employee.`
             document.getElementById(tabName + '-tab').classList.add('active');
 
             updateAnalyzeButton();
-
+            
             // Setup comparison tab event listeners
             if (tabName === 'compare') {
                 setupComparisonListeners();
@@ -2421,12 +2396,12 @@ Freelancer is an independent contractor, not an employee.`
         function setupComparisonListeners() {
             const contractA = document.getElementById('contract-a');
             const contractB = document.getElementById('contract-b');
-
+            
             if (!contractA.hasAttribute('data-listeners-added')) {
                 contractA.addEventListener('input', PerformanceManager.debounce(updateComparisonCharCounter, 300));
                 contractA.setAttribute('data-listeners-added', 'true');
             }
-
+            
             if (!contractB.hasAttribute('data-listeners-added')) {
                 contractB.addEventListener('input', PerformanceManager.debounce(updateComparisonCharCounter, 300));
                 contractB.setAttribute('data-listeners-added', 'true');
@@ -2443,7 +2418,7 @@ Freelancer is an independent contractor, not an employee.`
             if (contractA && counterA) {
                 const lengthA = contractA.value.length;
                 counterA.textContent = `${lengthA.toLocaleString()} / ${maxLength.toLocaleString()} characters`;
-
+                
                 if (lengthA > maxLength * 0.9) {
                     counterA.classList.add('warning');
                 } else if (lengthA > maxLength) {
@@ -2457,7 +2432,7 @@ Freelancer is an independent contractor, not an employee.`
             if (contractB && counterB) {
                 const lengthB = contractB.value.length;
                 counterB.textContent = `${lengthB.toLocaleString()} / ${maxLength.toLocaleString()} characters`;
-
+                
                 if (lengthB > maxLength * 0.9) {
                     counterB.classList.add('warning');
                 } else if (lengthB > maxLength) {
@@ -2532,7 +2507,7 @@ Freelancer is an independent contractor, not an employee.`
             }, 150);
 
             const reader = new FileReader();
-
+            
             const fileExtension = file.name.toLowerCase().split('.').pop();
 
             try {
@@ -2540,9 +2515,9 @@ Freelancer is an independent contractor, not an employee.`
                     await processTextFile(file, progressInterval, progressFill);
                 } else if (file.type === 'application/pdf' || fileExtension === 'pdf') {
                     await processPDFFile(file, progressInterval, progressFill);
-                } else if (file.type.includes('wordprocessingml') ||
-                    file.type === 'application/msword' ||
-                    fileExtension === 'docx' || fileExtension === 'doc') {
+                } else if (file.type.includes('wordprocessingml') || 
+                          file.type === 'application/msword' || 
+                          fileExtension === 'docx' || fileExtension === 'doc') {
                     await processDocFile(file, progressInterval, progressFill);
                 } else {
                     alert('Unsupported file type. Please upload PDF, DOC, DOCX, or TXT files.');
@@ -2560,7 +2535,7 @@ Freelancer is an independent contractor, not an employee.`
         async function processTextFile(file, progressInterval, progressFill) {
             return new Promise((resolve, reject) => {
                 const reader = new FileReader();
-                reader.onload = function (e) {
+                reader.onload = function(e) {
                     try {
                         contractText = SecurityUtils.sanitizeInput(e.target.result);
                         if (contractText.length > 500000) {
@@ -2581,21 +2556,21 @@ Freelancer is an independent contractor, not an employee.`
         async function processPDFFile(file, progressInterval, progressFill) {
             try {
                 const pdfjsLib = await LibraryLoader.loadScript('https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js', 'pdfjsLib');
-
+                
                 return new Promise((resolve, reject) => {
                     const reader = new FileReader();
-                    reader.onload = async function (e) {
+                    reader.onload = async function(e) {
                         try {
                             const typedarray = new Uint8Array(e.target.result);
                             const pdf = await pdfjsLib.getDocument(typedarray).promise;
                             const textContent = await extractTextFromPDF(pdf);
-
+                            
                             contractText = SecurityUtils.sanitizeInput(textContent);
                             if (contractText.length > 500000) {
                                 contractText = contractText.substring(0, 500000);
                                 alert('PDF content was truncated to 500,000 characters limit.');
                             }
-
+                            
                             completeFileUpload(progressInterval, progressFill);
                             resolve();
                         } catch (error) {
@@ -2613,19 +2588,19 @@ Freelancer is an independent contractor, not an employee.`
         async function processDocFile(file, progressInterval, progressFill) {
             try {
                 const mammoth = await LibraryLoader.loadScript('https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.4.2/mammoth.browser.min.js', 'mammoth');
-
+                
                 return new Promise((resolve, reject) => {
                     const reader = new FileReader();
-                    reader.onload = async function (e) {
+                    reader.onload = async function(e) {
                         try {
-                            const result = await mammoth.extractRawText({ arrayBuffer: e.target.result });
+                            const result = await mammoth.extractRawText({arrayBuffer: e.target.result});
                             contractText = SecurityUtils.sanitizeInput(result.value);
-
+                            
                             if (contractText.length > 500000) {
                                 contractText = contractText.substring(0, 500000);
                                 alert('Document content was truncated to 500,000 characters limit.');
                             }
-
+                            
                             completeFileUpload(progressInterval, progressFill);
                             resolve();
                         } catch (error) {
@@ -2646,8 +2621,8 @@ Freelancer is an independent contractor, not an employee.`
 
             for (let i = 1; i <= numPages; i++) {
                 textPromises.push(
-                    pdf.getPage(i).then(page =>
-                        page.getTextContent().then(content =>
+                    pdf.getPage(i).then(page => 
+                        page.getTextContent().then(content => 
                             content.items.map(item => item.str).join(' ')
                         )
                     )
@@ -2660,14 +2635,14 @@ Freelancer is an independent contractor, not an employee.`
         function completeFileUpload(progressInterval, progressFill) {
             clearInterval(progressInterval);
             progressFill.style.width = '100%';
-
+            
             setTimeout(() => {
                 document.getElementById('upload-progress').style.display = 'none';
                 progressFill.style.width = '0%';
-
+                
                 // Show success notification with confetti
                 showSuccessNotification();
-
+                
                 updateAnalyzeButton();
             }, 500);
         }
@@ -2676,24 +2651,24 @@ Freelancer is an independent contractor, not an employee.`
             // Add success styling to upload area
             const uploadArea = document.getElementById('file-upload-area');
             uploadArea.classList.add('success');
-
+            
             // Show success indicator
             const successIndicator = document.getElementById('upload-success');
             successIndicator.style.display = 'block';
-
+            
             // Show success notification popup
             const notification = document.getElementById('success-notification');
             notification.style.display = 'block';
-
+            
             // Create confetti effect
             createConfetti();
-
+            
             // Hide notification after 3 seconds
             setTimeout(() => {
                 notification.style.display = 'none';
                 clearConfetti();
             }, 3000);
-
+            
             // Remove success styling after 5 seconds
             setTimeout(() => {
                 uploadArea.classList.remove('success');
@@ -2702,12 +2677,12 @@ Freelancer is an independent contractor, not an employee.`
 
         function createConfetti() {
             const container = document.getElementById('confetti-container');
-
+            
             // Clear any existing confetti first
             container.innerHTML = '';
-
+            
             const colors = ['#ff6b6b', '#4ecdc4', '#45b7d1', '#f9ca24', '#6c5ce7'];
-
+            
             // Create 25 confetti pieces (reduced for simpler effect)
             for (let i = 0; i < 25; i++) {
                 const confetti = document.createElement('div');
@@ -2736,7 +2711,7 @@ Freelancer is an independent contractor, not an employee.`
             textArea.value = sampleContracts[type];
             contractText = '';
             updateCharCounter();
-
+            
             // Switch to paste tab
             switchTab('paste');
             document.querySelector('.tab-button:nth-child(2)').classList.add('active');
@@ -2749,20 +2724,20 @@ Freelancer is an independent contractor, not an employee.`
             const textArea = document.getElementById('contract-text');
             const contractA = document.getElementById('contract-a');
             const contractB = document.getElementById('contract-b');
-
+            
             // Check which tab is active
             const activeTab = document.querySelector('.tab-content.active');
             const isCompareTab = activeTab && activeTab.id === 'compare-tab';
-
+            
             if (isCompareTab) {
                 // Show compare button, hide analyze button
                 analyzeBtn.style.display = 'none';
                 compareBtn.style.display = 'block';
-
-                const hasComparisonContent = contractA && contractB &&
+                
+                const hasComparisonContent = contractA && contractB && 
                     contractA.value.trim() && contractB.value.trim();
                 compareBtn.disabled = !hasComparisonContent;
-
+                
                 if (hasComparisonContent) {
                     updateStep(1, 'completed');
                     updateStep(2, 'active');
@@ -2771,10 +2746,10 @@ Freelancer is an independent contractor, not an employee.`
                 // Show analyze button, hide compare button
                 analyzeBtn.style.display = 'block';
                 compareBtn.style.display = 'none';
-
+                
                 const hasContent = contractText.trim() || (textArea && textArea.value.trim());
                 analyzeBtn.disabled = !hasContent;
-
+                
                 if (hasContent) {
                     updateStep(1, 'completed');
                     updateStep(2, 'active');
@@ -2791,7 +2766,7 @@ Freelancer is an independent contractor, not an employee.`
         async function analyzeContract() {
             const textArea = document.getElementById('contract-text');
             const finalText = SecurityUtils.sanitizeInput(contractText || textArea.value.trim());
-
+            
             if (!finalText) {
                 alert('Please upload a document or paste contract text first.');
                 return;
@@ -2814,7 +2789,7 @@ Freelancer is an independent contractor, not an employee.`
             updateStep(3, 'active');
 
             showLoadingOverlay();
-
+            
             try {
                 // Use chunked processing for better performance
                 await performAdvancedAnalysisAsync(finalText);
@@ -2822,17 +2797,17 @@ Freelancer is an independent contractor, not an employee.`
                 showResults();
                 updateStep(3, 'completed');
                 updateStep(4, 'active');
-
+                
                 // Show Start Over button after analysis is complete
                 document.getElementById('start-over-btn').style.display = 'block';
-
+                
                 // Save analysis to browser storage
                 StorageManager.save('lastAnalysis', {
                     timestamp: Date.now(),
                     results: analysisResults,
                     text: finalText.substring(0, 1000) // Save only first 1000 chars for reference
                 });
-
+                
             } catch (error) {
                 console.error('Analysis error:', error);
                 hideLoadingOverlay();
@@ -2844,7 +2819,7 @@ Freelancer is an independent contractor, not an employee.`
             const overlay = document.getElementById('loading-overlay');
             const loadingText = document.getElementById('loading-text');
             overlay.style.display = 'flex';
-
+            
             const messages = [
                 'Processing document...',
                 'Extracting clauses...',
@@ -2852,13 +2827,13 @@ Freelancer is an independent contractor, not an employee.`
                 'Generating recommendations...',
                 'Finalizing report...'
             ];
-
+            
             let messageIndex = 0;
             const messageInterval = setInterval(() => {
                 loadingText.textContent = messages[messageIndex];
                 messageIndex = (messageIndex + 1) % messages.length;
             }, 600);
-
+            
             setTimeout(() => clearInterval(messageInterval), 3000);
         }
 
@@ -2869,7 +2844,7 @@ Freelancer is an independent contractor, not an employee.`
         async function performAdvancedAnalysisAsync(text) {
             const textLower = text.toLowerCase();
             analysisResults = {};
-
+            
             let totalScore = 0;
             let clausesFound = 0;
             let missingCount = 0;
@@ -2879,14 +2854,14 @@ Freelancer is an independent contractor, not an employee.`
             const chunkSize = 3;
             for (let i = 0; i < clauseDefinitions.length; i += chunkSize) {
                 const chunk = clauseDefinitions.slice(i, i + chunkSize);
-
+                
                 // Process chunk
                 await new Promise(resolve => {
                     setTimeout(() => {
                         chunk.forEach(clause => {
                             const analysis = analyzeClause(clause, text, textLower);
                             analysisResults[clause.id] = analysis;
-
+                            
                             totalScore += analysis.score;
                             if (analysis.found) clausesFound++;
                             if (analysis.status === 'missing') missingCount++;
@@ -2895,20 +2870,20 @@ Freelancer is an independent contractor, not an employee.`
                         resolve();
                     }, 10); // Small delay to prevent blocking
                 });
-
+                
                 // Update progress
                 const progress = Math.round(((i + chunkSize) / clauseDefinitions.length) * 100);
                 updateLoadingProgress(Math.min(progress, 100));
             }
 
             const overallScore = Math.round(totalScore / clauseDefinitions.length);
-
+            
             // Update summary
             document.getElementById('total-clauses').textContent = clausesFound;
             document.getElementById('missing-clauses').textContent = missingCount;
             document.getElementById('high-risk-count').textContent = highRiskCount;
             document.getElementById('overall-score').textContent = overallScore + '%';
-
+            
             // Track analysis completion
             Analytics.trackAnalysis({
                 totalClauses: clauseDefinitions.length,
@@ -2928,10 +2903,10 @@ Freelancer is an independent contractor, not an employee.`
 
         function analyzeClause(clause, originalText, textLower) {
             // Check for keyword presence
-            const keywordMatches = clause.keywords.filter(keyword =>
+            const keywordMatches = clause.keywords.filter(keyword => 
                 textLower.includes(keyword.toLowerCase())
             );
-
+            
             const found = keywordMatches.length > 0;
             let status, risk, score;
             let extractedText = '';
@@ -2940,18 +2915,18 @@ Freelancer is an independent contractor, not an employee.`
             if (found) {
                 // Extract relevant text sections
                 extractedText = extractClauseText(originalText, clause.keywords);
-
+                
                 // Analyze risk factors
                 riskFactors = analyzeRiskFactors(textLower, clause.riskFactors);
-
+                
                 // Determine risk level and score using deterministic calculation
                 const keywordDensity = keywordMatches.length / clause.keywords.length;
                 const riskScore = riskFactors.length;
-
+                
                 // Create deterministic "randomness" based on clause content
                 const contentHash = generateContentHash(clause.id + originalText.substring(0, 100));
                 const deterministicVariation = (contentHash % 100) / 100; // 0-1 range
-
+                
                 if (keywordDensity >= 0.6 && riskScore <= 1) {
                     status = 'strong';
                     risk = 'low';
@@ -2999,27 +2974,27 @@ Freelancer is an independent contractor, not an employee.`
             // Find sentences containing keywords
             const sentences = text.split(/[.!?]+/);
             const relevantSentences = [];
-
+            
             keywords.forEach(keyword => {
                 sentences.forEach(sentence => {
-                    if (sentence.toLowerCase().includes(keyword.toLowerCase()) &&
+                    if (sentence.toLowerCase().includes(keyword.toLowerCase()) && 
                         !relevantSentences.includes(sentence.trim())) {
                         relevantSentences.push(sentence.trim());
                     }
                 });
             });
-
+            
             let extractedText = relevantSentences.slice(0, 3).join('. ') + (relevantSentences.length > 3 ? '...' : '');
-
+            
             // Highlight legal terms with colors and bold formatting
             extractedText = highlightLegalTerms(extractedText, keywords);
-
+            
             return extractedText;
         }
 
         function highlightLegalTerms(text, keywords) {
             if (!text) return text;
-
+            
             // Comprehensive color coding system for legal terms
             const termColorMap = {
                 // 🔴 HIGH RISK TERMS (Red) - Critical liability and indemnification
@@ -3031,7 +3006,7 @@ Freelancer is an independent contractor, not an employee.`
                 'consequential': '#dc2626',
                 'punitive': '#dc2626',
                 'losses': '#dc2626',
-
+                
                 // 🔵 CONTRACT CONTROL (Blue) - Termination and breach terms
                 'termination': '#2563eb',
                 'terminate': '#2563eb',
@@ -3042,7 +3017,7 @@ Freelancer is an independent contractor, not an employee.`
                 'end': '#2563eb',
                 'cancel': '#2563eb',
                 'void': '#2563eb',
-
+                
                 // 🟣 CONFIDENTIALITY (Purple) - Information protection
                 'confidential': '#7c3aed',
                 'non-disclosure': '#7c3aed',
@@ -3052,7 +3027,7 @@ Freelancer is an independent contractor, not an employee.`
                 'information': '#7c3aed',
                 'disclose': '#7c3aed',
                 'confidentiality': '#7c3aed',
-
+                
                 // 🟠 COMPETITION RESTRICTIONS (Orange) - Non-compete and restraints
                 'non-compete': '#ea580c',
                 'non-competition': '#ea580c',
@@ -3063,7 +3038,7 @@ Freelancer is an independent contractor, not an employee.`
                 'covenant not to compete': '#ea580c',
                 'solicit': '#ea580c',
                 'non-solicitation': '#ea580c',
-
+                
                 // 🟢 INTELLECTUAL PROPERTY (Green) - IP rights and ownership
                 'intellectual property': '#059669',
                 'copyright': '#059669',
@@ -3074,7 +3049,7 @@ Freelancer is an independent contractor, not an employee.`
                 'license': '#059669',
                 'work product': '#059669',
                 'proprietary rights': '#059669',
-
+                
                 // 🟦 LEGAL PROCESS (Teal) - Dispute resolution and jurisdiction
                 'arbitration': '#0d9488',
                 'mediation': '#0d9488',
@@ -3086,7 +3061,7 @@ Freelancer is an independent contractor, not an employee.`
                 'court': '#0d9488',
                 'venue': '#0d9488',
                 'adr': '#0d9488',
-
+                
                 // 🟡 FINANCIAL TERMS (Amber) - Payment and monetary obligations
                 'payment': '#d97706',
                 'fee': '#d97706',
@@ -3098,7 +3073,7 @@ Freelancer is an independent contractor, not an employee.`
                 'due': '#d97706',
                 'payable': '#d97706',
                 'late': '#d97706',
-
+                
                 // 🟤 PERFORMANCE TERMS (Brown) - Obligations and warranties
                 'warranty': '#92400e',
                 'represent': '#92400e',
@@ -3110,42 +3085,42 @@ Freelancer is an independent contractor, not an employee.`
                 'covenant': '#92400e',
                 'promise': '#92400e'
             };
-
+            
             let highlightedText = text;
-
+            
             // Sort keywords by length (longest first) to avoid partial matches
             const sortedKeywords = keywords.sort((a, b) => b.length - a.length);
-
+            
             sortedKeywords.forEach(keyword => {
                 const keywordLower = keyword.toLowerCase();
                 const color = termColorMap[keywordLower] || '#6366f1'; // Default indigo for unmatched terms
-
+                
                 // Create regex pattern that matches whole words or phrases
                 const escapedKeyword = keyword.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
                 const regex = new RegExp(`\\b(${escapedKeyword})\\b`, 'gi');
-
-                highlightedText = highlightedText.replace(regex,
+                
+                highlightedText = highlightedText.replace(regex, 
                     `<span class="legal-term-highlight" style="background: ${color}20; color: ${color}; font-weight: bold; padding: 3px 6px; border-radius: 4px; border: 1px solid ${color}60; box-shadow: 0 1px 2px ${color}30;">$1</span>`
                 );
             });
-
+            
             return highlightedText;
         }
 
         function analyzeRiskFactors(textLower, riskFactors) {
             const foundRisks = [];
-
+            
             riskFactors.forEach(factor => {
                 // Simple risk detection based on common patterns
                 switch (factor) {
                     case 'broad definition':
-                        if (textLower.includes('including but not limited to') ||
+                        if (textLower.includes('including but not limited to') || 
                             textLower.includes('any and all')) {
                             foundRisks.push('Overly broad definitions detected');
                         }
                         break;
                     case 'unlimited duration':
-                        if (!textLower.includes('year') && !textLower.includes('month') &&
+                        if (!textLower.includes('year') && !textLower.includes('month') && 
                             !textLower.includes('expire')) {
                             foundRisks.push('No time limitations specified');
                         }
@@ -3157,7 +3132,7 @@ Freelancer is an independent contractor, not an employee.`
                         break;
                 }
             });
-
+            
             return foundRisks;
         }
 
@@ -3165,10 +3140,10 @@ Freelancer is an independent contractor, not an employee.`
             document.getElementById('results-section').classList.add('active');
             document.getElementById('export-btn').style.display = 'block';
             renderClauseCards();
-
+            
             // Scroll to results
-            document.getElementById('results-section').scrollIntoView({
-                behavior: 'smooth'
+            document.getElementById('results-section').scrollIntoView({ 
+                behavior: 'smooth' 
             });
         }
 
@@ -3197,8 +3172,8 @@ Freelancer is an independent contractor, not an employee.`
                     <div class="clause-title-section">
                         <div class="clause-title">${clause.title}</div>
                         <div class="clause-subtitle">${clause.subtitle}</div>
-                        ${clause.found ? `<div style="font-size: 0.8rem; color: #059669;">✓ Detected</div>` :
-                    `<div style="font-size: 0.8rem; color: #dc2626;">✗ Missing</div>`}
+                        ${clause.found ? `<div style="font-size: 0.8rem; color: #059669;">✓ Detected</div>` : 
+                                        `<div style="font-size: 0.8rem; color: #dc2626;">✗ Missing</div>`}
                     </div>
                     <div class="clause-status-section">
                         <div class="risk-badge ${riskClass}">${riskText}</div>
@@ -3239,8 +3214,8 @@ Freelancer is an independent contractor, not an employee.`
                             <div class="explanation-text">
                                 <h4>📋 What this clause does:</h4>
                                 <p>${clause.explanation}</p>
-                                ${clause.keywordMatches.length > 0 ?
-                    `<p><strong>Keywords found:</strong> ${clause.keywordMatches.join(', ')}</p>` : ''}
+                                ${clause.keywordMatches.length > 0 ? 
+                                    `<p><strong>Keywords found:</strong> ${clause.keywordMatches.join(', ')}</p>` : ''}
                             </div>
                         </div>
                         
@@ -3248,8 +3223,8 @@ Freelancer is an independent contractor, not an employee.`
                             <div class="risk-analysis">
                                 <h4>⚠️ Risk Assessment:</h4>
                                 <p>${clause.risks}</p>
-                                ${clause.riskFactors.length > 0 ?
-                    `<div style="margin-top: 15px;">
+                                ${clause.riskFactors.length > 0 ? 
+                                    `<div style="margin-top: 15px;">
                                         <strong>Identified Risk Factors:</strong>
                                         <ul style="margin-top: 5px;">
                                             ${clause.riskFactors.map(risk => `<li>${risk}</li>`).join('')}
@@ -3265,8 +3240,8 @@ Freelancer is an independent contractor, not an employee.`
                                 <div style="margin-top: 15px;">
                                     <strong>Priority Level:</strong> 
                                     <span class="risk-badge ${riskClass}" style="margin-left: 10px;">
-                                        ${clause.risk === 'high' ? 'High Priority' :
-                    clause.risk === 'medium' ? 'Medium Priority' : 'Low Priority'}
+                                        ${clause.risk === 'high' ? 'High Priority' : 
+                                          clause.risk === 'medium' ? 'Medium Priority' : 'Low Priority'}
                                     </span>
                                 </div>
                             </div>
@@ -3281,10 +3256,10 @@ Freelancer is an independent contractor, not an employee.`
         function toggleClauseCard(clauseId) {
             const content = document.getElementById(`content-${clauseId}`);
             const header = content.previousElementSibling;
-
+            
             content.classList.toggle('active');
             header.classList.toggle('active');
-
+            
             // Track clause interaction
             const action = content.classList.contains('active') ? 'expand' : 'collapse';
             Analytics.trackClauseInteraction(clauseId, action);
@@ -3305,7 +3280,7 @@ Freelancer is an independent contractor, not an employee.`
         function filterClauses() {
             const filter = document.getElementById('risk-filter').value;
             const cards = document.querySelectorAll('.clause-card');
-
+            
             cards.forEach(card => {
                 if (filter === 'all' || card.dataset.risk === filter || card.dataset.status === filter) {
                     card.style.display = 'block';
@@ -3319,7 +3294,7 @@ Freelancer is an independent contractor, not an employee.`
             const sortBy = document.getElementById('sort-filter').value;
             const grid = document.getElementById('clause-grid');
             const cards = Array.from(grid.querySelectorAll('.clause-card'));
-
+            
             cards.sort((a, b) => {
                 switch (sortBy) {
                     case 'risk':
@@ -3334,18 +3309,18 @@ Freelancer is an independent contractor, not an employee.`
                         return 0;
                 }
             });
-
+            
             cards.forEach(card => grid.appendChild(card));
         }
 
         function searchClauses() {
             const searchTerm = document.getElementById('search-input').value.toLowerCase();
             const cards = document.querySelectorAll('.clause-card');
-
+            
             cards.forEach(card => {
                 const title = card.querySelector('.clause-title').textContent.toLowerCase();
                 const subtitle = card.querySelector('.clause-subtitle').textContent.toLowerCase();
-
+                
                 if (title.includes(searchTerm) || subtitle.includes(searchTerm)) {
                     card.style.display = 'block';
                 } else {
@@ -3360,14 +3335,14 @@ Freelancer is an independent contractor, not an employee.`
                 if (!jsPDFLib || !jsPDFLib.jsPDF) {
                     throw new Error('PDF library not available');
                 }
-
+                
                 const { jsPDF } = jsPDFLib;
                 const doc = new jsPDF();
                 const pageWidth = doc.internal.pageSize.width;
                 const margin = 20;
                 const maxWidth = pageWidth - (margin * 2);
                 let y = 30;
-
+                
                 // Helper function to add text with word wrapping
                 function addWrappedText(text, x, startY, maxWidth, fontSize = 10) {
                     doc.setFontSize(fontSize);
@@ -3375,7 +3350,7 @@ Freelancer is an independent contractor, not an employee.`
                     doc.text(lines, x, startY);
                     return startY + (lines.length * (fontSize * 0.4));
                 }
-
+                
                 // Helper function to check if we need a new page
                 function checkNewPage(currentY, neededSpace = 40) {
                     if (currentY + neededSpace > 280) {
@@ -3384,36 +3359,36 @@ Freelancer is an independent contractor, not an employee.`
                     }
                     return currentY;
                 }
-
+                
                 // Title and Header
                 doc.setFontSize(20);
                 doc.setFont(undefined, 'bold');
                 doc.text('Contract Analysis Report', margin, y);
                 y += 20;
-
+                
                 doc.setFontSize(12);
                 doc.setFont(undefined, 'normal');
                 doc.text(`Generated: ${new Date().toLocaleDateString()} at ${new Date().toLocaleTimeString()}`, margin, y);
                 y += 15;
-
+                
                 // Executive Summary Box
                 doc.setDrawColor(30, 60, 114);
                 doc.setFillColor(240, 248, 255);
                 doc.rect(margin, y, maxWidth, 50, 'FD');
-
+                
                 y += 10;
                 doc.setFontSize(14);
                 doc.setFont(undefined, 'bold');
                 doc.text('Executive Summary', margin + 10, y);
                 y += 10;
-
+                
                 doc.setFontSize(11);
                 doc.setFont(undefined, 'normal');
                 const totalClauses = document.getElementById('total-clauses').textContent;
                 const missingClauses = document.getElementById('missing-clauses').textContent;
                 const highRiskCount = document.getElementById('high-risk-count').textContent;
                 const overallScore = document.getElementById('overall-score').textContent;
-
+                
                 doc.text(`• Clauses Analyzed: ${Object.keys(analysisResults).length}`, margin + 10, y);
                 y += 7;
                 doc.text(`• Clauses Found: ${totalClauses}`, margin + 10, y);
@@ -3424,20 +3399,20 @@ Freelancer is an independent contractor, not an employee.`
                 y += 7;
                 doc.text(`• Overall Contract Score: ${overallScore}`, margin + 10, y);
                 y += 20;
-
+                
                 // Risk Assessment Summary
                 y = checkNewPage(y, 60);
                 doc.setFontSize(16);
                 doc.setFont(undefined, 'bold');
                 doc.text('Risk Assessment Overview', margin, y);
                 y += 15;
-
+                
                 const riskCounts = { high: 0, medium: 0, low: 0, missing: 0 };
                 Object.values(analysisResults).forEach(clause => {
                     if (clause.status === 'missing') riskCounts.missing++;
                     else riskCounts[clause.risk]++;
                 });
-
+                
                 doc.setFontSize(11);
                 doc.setFont(undefined, 'normal');
                 y = addWrappedText(
@@ -3445,51 +3420,51 @@ Freelancer is an independent contractor, not an employee.`
                     margin, y, maxWidth, 11
                 );
                 y += 15;
-
+                
                 // Detailed Clause Analysis
                 doc.setFontSize(16);
                 doc.setFont(undefined, 'bold');
                 doc.text('Detailed Clause Analysis', margin, y);
                 y += 15;
-
+                
                 // Sort clauses by risk level for better presentation
                 const sortedClauses = Object.values(analysisResults).sort((a, b) => {
                     const riskOrder = { 'missing': 4, 'high': 3, 'medium': 2, 'low': 1 };
                     return riskOrder[b.status === 'missing' ? 'missing' : b.risk] - riskOrder[a.status === 'missing' ? 'missing' : a.risk];
                 });
-
+                
                 sortedClauses.forEach((clause, index) => {
                     y = checkNewPage(y, 80);
-
+                    
                     // Clause header with colored background
-                    const riskColor = clause.status === 'missing' ? [128, 128, 128] :
-                        clause.risk === 'high' ? [239, 68, 68] :
-                            clause.risk === 'medium' ? [245, 158, 11] : [34, 197, 94];
-
+                    const riskColor = clause.status === 'missing' ? [128, 128, 128] : 
+                                     clause.risk === 'high' ? [239, 68, 68] :
+                                     clause.risk === 'medium' ? [245, 158, 11] : [34, 197, 94];
+                    
                     doc.setFillColor(riskColor[0], riskColor[1], riskColor[2]);
                     doc.rect(margin, y - 5, maxWidth, 12, 'F');
-
+                    
                     doc.setTextColor(255, 255, 255);
                     doc.setFontSize(12);
                     doc.setFont(undefined, 'bold');
-                    const statusText = clause.status === 'missing' ? 'MISSING' :
-                        clause.risk.toUpperCase() + ' RISK';
+                    const statusText = clause.status === 'missing' ? 'MISSING' : 
+                                      clause.risk.toUpperCase() + ' RISK';
                     doc.text(`${index + 1}. ${clause.title} - ${statusText}`, margin + 5, y + 5);
                     y += 20;
-
+                    
                     // Reset text color
                     doc.setTextColor(0, 0, 0);
                     doc.setFont(undefined, 'normal');
                     doc.setFontSize(10);
-
+                    
                     // Status and description
-                    const statusDescription = clause.status === 'missing' ?
+                    const statusDescription = clause.status === 'missing' ? 
                         'This important clause was not found in your contract.' :
                         `This clause was found but has ${clause.risk} risk level (${clause.status} implementation).`;
-
+                    
                     y = addWrappedText(`Status: ${statusDescription}`, margin, y, maxWidth, 10);
                     y += 8;
-
+                    
                     // What this clause does
                     doc.setFont(undefined, 'bold');
                     doc.text('What this clause does:', margin, y);
@@ -3497,7 +3472,7 @@ Freelancer is an independent contractor, not an employee.`
                     doc.setFont(undefined, 'normal');
                     y = addWrappedText(clause.explanation, margin, y, maxWidth, 10);
                     y += 8;
-
+                    
                     // Risk analysis (if not missing)
                     if (clause.status !== 'missing') {
                         doc.setFont(undefined, 'bold');
@@ -3505,7 +3480,7 @@ Freelancer is an independent contractor, not an employee.`
                         y += 5;
                         doc.setFont(undefined, 'normal');
                         y = addWrappedText(clause.risks, margin, y, maxWidth, 10);
-
+                        
                         // Add specific risk factors if found
                         if (clause.riskFactors && clause.riskFactors.length > 0) {
                             y += 5;
@@ -3520,33 +3495,33 @@ Freelancer is an independent contractor, not an employee.`
                         }
                         y += 5;
                     }
-
+                    
                     // Recommendations
                     doc.setFont(undefined, 'bold');
                     doc.text('Recommendations:', margin, y);
                     y += 5;
                     doc.setFont(undefined, 'normal');
                     y = addWrappedText(clause.recommendations, margin, y, maxWidth, 10);
-
+                    
                     // Priority level
                     y += 8;
                     doc.setFont(undefined, 'bold');
                     const priority = clause.status === 'missing' || clause.risk === 'high' ? 'HIGH PRIORITY' :
-                        clause.risk === 'medium' ? 'MEDIUM PRIORITY' : 'LOW PRIORITY';
+                                    clause.risk === 'medium' ? 'MEDIUM PRIORITY' : 'LOW PRIORITY';
                     doc.text(`Action Priority: ${priority}`, margin, y);
-
+                    
                     y += 20;
                 });
-
+                
                 // Add disclaimer page
                 doc.addPage();
                 y = 30;
-
+                
                 doc.setFontSize(16);
                 doc.setFont(undefined, 'bold');
                 doc.text('Important Legal Disclaimer', margin, y);
                 y += 20;
-
+                
                 doc.setFontSize(11);
                 doc.setFont(undefined, 'normal');
                 const disclaimerText = `This automated contract analysis is provided for informational purposes only and does not constitute legal advice. The analysis is based on automated keyword detection and general legal principles, and may not identify all potential issues or risks in your specific contract.
@@ -3564,21 +3539,21 @@ Recommendations:
 • Use this analysis as a starting point, not a final assessment
 
 By using this report, you acknowledge that LegalClauseChecker provides educational information only and assumes no liability for decisions made based on this analysis.`;
-
+                
                 y = addWrappedText(disclaimerText, margin, y, maxWidth, 11);
-
+                
                 // Footer with generation info
                 doc.setFontSize(8);
                 doc.setTextColor(128, 128, 128);
                 doc.text(`Generated by LegalClauseChecker.com on ${new Date().toLocaleString()}`, margin, 280);
-
+                
                 // Save the PDF
                 const fileName = `contract-analysis-report-${new Date().toISOString().split('T')[0]}.pdf`;
                 doc.save(fileName);
-
+                
                 Analytics.trackExport('pdf');
                 Analytics.trackConversion('report_download', 1);
-
+                
             } catch (error) {
                 console.error('PDF export error:', error);
                 Analytics.trackError(error, 'pdf_export');
@@ -3586,7 +3561,7 @@ By using this report, you acknowledge that LegalClauseChecker provides education
                 createTextSummary();
             }
         }
-
+        
         function createTextSummary() {
             let summary = 'CONTRACT ANALYSIS REPORT\n';
             summary += `Generated: ${new Date().toLocaleDateString()}\n\n`;
@@ -3596,11 +3571,11 @@ By using this report, you acknowledge that LegalClauseChecker provides education
             summary += `High Risk: ${document.getElementById('high-risk-count').textContent}\n`;
             summary += `Score: ${document.getElementById('overall-score').textContent}\n\n`;
             summary += 'CLAUSE DETAILS:\n';
-
+            
             Object.values(analysisResults).forEach(clause => {
                 summary += `${clause.title}: ${clause.status} (${clause.risk} risk)\n`;
             });
-
+            
             const blob = new Blob([summary], { type: 'text/plain' });
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
@@ -3724,7 +3699,7 @@ By using this report, you acknowledge that LegalClauseChecker provides education
             const modal = document.getElementById('footer-modal');
             const title = document.getElementById('footer-modal-title');
             const body = document.getElementById('footer-modal-body');
-
+            
             const page = footerPages[pageId];
             if (page) {
                 title.textContent = page.title;
@@ -3741,7 +3716,7 @@ By using this report, you acknowledge that LegalClauseChecker provides education
         }
 
         // Close modal when clicking outside
-        document.addEventListener('click', function (event) {
+        document.addEventListener('click', function(event) {
             const modal = document.getElementById('footer-modal');
             if (event.target === modal) {
                 closeFooterModal();
@@ -3749,7 +3724,7 @@ By using this report, you acknowledge that LegalClauseChecker provides education
         });
 
         // Close modal with Escape key
-        document.addEventListener('keydown', function (event) {
+        document.addEventListener('keydown', function(event) {
             if (event.key === 'Escape') {
                 closeFooterModal();
             }
@@ -3762,22 +3737,22 @@ By using this report, you acknowledge that LegalClauseChecker provides education
                 contractText = '';
                 analysisResults = {};
                 currentStep = 1;
-
+                
                 // Clear comparison data
                 window.comparisonResults = {};
                 window.contractAnalysisA = {};
                 window.contractAnalysisB = {};
-
+                
                 // Reset form elements
                 document.getElementById('contract-text').value = '';
                 document.getElementById('file-input').value = '';
-
+                
                 // Reset comparison form elements
                 const contractA = document.getElementById('contract-a');
                 const contractB = document.getElementById('contract-b');
                 if (contractA) contractA.value = '';
                 if (contractB) contractB.value = '';
-
+                
                 // Reset comparison character counters
                 const counterA = document.getElementById('char-counter-a');
                 const counterB = document.getElementById('char-counter-b');
@@ -3789,43 +3764,43 @@ By using this report, you acknowledge that LegalClauseChecker provides education
                     counterB.textContent = '0 / 250,000 characters';
                     counterB.classList.remove('warning', 'error');
                 }
-
+                
                 // Reset upload area and clear all success indicators
                 const uploadArea = document.getElementById('file-upload-area');
                 uploadArea.classList.remove('success');
                 uploadArea.style.border = '3px dashed #d1d5db';
                 uploadArea.style.background = '#fafafa';
                 document.getElementById('upload-success').style.display = 'none';
-
+                
                 // Clear any confetti effects
                 clearConfetti();
-
+                
                 // Hide success notification if still visible
                 document.getElementById('success-notification').style.display = 'none';
-
+                
                 // Hide results sections and export button
                 document.getElementById('results-section').classList.remove('active');
                 document.getElementById('comparison-results').classList.remove('active');
                 document.getElementById('export-btn').style.display = 'none';
-
+                
                 // Hide Start Over button until next analysis
                 document.getElementById('start-over-btn').style.display = 'none';
-
+                
                 // Show input section again
                 document.getElementById('input-section').style.display = 'block';
-
+                
                 // Reset progress steps
                 document.querySelectorAll('.step').forEach(step => {
                     step.classList.remove('active', 'completed');
                 });
                 updateStep(1, 'active');
-
+                
                 // Switch back to upload tab
                 document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
                 document.querySelector('.tab-button:first-child').classList.add('active');
                 document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
                 document.getElementById('upload-tab').classList.add('active');
-
+                
                 // Reset upload area to original state
                 const uploadIcon = uploadArea.querySelector('.upload-icon');
                 const uploadText = uploadArea.querySelector('.upload-text');
@@ -3837,26 +3812,26 @@ By using this report, you acknowledge that LegalClauseChecker provides education
                         <p>Supports PDF, DOC, DOCX, and TXT files</p>
                     `;
                 }
-
+                
                 // Reset character counter
                 const counter = document.getElementById('char-counter');
                 counter.textContent = '0 / 500,000 characters';
                 counter.classList.remove('warning', 'error');
-
+                
                 // Update analyze button state
                 updateAnalyzeButton();
-
+                
                 // Scroll to top smoothly
                 window.scrollTo({ top: 0, behavior: 'smooth' });
-
+                
                 // Clear browser storage
                 StorageManager.clear('lastAnalysis');
-
+                
                 // Track start over action
                 Analytics.trackCustomEvent('start_over', {
                     timestamp: new Date().toISOString()
                 });
-
+                
                 // Show a brief confirmation message
                 setTimeout(() => {
                     const notification = document.createElement('div');
@@ -3874,7 +3849,7 @@ By using this report, you acknowledge that LegalClauseChecker provides education
                     `;
                     notification.textContent = '✅ Ready for new contract analysis!';
                     document.body.appendChild(notification);
-
+                    
                     setTimeout(() => {
                         notification.remove();
                     }, 3000);
@@ -3885,7 +3860,7 @@ By using this report, you acknowledge that LegalClauseChecker provides education
         async function compareContracts() {
             const contractAText = SecurityUtils.sanitizeInput(document.getElementById('contract-a').value.trim());
             const contractBText = SecurityUtils.sanitizeInput(document.getElementById('contract-b').value.trim());
-
+            
             if (!contractAText || !contractBText) {
                 alert('Please enter text for both contracts to compare.');
                 return;
@@ -3901,24 +3876,24 @@ By using this report, you acknowledge that LegalClauseChecker provides education
             updateStep(3, 'active');
 
             showLoadingOverlay();
-
+            
             try {
                 await performContractComparison(contractAText, contractBText);
                 hideLoadingOverlay();
                 showComparisonResults();
                 updateStep(3, 'completed');
                 updateStep(4, 'active');
-
+                
                 // Show Start Over button after comparison
                 document.getElementById('start-over-btn').style.display = 'block';
-
+                
                 // Track comparison completion
                 Analytics.trackCustomEvent('contract_comparison', {
                     contractALength: contractAText.length,
                     contractBLength: contractBText.length,
                     timestamp: new Date().toISOString()
                 });
-
+                
             } catch (error) {
                 console.error('Comparison error:', error);
                 hideLoadingOverlay();
@@ -3932,35 +3907,35 @@ By using this report, you acknowledge that LegalClauseChecker provides education
             let betterCount = 0;
             let worseCount = 0;
             let similarCount = 0;
-
+            
             // Analyze both contracts
             const analysisA = await analyzeContractText(contractA);
             const analysisB = await analyzeContractText(contractB);
-
+            
             // Compare each clause type
             clauseDefinitions.forEach(clauseDef => {
                 const clauseA = analysisA[clauseDef.id];
                 const clauseB = analysisB[clauseDef.id];
-
+                
                 const comparison = compareClause(clauseA, clauseB, clauseDef);
                 comparisonResults[clauseDef.id] = comparison;
-
+                
                 if (comparison.status === 'better') betterCount++;
                 else if (comparison.status === 'worse') worseCount++;
                 else similarCount++;
             });
-
+            
             // Determine overall recommendation
             let recommendation = 'Similar';
             if (betterCount > worseCount + 2) recommendation = 'Contract A';
             else if (worseCount > betterCount + 2) recommendation = 'Contract B';
-
+            
             // Update summary
             document.getElementById('better-clauses').textContent = betterCount;
             document.getElementById('worse-clauses').textContent = worseCount;
             document.getElementById('similar-clauses').textContent = similarCount;
             document.getElementById('recommendation').textContent = recommendation;
-
+            
             // Store results globally
             window.comparisonResults = comparisonResults;
             window.contractAnalysisA = analysisA;
@@ -3970,12 +3945,12 @@ By using this report, you acknowledge that LegalClauseChecker provides education
         async function analyzeContractText(text) {
             const textLower = text.toLowerCase();
             const results = {};
-
+            
             // Process clauses in chunks for better performance
             const chunkSize = 5;
             for (let i = 0; i < clauseDefinitions.length; i += chunkSize) {
                 const chunk = clauseDefinitions.slice(i, i + chunkSize);
-
+                
                 await new Promise(resolve => {
                     setTimeout(() => {
                         chunk.forEach(clause => {
@@ -3985,13 +3960,13 @@ By using this report, you acknowledge that LegalClauseChecker provides education
                     }, 10);
                 });
             }
-
+            
             return results;
         }
 
         function compareClause(clauseA, clauseB, definition) {
             let status, explanation, recommendation;
-
+            
             // Both missing
             if (!clauseA.found && !clauseB.found) {
                 status = 'similar';
@@ -4014,7 +3989,7 @@ By using this report, you acknowledge that LegalClauseChecker provides education
             else {
                 const scoreDiff = clauseA.score - clauseB.score;
                 const riskComparison = compareRiskLevels(clauseA.risk, clauseB.risk);
-
+                
                 if (scoreDiff > 10 || riskComparison > 0) {
                     status = 'better';
                     explanation = `Contract A has a stronger implementation (Score: ${clauseA.score} vs ${clauseB.score}).`;
@@ -4029,7 +4004,7 @@ By using this report, you acknowledge that LegalClauseChecker provides education
                     recommendation = 'Both contracts provide adequate coverage for this clause.';
                 }
             }
-
+            
             return {
                 ...definition,
                 clauseA,
@@ -4049,10 +4024,10 @@ By using this report, you acknowledge that LegalClauseChecker provides education
             document.getElementById('comparison-results').classList.add('active');
             document.getElementById('export-btn').style.display = 'block';
             renderComparisonCards();
-
+            
             // Scroll to results
-            document.getElementById('comparison-results').scrollIntoView({
-                behavior: 'smooth'
+            document.getElementById('comparison-results').scrollIntoView({ 
+                behavior: 'smooth' 
             });
         }
 
@@ -4072,7 +4047,7 @@ By using this report, you acknowledge that LegalClauseChecker provides education
 
             const statusClass = `status-${comparison.status}`;
             const statusText = comparison.status === 'better' ? 'Contract A Better' :
-                comparison.status === 'worse' ? 'Contract B Better' : 'Similar Quality';
+                              comparison.status === 'worse' ? 'Contract B Better' : 'Similar Quality';
 
             card.innerHTML = `
                 <div class="comparison-card-header">
@@ -4123,30 +4098,28 @@ By using this report, you acknowledge that LegalClauseChecker provides education
 
         // Add service worker registration for better caching (if available)
         if ('serviceWorker' in navigator) {
-            window.addEventListener('load', function () {
+            window.addEventListener('load', function() {
                 // Service worker would be registered here in production
                 console.log('Service Worker support detected');
             });
         }
 
         // Add error boundary for unhandled errors
-        window.addEventListener('error', function (event) {
+        window.addEventListener('error', function(event) {
             console.error('Global error:', event.error);
             // Don't show alert for every error, just log it
         });
 
-        window.addEventListener('unhandledrejection', function (event) {
+        window.addEventListener('unhandledrejection', function(event) {
             console.error('Unhandled promise rejection:', event.reason);
             event.preventDefault(); // Prevent default browser behavior
         });
 
         // Cleanup on page unload
-        window.addEventListener('beforeunload', function () {
+        window.addEventListener('beforeunload', function() {
             // Clear any intervals or timeouts
             PerformanceManager.cleanup();
         });
     </script>
-    <script>(function () { function c() { var b = a.contentDocument || a.contentWindow.document; if (b) { var d = b.createElement('script'); d.innerHTML = "window.__CF$cv$params={r:'96ceb0c166b663b4',t:'MTc1NDgyMDQ5MC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);"; b.getElementsByTagName('head')[0].appendChild(d) } } if (document.body) { var a = document.createElement('iframe'); a.height = 1; a.width = 1; a.style.position = 'absolute'; a.style.top = 0; a.style.left = 0; a.style.border = 'none'; a.style.visibility = 'hidden'; document.body.appendChild(a); if ('loading' !== document.readyState) c(); else if (window.addEventListener) document.addEventListener('DOMContentLoaded', c); else { var e = document.onreadystatechange || function () { }; document.onreadystatechange = function (b) { e(b); 'loading' !== document.readyState && (document.onreadystatechange = e, c()) } } } })();</script>
-</body>
-
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'96ceb0c166b663b4',t:'MTc1NDgyMDQ5MC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
