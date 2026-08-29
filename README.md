@@ -290,7 +290,11 @@ Attribution required
  - Keep the copyright notice
 ⚖️ 
 Legal Disclaimer
+This project is provided for informational and educational purposes only and does not constitute legal advice.
 
+The risk classifications and clause explanations are general indicators and should not be treated as a determination of legality, enforceability, or suitability for any specific situation.
+
+For important legal decisions, users should consult a qualified legal professional in the relevant jurisdiction.
 🙋‍♂️ 
 Support & Contact
 
